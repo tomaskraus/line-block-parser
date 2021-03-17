@@ -6,10 +6,13 @@
 
 const fu = require("./func-utils");
 
-const initialLineContext = {
-  lineNumber: 0,
-  line: "",
-};
+const PROP_LINE = "line";
+const PROP_LINE_NUMBER = "lineNumber";
+const PROP_RESULT = "result";
+
+const initialLineContext = {};
+initialLineContext[PROP_LINE_NUMBER] = 0;
+initialLineContext[PROP_LINE] = "";
 
 const DEFAULT_PARSER_ID = "line-block-parser";
 const NO_BLOCK_BEGIN = -1;
@@ -70,8 +73,8 @@ class Parser {
 
   static consumeLine(lineContext, line) {
     return fu.compose2(
-      fu.overProp("lineNumber", (x) => x + 1),
-      fu.setProp("line", line)
+      fu.overProp(PROP_LINE_NUMBER, (x) => x + 1),
+      fu.setProp(PROP_LINE, line)
     )(lineContext);
   }
 
@@ -80,7 +83,7 @@ class Parser {
       pState: fu.prop(this.parserId),
 
       createInitialLineContext: fu.compose2(
-        fu.setProp("result", []),
+        fu.setProp(PROP_RESULT, []),
         fu.setProp(this.parserId, initialParserState)
       ),
 
@@ -91,7 +94,7 @@ class Parser {
         // } else {
         // }
         return fu.overProp(
-          "result",
+          PROP_RESULT,
           (arr) => [...arr, this._blockCB(lineContext)],
           lineContext
         );
