@@ -21,22 +21,29 @@ const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
 };
 
-const defaultCB = (lineContext) => null;
+const defaultCallback = (lineContext) => null;
 
-const defaultBlockCB = (lineContext) => {
+const simpleBlockCallback = (lineContext) => lineContext.line;
+
+const defaultBlockCallback = (lineContext) => {
   return { num: lineContext.lineNumber, out: lineContext.line };
 };
 
 class Parser {
-  _beginMarkCB = defaultCB;
-  _endMarkCB = defaultCB;
-  _blockCB = defaultBlockCB;
-  _notBlockCB = defaultCB;
+  static defaultCallbacks() {
+    return {
+      beginMark: defaultCallback,
+      endMark: defaultCallback,
+      block: defaultBlockCallback,
+      notBlock: defaultCallback,
+    };
+  }
 
   constructor(beginkMark, endMark, parserId = DEFAULT_PARSER_ID) {
     this.beginkMark = beginkMark;
     this.endMark = endMark;
     this.parserId = parserId;
+    this.callbacks = Parser.defaultCallbacks();
   }
 
   static create(beginkMark, endMark, parserId) {
@@ -44,22 +51,27 @@ class Parser {
   }
 
   onBeginMark(callback) {
-    this._beginMarkCB = callback;
+    this.callbacks.beginMark = callback;
     return this;
   }
 
   onEndMark(callback) {
-    this._endMarkCB = callback;
+    this.callbacks.endMark = callback;
     return this;
   }
 
   onBlock(callback) {
-    this._blockCB = callback;
+    this.callbacks.block = callback;
     return this;
   }
 
   onNotBlock(callback) {
-    this._notBlockCB = callback;
+    this.callbacks.notBlock = callback;
+    return this;
+  }
+
+  setCallbacks(callbacks) {
+    this.callbacks = { ...this.callbacks, ...callbacks };
     return this;
   }
 
@@ -95,7 +107,7 @@ class Parser {
         // }
         return fu.overProp(
           PROP_RESULT,
-          (arr) => [...arr, this._blockCB(lineContext)],
+          (arr) => [...arr, this.callbacks.block(lineContext)],
           lineContext
         );
       },
@@ -105,5 +117,6 @@ class Parser {
 
 module.exports = {
   initialLineContext,
+  simpleBlockCallback,
   Parser,
 };

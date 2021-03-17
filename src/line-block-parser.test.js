@@ -6,7 +6,8 @@ fu.log("parser", parser);
 
 const parser2 = LBP.Parser.create("//", "", "lineParser")
   .onBeginMark("ahoj")
-  .onEndMark("cau");
+  .onEndMark("cau")
+  .setCallbacks({ block: LBP.simpleBlockCallback });
 fu.log("parser2", parser2);
 fu.log("orig:", parser);
 
