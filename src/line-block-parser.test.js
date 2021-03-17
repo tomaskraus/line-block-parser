@@ -4,7 +4,7 @@ const LBP = require("./line-block-parser");
 const parser = LBP.Parser.create("/*", "/*");
 fu.log("parser", parser);
 
-const parser2 = LBP.Parser.create("//", "", "lineParser")
+const parser2 = LBP.Parser.create("//", "")
   .onBeginMark("ahoj")
   .onEndMark("cau")
   .setCallbacks({ block: LBP.simpleBlockCallback });

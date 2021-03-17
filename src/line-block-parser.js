@@ -9,12 +9,12 @@ const fu = require("./func-utils");
 const PROP_LINE = "line";
 const PROP_LINE_NUMBER = "lineNumber";
 const PROP_RESULT = "result";
+const PROP_PARSER = "parser";
 
 const initialLineContext = {};
 initialLineContext[PROP_LINE_NUMBER] = 0;
 initialLineContext[PROP_LINE] = "";
 
-const DEFAULT_PARSER_ID = "line-block-parser";
 const NO_BLOCK_BEGIN = -1;
 
 const initialParserState = {
@@ -39,15 +39,14 @@ class Parser {
     };
   }
 
-  constructor(beginkMark, endMark, parserId = DEFAULT_PARSER_ID) {
+  constructor(beginkMark, endMark) {
     this.beginkMark = beginkMark;
     this.endMark = endMark;
-    this.parserId = parserId;
     this.callbacks = Parser.defaultCallbacks();
   }
 
-  static create(beginkMark, endMark, parserId) {
-    return new Parser(beginkMark, endMark, parserId);
+  static create(beginkMark, endMark) {
+    return new Parser(beginkMark, endMark);
   }
 
   onBeginMark(callback) {
@@ -92,11 +91,9 @@ class Parser {
 
   _getParserTools() {
     return {
-      pState: fu.prop(this.parserId),
-
       createInitialLineContext: fu.compose2(
         fu.setProp(PROP_RESULT, []),
-        fu.setProp(this.parserId, initialParserState)
+        fu.setProp(PROP_PARSER, initialParserState)
       ),
 
       parserReducer: (lineContext, line) => {
