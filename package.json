@@ -1,0 +1,19 @@
+{
+  "name": "line-block-parser",
+  "version": "0.1.0",
+  "description": "Recognizes block of lines, such as comment blocks etc.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "parser",
+    "line",
+    "text",
+    "textline",
+    "comment",
+    "commentblock"
+  ],
+  "author": "Tomas Kraus",
+  "license": "ISC"
+}
