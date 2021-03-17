@@ -19,6 +19,12 @@ u.log("false", u.nullOrUndefined(false));
 u.log('"a"', u.nullOrUndefined("a"));
 u.log("[1]", u.nullOrUndefined([1]));
 
+hr("compose2");
+const intoArr = (a) => [a];
+const inc = (k) => k + 1;
+const incToArr = u.compose2(intoArr, inc);
+u.log("incToArr(2)", incToArr(2));
+
 hr("plus");
 
 const plus = (a, b) => a + b;
@@ -84,8 +90,10 @@ u.log("obj", weatherStationObj);
 u.log([1, 2, 3, 4, 5]["length"]);
 
 hr("overProp  curry3 2");
-const tempToStr = u.overProp("temp", (x) => `${x}`);
-const weatherStationObj3 = tempToStr(weatherStationObj);
+const toStr = (a) => `${a}`;
+const inc1 = (k) => k + 1;
+const tempIncToStr = u.overProp("temp", u.compose2(toStr, inc1));
+const weatherStationObj3 = tempIncToStr(weatherStationObj);
 
 u.log("weatherStationObj3", weatherStationObj3);
 u.log("weatherStationObj", weatherStationObj);
