@@ -82,3 +82,11 @@ u.log("obj", weatherStationObj);
 
 //weird, but functional
 u.log([1, 2, 3, 4, 5]["length"]);
+
+hr("overProp  curry3 2");
+const tempToStr = u.overProp("temp", (x) => `${x}`);
+const weatherStationObj3 = tempToStr(weatherStationObj);
+
+u.log("weatherStationObj3", weatherStationObj3);
+u.log("weatherStationObj", weatherStationObj);
+u.log("obj", weatherStationObj);

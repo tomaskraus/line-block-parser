@@ -44,6 +44,13 @@ const setProp = curry3((propName, value, obj) => {
   return obj2;
 });
 
+// overProp :: name -> (a -> b) -> {..., name: a} -> { ..., name: b}
+const overProp = curry3((propName, fn, obj) => {
+  const obj2 = { ...obj };
+  obj2[propName] = fn(obj2[propName]);
+  return obj2;
+});
+
 module.exports = {
   log,
   nullOrUndefined,
@@ -51,4 +58,5 @@ module.exports = {
   curry3,
   prop,
   setProp,
+  overProp,
 };
