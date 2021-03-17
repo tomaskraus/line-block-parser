@@ -8,7 +8,6 @@ const parser2 = LBP.Parser.create("//", "", "lineParser")
   .onBeginMark("ahoj")
   .onEndMark("cau");
 fu.log("parser2", parser2);
-fu.log("lineContext", parser2.setInitialLineContext(LBP.initialLineContext));
 fu.log("orig:", parser);
 
 const lines = [
