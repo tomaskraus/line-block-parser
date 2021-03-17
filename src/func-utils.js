@@ -15,6 +15,9 @@ const nullOrUndefined = (a) => {
 //compose2 :: (b -> c) -> (a -> b) -> (a -> c)
 const compose2 = (f, g) => (a) => f(g(a));
 
+//compose3 :: (c -> d) -> (b -> c) -> (a -> b) -> (a -> d)
+const compose3 = (f, g, h) => (a) => f(g(h(a)));
+
 // curry2 :: ((a -> b) -> c) -> (a -> b -> c)
 const curry2 = (f) => (...args) => {
   if (args.length >= 2) {
@@ -58,6 +61,7 @@ module.exports = {
   log,
   nullOrUndefined,
   compose2,
+  compose3,
   curry2,
   curry3,
   prop,

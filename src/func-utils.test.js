@@ -25,6 +25,13 @@ const inc = (k) => k + 1;
 const incToArr = u.compose2(intoArr, inc);
 u.log("incToArr(2)", incToArr(2));
 
+hr("compose3");
+const intoArr_1 = (a) => [a];
+const inc_1 = (k) => k + 1;
+const toStr_1 = (a) => `${a}`;
+const incToStrArr = u.compose3(intoArr_1, toStr_1, inc_1);
+u.log("incToStrArr(2)", incToStrArr(2));
+
 hr("plus");
 
 const plus = (a, b) => a + b;
