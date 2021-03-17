@@ -30,4 +30,6 @@ const lines = [
 fu.log(lines);
 fu.log("-----------");
 fu.log("", parser2.parseLines(lines));
+fu.log("-- once more --");
+fu.log("", parser2.parseLines(lines));
 // => [["  Its fleece was white as snow,", "And every where that Mary went",], ["   That was against the rule,"]]
