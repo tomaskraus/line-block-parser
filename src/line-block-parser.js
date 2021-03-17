@@ -66,7 +66,7 @@ class Parser {
   parseLines(lines) {
     const pt = this._getParserTools();
     return lines.reduce(
-      pt.parseReducer,
+      pt.parserReducer,
       pt.createInitialLineContext(initialLineContext)
     ).result;
   }
@@ -87,7 +87,7 @@ class Parser {
         fu.setProp(this.parserId, initialParserState)
       ),
 
-      parseReducer: (lineContext, line) => {
+      parserReducer: (lineContext, line) => {
         lineContext = Parser.consumeLine(lineContext, line);
         //const state = pState(lineContext);
         // if (state.beginBlockLineNum === NO_BLOCK_BEGIN) {
