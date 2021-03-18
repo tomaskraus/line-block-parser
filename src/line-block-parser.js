@@ -202,9 +202,6 @@ class Parser {
 
 module.exports = {
   initialLineContext,
-  infoCallback,
-  setParserState,
-  overParserState,
   Parser,
   mode,
 };
