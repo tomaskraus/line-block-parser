@@ -134,11 +134,9 @@ class Parser {
   }
 
   parseLines(lines) {
-    const pt = this._getParserTools();
-
     return lines.reduce(
-      pt.parserReducer,
-      pt.createInitialLineContextWithParser(initialLineContext)
+      this.parserReducer.bind(this), //bind to preserve context
+      createInitialLineContextWithParser(initialLineContext)
     )[PROP_RESULT];
   }
 
@@ -150,54 +148,50 @@ class Parser {
     )(lineContext);
   }
 
-  _getParserTools() {
-    return {
-      createInitialLineContextWithParser: fu.compose2(
-        fu.setProp(PROP_RESULT, []),
-        fu.setProp(PROP_PARSER, initialParserState)
-      ),
+  parserReducer(lineContext, line) {
+    let lc = Parser.consumeLine(line, lineContext);
+    let pState = lc[PROP_PARSER];
 
-      parserReducer: (lineContext, line) => {
-        let lc = Parser.consumeLine(line, lineContext);
-        let pState = lc[PROP_PARSER];
+    //fu.log("line: ", `'${lc.line}'`);
+    if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
+      if (lc.line.trim() === this.beginMark) {
+        //fu.log("BEGIN MARK");
+        pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
+        pState.type = "beginMark";
+        lc = this.callbacks.beginMark(lc);
+      } else {
+        //fu.log("NOT BLOCK");
+        pState.type = "notBlock";
+        lc = this.callbacks.notBlock(lc);
+      }
+    } else {
+      if (lc.line.trim() === this.endMark) {
+        //fu.log("END MARK");
+        pState.type = "endMark";
+        lc = this.callbacks.endMark(lc);
+        lc[PROP_PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+      } else {
+        //fu.log("BLOCK");
+        pState.type = "block";
+        lc = this.callbacks.block(lc);
+      }
+    }
 
-        //fu.log("line: ", `'${lc.line}'`);
-        if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-          if (lc.line.trim() === this.beginMark) {
-            //fu.log("BEGIN MARK");
-            pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
-            pState.type = "beginMark";
-            lc = this.callbacks.beginMark(lc);
-          } else {
-            //fu.log("NOT BLOCK");
-            pState.type = "notBlock";
-            lc = this.callbacks.notBlock(lc);
-          }
-        } else {
-          if (lc.line.trim() === this.endMark) {
-            //fu.log("END MARK");
-            pState.type = "endMark";
-            lc = this.callbacks.endMark(lc);
-            lc[PROP_PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
-          } else {
-            //fu.log("BLOCK");
-            pState.type = "block";
-            lc = this.callbacks.block(lc);
-          }
-        }
-
-        if (!fu.nullOrUndefined(lc[PROP_PARSER].out)) {
-          return fu.overProp(
-            PROP_RESULT,
-            (arr) => [...arr, lc[PROP_PARSER].out],
-            lc
-          );
-        }
-        return lc;
-      },
-    };
+    if (!fu.nullOrUndefined(lc[PROP_PARSER].out)) {
+      return fu.overProp(
+        PROP_RESULT,
+        (arr) => [...arr, lc[PROP_PARSER].out],
+        lc
+      );
+    }
+    return lc;
   }
 }
+
+const createInitialLineContextWithParser = fu.compose2(
+  fu.setProp(PROP_RESULT, []),
+  fu.setProp(PROP_PARSER, initialParserState)
+);
 
 module.exports = {
   initialLineContext,
