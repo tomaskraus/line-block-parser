@@ -49,17 +49,51 @@ const infoCallback = (lineContext) =>
     lineContext
   );
 
-const defaultCallback = (lineContext) =>
+const identityCallback = (lineContext) => lineContext;
+
+const plainCallback = (lineContext) =>
   setParserOutput(lineContext[PROP_LINE], lineContext);
+
+const groupBlockCallback = (lineContext) =>
+  overParserState(
+    "acc",
+    (acc) => [...acc, lineContext[PROP_LINE]],
+    lineContext
+  );
+
+const consumeAccumulatorCallback = (lineContext) =>
+  setParserOutput(lineContext[PROP_PARSER].acc, lineContext);
+
+const mode = {
+  PLAIN_ALL_FLAT: {
+    beginMark: plainCallback,
+    endMark: plainCallback,
+    block: plainCallback,
+    notBlock: plainCallback,
+  },
+  INFO_ALL_FLAT: {
+    beginMark: infoCallback,
+    endMark: infoCallback,
+    block: infoCallback,
+    notBlock: infoCallback,
+  },
+  PLAIN_BLOCK: {
+    beginMark: plainCallback,
+    endMark: plainCallback,
+    block: plainCallback,
+    notBlock: identityCallback,
+  },
+  PLAIN_NOT_BLOCK: {
+    beginMark: identityCallback,
+    endMark: identityCallback,
+    block: identityCallback,
+    notBlock: plainCallback,
+  },
+};
 
 class Parser {
   static defaultCallbacks() {
-    return {
-      beginMark: defaultCallback,
-      endMark: defaultCallback,
-      block: defaultCallback,
-      notBlock: defaultCallback,
-    };
+    return mode.PLAIN_ALL_FLAT;
   }
 
   constructor(beginMark, endMark) {
@@ -72,27 +106,7 @@ class Parser {
     return new Parser(beginkMark, endMark);
   }
 
-  onBeginMark(callback) {
-    this.callbacks.beginMark = callback;
-    return this;
-  }
-
-  onEndMark(callback) {
-    this.callbacks.endMark = callback;
-    return this;
-  }
-
-  onBlock(callback) {
-    this.callbacks.block = callback;
-    return this;
-  }
-
-  onNotBlock(callback) {
-    this.callbacks.notBlock = callback;
-    return this;
-  }
-
-  setCallbacks(callbacks) {
+  setMode(callbacks) {
     this.callbacks = { ...this.callbacks, ...callbacks };
     return this;
   }
@@ -171,9 +185,9 @@ class Parser {
 
 module.exports = {
   initialLineContext,
-  defaultCallback,
   infoCallback,
   setParserState,
   overParserState,
   Parser,
+  mode,
 };

@@ -30,18 +30,13 @@ fu.log("", parser.parseLines(lines));
 
 fu.log("-------");
 
-const parser2 = LBP.Parser.create("/*", "*/")
-  .onBeginMark(LBP.infoCallback)
-  .onEndMark(LBP.infoCallback)
-  .onBlock(LBP.infoCallback)
-  .onNotBlock(LBP.infoCallback);
-//.setCallbacks({ block: LBP.infoCallback });
+const parser2 = LBP.Parser.create("/*", "*/");
 fu.log("parser2", parser2);
 fu.log("orig:", parser);
 
 fu.log("-- parser2 ---------");
 fu.log("", parser2.parseLines(lines));
 fu.log("-- once more parser2 (callback change) --");
-parser2.onBlock(LBP.defaultCallback);
+parser2.setMode(LBP.mode.PLAIN_NOT_BLOCK);
 fu.log("", parser2.parseLines(lines));
 // => [["  Its fleece was white as snow,", "And every where that Mary went",], ["   That was against the rule,"]]
