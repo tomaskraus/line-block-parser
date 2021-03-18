@@ -7,12 +7,12 @@ const lines = [
   "/*",
   "  Its fleece was white as snow,",
   "And every where that Mary went",
-  "/*",
+  "*/",
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
   "/*",
   "   That was against the rule,",
-  "/*",
+  "*/",
   "It made the children laugh and play,",
   "   To see a lamb at school.",
 ];
@@ -22,7 +22,7 @@ fu.log(lines);
 
 fu.log("-------");
 
-const parser = LBP.Parser.create("/*", "/*");
+const parser = LBP.Parser.create("/*", "*/");
 fu.log("parser", parser);
 
 fu.log("-- parser ---------");
@@ -30,10 +30,12 @@ fu.log("", parser.parseLines(lines));
 
 fu.log("-------");
 
-const parser2 = LBP.Parser.create("//", "")
-  .onBeginMark("ahoj")
-  .onEndMark("cau")
-  .setCallbacks({ block: LBP.infoCallback });
+const parser2 = LBP.Parser.create("/*", "*/")
+  .onBeginMark(LBP.infoCallback)
+  .onEndMark(LBP.infoCallback)
+  .onBlock(LBP.infoCallback)
+  .onNotBlock(LBP.infoCallback);
+//.setCallbacks({ block: LBP.infoCallback });
 fu.log("parser2", parser2);
 fu.log("orig:", parser);
 
