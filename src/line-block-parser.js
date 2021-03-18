@@ -43,6 +43,13 @@ const setParserOutput = fu.curry2((value, lineContext) =>
   overParserState("out", (_) => value, lineContext)
 );
 
+const appendToResult = (lineContext) =>
+  fu.overProp(
+    PROP_RESULT,
+    (arr) => [...arr, lineContext[PROP_PARSER].out],
+    lineContext
+  );
+
 const plainDecorator = (lineContext) => lineContext[PROP_LINE];
 
 const infoDecorator = (lineContext) => {
@@ -69,10 +76,12 @@ const addToAccumulatorCallback = (decorator) => (lineContext) =>
     lineContext
   );
 
-const consumeAccumulatorCallback = (lineContext) =>
-  setParserOutput(lineContext[PROP_PARSER].acc, lineContext);
-
 const emptyAccumulatorCallback = setParserState("acc", []);
+
+const consumeAccumulatorCallback = (lineContext) =>
+  fu.compose2(emptyAccumulatorCallback, (lc) =>
+    setParserOutput(lineContext[PROP_PARSER].acc, lc)
+  )(lineContext);
 
 const mode = {
   PLAIN_FLAT_ALL: {
@@ -134,9 +143,11 @@ class Parser {
   }
 
   parseLines(lines) {
-    return lines.reduce(
-      this.parserReducer.bind(this), //bind to preserve context
-      createInitialLineContextWithParser(initialLineContext)
+    return Parser.flush(
+      lines.reduce(
+        this.parserReducer.bind(this), //bind to preserve context
+        createInitialLineContextWithParser(initialLineContext)
+      )
     )[PROP_RESULT];
   }
 
@@ -147,6 +158,14 @@ class Parser {
       fu.setProp(PROP_LINE, line)
     )(lineContext);
   }
+
+  static flush = (lineContext) => {
+    //fu.log("FLUSH acc: ", lineContext[PROP_PARSER]);
+    if (lineContext[PROP_PARSER].acc.length === 0) {
+      return lineContext;
+    }
+    return fu.compose2(appendToResult, consumeAccumulatorCallback)(lineContext);
+  };
 
   parserReducer(lineContext, line) {
     let lc = Parser.consumeLine(line, lineContext);
@@ -178,11 +197,7 @@ class Parser {
     }
 
     if (!fu.nullOrUndefined(lc[PROP_PARSER].out)) {
-      return fu.overProp(
-        PROP_RESULT,
-        (arr) => [...arr, lc[PROP_PARSER].out],
-        lc
-      );
+      return appendToResult(lc);
     }
     return lc;
   }
