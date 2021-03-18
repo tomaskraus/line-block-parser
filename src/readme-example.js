@@ -1,14 +1,4 @@
-# Line Block Parser
-
-Recognizes block of lines, enclosed in marks - such as comment blocks etc.
-We can choose those marks.
-
-## Usage
-
-Simple example:
-
-```js
-const LBP = require("line-block-parser");
+const LBP = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
 const jsCommentParser = LBP.Parser.create("/*", "*/"); //params: begin mark, end mark
@@ -34,18 +24,3 @@ const lines = [
 const blocksFound = jsCommentParser.parseLines(lines);
 
 console.log(blocksFound);
-
-```
-
-Output:
-
-```shell
-[
-  [
-    '  Its fleece was white as snow,',
-    'And every where that Mary went'
-  ],
-  [ '   That was against the rule,' ]
-]
-
-```
