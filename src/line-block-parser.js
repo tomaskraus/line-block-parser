@@ -23,8 +23,6 @@ const initialParserState = {
   out: null,
 };
 
-const defaultCallback = (lineContext) => lineContext;
-
 // overParserState :: string -> (a -> b) -> lineContext -> lineContext
 const overParserState = fu.curry3((propName, fn, lineContext) => {
   const newParserState = fu.overProp(propName, fn, lineContext[PROP_PARSER]);
@@ -36,21 +34,21 @@ const setParserOutput = fu.curry2((value, lineContext) =>
   overParserState("out", (_) => value, lineContext)
 );
 
-const simpleBlockCallback = (lineContext) =>
-  setParserOutput(lineContext[PROP_LINE], lineContext);
-
-const defaultBlockCallback = (lineContext) =>
+const infoCallback = (lineContext) =>
   setParserOutput(
     { num: lineContext.lineNumber, out: lineContext.line },
     lineContext
   );
+
+const defaultCallback = (lineContext) =>
+  setParserOutput(lineContext[PROP_LINE], lineContext);
 
 class Parser {
   static defaultCallbacks() {
     return {
       beginMark: defaultCallback,
       endMark: defaultCallback,
-      block: defaultBlockCallback,
+      block: defaultCallback,
       notBlock: defaultCallback,
     };
   }
@@ -141,7 +139,8 @@ class Parser {
 
 module.exports = {
   initialLineContext,
-  simpleBlockCallback,
+  defaultCallback,
+  infoCallback,
   overParserState,
   Parser,
 };
