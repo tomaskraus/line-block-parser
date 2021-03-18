@@ -4,6 +4,8 @@
  *
  */
 
+//TODO add header to INFO_GROUP_BLOCK mode
+
 //TODO add proper begin-end pair check
 
 const fu = require("./func-utils");
@@ -41,25 +43,29 @@ const setParserOutput = fu.curry2((value, lineContext) =>
   overParserState("out", (_) => value, lineContext)
 );
 
-const infoCallback = (lineContext) =>
-  setParserOutput(
-    {
-      num: lineContext[PROP_LINE_NUMBER],
-      type: lineContext[PROP_PARSER].type,
-      out: lineContext[PROP_LINE],
-    },
-    lineContext
-  );
+const plainDecorator = (lineContext) => lineContext[PROP_LINE];
+
+const infoDecorator = (lineContext) => {
+  return {
+    num: lineContext[PROP_LINE_NUMBER],
+    type: lineContext[PROP_PARSER].type,
+    out: lineContext[PROP_LINE],
+  };
+};
+
+const flatCallback = (decorator) => (lineContext) =>
+  setParserOutput(decorator(lineContext), lineContext);
 
 const emptyCallback = (lineContext) => lineContext;
 
-const plainCallback = (lineContext) =>
-  setParserOutput(lineContext[PROP_LINE], lineContext);
+const infoCallback = flatCallback(infoDecorator);
 
-const addToAccumulatorCallback = (lineContext) =>
+const plainCallback = flatCallback(plainDecorator);
+
+const addToAccumulatorCallback = (decorator) => (lineContext) =>
   overParserState(
     "acc",
-    (acc) => [...acc, lineContext[PROP_LINE]],
+    (acc) => [...acc, decorator(lineContext)],
     lineContext
   );
 
@@ -97,7 +103,13 @@ const mode = {
   PLAIN_GROUP_BLOCK: {
     beginMark: emptyAccumulatorCallback,
     endMark: consumeAccumulatorCallback,
-    block: addToAccumulatorCallback,
+    block: addToAccumulatorCallback(plainDecorator),
+    notBlock: emptyCallback,
+  },
+  INFO_GROUP_BLOCK: {
+    beginMark: emptyAccumulatorCallback,
+    endMark: consumeAccumulatorCallback,
+    block: addToAccumulatorCallback(infoDecorator),
     notBlock: emptyCallback,
   },
 };

@@ -53,4 +53,8 @@ fu.log("-- parser2 (PLAIN_GROUP_BLOCK mode) ---------");
 parser2.setMode(LBP.mode.PLAIN_GROUP_BLOCK);
 fu.log("", parser2.parseLines(lines));
 
+fu.log("-- parser2 (INFO_GROUP_BLOCK mode) ---------");
+parser2.setMode(LBP.mode.INFO_GROUP_BLOCK);
+fu.log("", parser2.parseLines(lines));
+
 // => [["  Its fleece was white as snow,", "And every where that Mary went",], ["   That was against the rule,"]]
