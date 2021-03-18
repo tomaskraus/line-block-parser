@@ -19,15 +19,31 @@ const NO_BLOCK_BEGIN = -1;
 
 const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
+  acc: [],
+  out: null,
 };
 
-const defaultCallback = (lineContext) => null;
+const defaultCallback = (lineContext) => lineContext;
 
-const simpleBlockCallback = (lineContext) => lineContext.line;
+// overParserState :: string -> (a -> b) -> lineContext -> lineContext
+const overParserState = fu.curry3((propName, fn, lineContext) => {
+  const newParserState = fu.overProp(propName, fn, lineContext[PROP_PARSER]);
+  return fu.setProp(PROP_PARSER, newParserState, lineContext);
+});
 
-const defaultBlockCallback = (lineContext) => {
-  return { num: lineContext.lineNumber, out: lineContext.line };
-};
+// setParserOutput :: a -> lineContext -> lineContext
+const setParserOutput = fu.curry2((value, lineContext) =>
+  overParserState("out", (_) => value, lineContext)
+);
+
+const simpleBlockCallback = (lineContext) =>
+  setParserOutput(lineContext[PROP_LINE], lineContext);
+
+const defaultBlockCallback = (lineContext) =>
+  setParserOutput(
+    { num: lineContext.lineNumber, out: lineContext.line },
+    lineContext
+  );
 
 class Parser {
   static defaultCallbacks() {
@@ -76,14 +92,16 @@ class Parser {
 
   parseLines(lines) {
     const pt = this._getParserTools();
+
     return lines.reduce(
       pt.parserReducer,
-      pt.createInitialLineContext(initialLineContext)
+      pt.createInitialLineContextWithParser(initialLineContext)
     ).result;
   }
 
-  static consumeLine(lineContext, line) {
-    return fu.compose2(
+  static consumeLine(line, lineContext) {
+    return fu.compose3(
+      setParserOutput(null),
       fu.overProp(PROP_LINE_NUMBER, (x) => x + 1),
       fu.setProp(PROP_LINE, line)
     )(lineContext);
@@ -91,22 +109,31 @@ class Parser {
 
   _getParserTools() {
     return {
-      createInitialLineContext: fu.compose2(
+      createInitialLineContextWithParser: fu.compose2(
         fu.setProp(PROP_RESULT, []),
         fu.setProp(PROP_PARSER, initialParserState)
       ),
 
       parserReducer: (lineContext, line) => {
-        lineContext = Parser.consumeLine(lineContext, line);
+        const lineContext2 = this.callbacks.block(
+          Parser.consumeLine(line, lineContext)
+        );
+
+        // fu.log("lineContext2", lineContext2);
+
         //const state = pState(lineContext);
         // if (state.beginBlockLineNum === NO_BLOCK_BEGIN) {
         // } else {
         // }
-        return fu.overProp(
-          PROP_RESULT,
-          (arr) => [...arr, this.callbacks.block(lineContext)],
-          lineContext
-        );
+
+        if (!fu.nullOrUndefined(lineContext2.parser.out)) {
+          return fu.overProp(
+            PROP_RESULT,
+            (arr) => [...arr, lineContext2.parser.out],
+            lineContext2
+          );
+        }
+        return lineContext2;
       },
     };
   }
@@ -115,5 +142,6 @@ class Parser {
 module.exports = {
   initialLineContext,
   simpleBlockCallback,
+  overParserState,
   Parser,
 };
