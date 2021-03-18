@@ -53,6 +53,20 @@ u.log("cplus()(1, 2)", cplus()(1, 2));
 u.log("cplus()(1)", cplus()(1));
 u.log("cplus()(1)(2)", cplus()(1)(2));
 
+hr("curry3");
+const plus3 = (a, b, c) => a + b + c;
+const cplus3 = u.curry3(plus3);
+u.log("cplus3(1, 2, 3)", cplus3(1, 2, 3));
+u.log("cplus3(1, 2)", cplus3(1, 2));
+u.log("cplus3(1, 2)(3)", cplus3(1, 2)(3));
+u.log("cplus3(1)(2)(3)", cplus3(1)(2)(3));
+u.log("cplus3(1)(2)", cplus3(1)(2));
+u.log("cplus3(1)", cplus3(1));
+
+u.log("cplus3()(1)", cplus3()(1));
+u.log("cplus3()(1)(2)", cplus3()(1)(2));
+u.log("cplus3()(1)(2)(3)", cplus3()(1)(2)(3));
+
 hr("prop");
 
 u.log('prop("length", "abcd")', u.prop("length", "abcd"));
