@@ -187,12 +187,6 @@ class Parser {
           }
         }
 
-        // fu.log("lineContext2", lineContext2);
-
-        // if (state.beginBlockLineNum === NO_BLOCK_BEGIN) {
-        // } else {
-        // }
-
         if (!fu.nullOrUndefined(lc[PROP_PARSER].out)) {
           return fu.overProp(
             PROP_RESULT,
