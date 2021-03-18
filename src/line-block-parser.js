@@ -47,9 +47,9 @@ const plainDecorator = (lineContext) => lineContext[PROP_LINE];
 
 const infoDecorator = (lineContext) => {
   return {
-    num: lineContext[PROP_LINE_NUMBER],
+    lineNumber: lineContext[PROP_LINE_NUMBER],
     type: lineContext[PROP_PARSER].type,
-    out: lineContext[PROP_LINE],
+    line: lineContext[PROP_LINE],
   };
 };
 
@@ -116,7 +116,7 @@ const mode = {
 
 class Parser {
   static defaultCallbacks() {
-    return mode.PLAIN_FLAT_ALL;
+    return mode.PLAIN_GROUP_BLOCK;
   }
 
   constructor(beginMark, endMark) {
