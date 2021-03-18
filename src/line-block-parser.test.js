@@ -34,9 +34,23 @@ const parser2 = LBP.Parser.create("/*", "*/");
 fu.log("parser2", parser2);
 fu.log("orig:", parser);
 
-fu.log("-- parser2 ---------");
+fu.log("-- parser2 (default mode) ---------");
 fu.log("", parser2.parseLines(lines));
-fu.log("-- once more parser2 (callback change) --");
-parser2.setMode(LBP.mode.PLAIN_NOT_BLOCK);
+
+fu.log("-- parser2 (PLAIN_FLAT_BLOCK mode) ---------");
+parser2.setMode(LBP.mode.PLAIN_FLAT_BLOCK);
 fu.log("", parser2.parseLines(lines));
+
+fu.log("-- parser2 (PLAIN_FLAT_NOT_BLOCK mode) ---------");
+parser2.setMode(LBP.mode.PLAIN_FLAT_NOT_BLOCK);
+fu.log("", parser2.parseLines(lines));
+
+fu.log("-- parser2 (INFO_FLAT_ALL mode) ---------");
+parser2.setMode(LBP.mode.INFO_FLAT_ALL);
+fu.log("", parser2.parseLines(lines));
+
+fu.log("-- parser2 (PLAIN_GROUP_BLOCK mode) ---------");
+parser2.setMode(LBP.mode.PLAIN_GROUP_BLOCK);
+fu.log("", parser2.parseLines(lines));
+
 // => [["  Its fleece was white as snow,", "And every where that Mary went",], ["   That was against the rule,"]]

@@ -4,6 +4,8 @@
  *
  */
 
+//TODO add proper begin-end pair check
+
 const fu = require("./func-utils");
 
 const PROP_LINE = "line";
@@ -30,8 +32,8 @@ const overParserState = fu.curry3((propName, fn, lineContext) => {
   return fu.setProp(PROP_PARSER, newParserState, lineContext);
 });
 
-const setParserState = fu.curry3((propName, fn, lineContext) => {
-  return overParserState(propName, (_) => value, lineneContext);
+const setParserState = fu.curry3((propName, value, lineContext) => {
+  return overParserState(propName, (_) => value, lineContext);
 });
 
 // setParserOutput :: a -> lineContext -> lineContext
@@ -49,12 +51,12 @@ const infoCallback = (lineContext) =>
     lineContext
   );
 
-const identityCallback = (lineContext) => lineContext;
+const emptyCallback = (lineContext) => lineContext;
 
 const plainCallback = (lineContext) =>
   setParserOutput(lineContext[PROP_LINE], lineContext);
 
-const groupBlockCallback = (lineContext) =>
+const addToAccumulatorCallback = (lineContext) =>
   overParserState(
     "acc",
     (acc) => [...acc, lineContext[PROP_LINE]],
@@ -64,36 +66,45 @@ const groupBlockCallback = (lineContext) =>
 const consumeAccumulatorCallback = (lineContext) =>
   setParserOutput(lineContext[PROP_PARSER].acc, lineContext);
 
+const emptyAccumulatorCallback = (lineContext) =>
+  setParserState("acc", [], lineContext);
+
 const mode = {
-  PLAIN_ALL_FLAT: {
+  PLAIN_FLAT_ALL: {
     beginMark: plainCallback,
     endMark: plainCallback,
     block: plainCallback,
     notBlock: plainCallback,
   },
-  INFO_ALL_FLAT: {
+  PLAIN_FLAT_BLOCK: {
+    beginMark: plainCallback,
+    endMark: plainCallback,
+    block: plainCallback,
+    notBlock: emptyCallback,
+  },
+  PLAIN_FLAT_NOT_BLOCK: {
+    beginMark: emptyCallback,
+    endMark: emptyCallback,
+    block: emptyCallback,
+    notBlock: plainCallback,
+  },
+  INFO_FLAT_ALL: {
     beginMark: infoCallback,
     endMark: infoCallback,
     block: infoCallback,
     notBlock: infoCallback,
   },
-  PLAIN_BLOCK: {
-    beginMark: plainCallback,
-    endMark: plainCallback,
-    block: plainCallback,
-    notBlock: identityCallback,
-  },
-  PLAIN_NOT_BLOCK: {
-    beginMark: identityCallback,
-    endMark: identityCallback,
-    block: identityCallback,
-    notBlock: plainCallback,
+  PLAIN_GROUP_BLOCK: {
+    beginMark: emptyAccumulatorCallback,
+    endMark: consumeAccumulatorCallback,
+    block: addToAccumulatorCallback,
+    notBlock: emptyCallback,
   },
 };
 
 class Parser {
   static defaultCallbacks() {
-    return mode.PLAIN_ALL_FLAT;
+    return mode.PLAIN_FLAT_ALL;
   }
 
   constructor(beginMark, endMark) {
