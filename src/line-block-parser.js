@@ -21,12 +21,17 @@ const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
   acc: [],
   out: null,
+  type: "init",
 };
 
 // overParserState :: string -> (a -> b) -> lineContext -> lineContext
 const overParserState = fu.curry3((propName, fn, lineContext) => {
   const newParserState = fu.overProp(propName, fn, lineContext[PROP_PARSER]);
   return fu.setProp(PROP_PARSER, newParserState, lineContext);
+});
+
+const setParserState = fu.curry3((propName, fn, lineContext) => {
+  return overParserState(propName, (_) => value, lineneContext);
 });
 
 // setParserOutput :: a -> lineContext -> lineContext
@@ -36,7 +41,11 @@ const setParserOutput = fu.curry2((value, lineContext) =>
 
 const infoCallback = (lineContext) =>
   setParserOutput(
-    { num: lineContext[PROP_LINE_NUMBER], out: lineContext[PROP_LINE] },
+    {
+      num: lineContext[PROP_LINE_NUMBER],
+      type: lineContext[PROP_PARSER].type,
+      out: lineContext[PROP_LINE],
+    },
     lineContext
   );
 
@@ -53,8 +62,8 @@ class Parser {
     };
   }
 
-  constructor(beginkMark, endMark) {
-    this.beginkMark = beginkMark;
+  constructor(beginMark, endMark) {
+    this.beginMark = beginMark;
     this.endMark = endMark;
     this.callbacks = Parser.defaultCallbacks();
   }
@@ -113,25 +122,48 @@ class Parser {
       ),
 
       parserReducer: (lineContext, line) => {
-        const lineContext2 = this.callbacks.block(
-          Parser.consumeLine(line, lineContext)
-        );
+        let lc = Parser.consumeLine(line, lineContext);
+        let pState = lc[PROP_PARSER];
+
+        //fu.log("line: ", `'${lc.line}'`);
+        if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
+          if (lc.line.trim() === this.beginMark) {
+            //fu.log("BEGIN MARK");
+            pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
+            pState.type = "beginMark";
+            lc = this.callbacks.beginMark(lc);
+          } else {
+            //fu.log("NOT BLOCK");
+            pState.type = "notBlock";
+            lc = this.callbacks.notBlock(lc);
+          }
+        } else {
+          if (lc.line.trim() === this.endMark) {
+            //fu.log("END MARK");
+            pState.type = "endMark";
+            lc = this.callbacks.endMark(lc);
+            lc[PROP_PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+          } else {
+            //fu.log("BLOCK");
+            pState.type = "block";
+            lc = this.callbacks.block(lc);
+          }
+        }
 
         // fu.log("lineContext2", lineContext2);
 
-        //const state = pState(lineContext);
         // if (state.beginBlockLineNum === NO_BLOCK_BEGIN) {
         // } else {
         // }
 
-        if (!fu.nullOrUndefined(lineContext2[PROP_PARSER].out)) {
+        if (!fu.nullOrUndefined(lc[PROP_PARSER].out)) {
           return fu.overProp(
             PROP_RESULT,
-            (arr) => [...arr, lineContext2[PROP_PARSER].out],
-            lineContext2
+            (arr) => [...arr, lc[PROP_PARSER].out],
+            lc
           );
         }
-        return lineContext2;
+        return lc;
       },
     };
   }
@@ -141,6 +173,7 @@ module.exports = {
   initialLineContext,
   defaultCallback,
   infoCallback,
+  setParserState,
   overParserState,
   Parser,
 };
