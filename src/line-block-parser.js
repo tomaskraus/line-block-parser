@@ -72,8 +72,7 @@ const addToAccumulatorCallback = (decorator) => (lineContext) =>
 const consumeAccumulatorCallback = (lineContext) =>
   setParserOutput(lineContext[PROP_PARSER].acc, lineContext);
 
-const emptyAccumulatorCallback = (lineContext) =>
-  setParserState("acc", [], lineContext);
+const emptyAccumulatorCallback = setParserState("acc", []);
 
 const mode = {
   PLAIN_FLAT_ALL: {
