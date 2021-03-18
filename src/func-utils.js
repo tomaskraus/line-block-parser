@@ -12,6 +12,9 @@ const nullOrUndefined = (a) => {
   //if (typeof a)
 };
 
+//id :: a -> a
+const id = (a) => a;
+
 //compose2 :: (b -> c) -> (a -> b) -> (a -> c)
 const compose2 = (f, g) => (a) => f(g(a));
 
@@ -60,6 +63,7 @@ const overProp = curry3((propName, fn, obj) => {
 module.exports = {
   log,
   nullOrUndefined,
+  id,
   compose2,
   compose3,
   curry2,

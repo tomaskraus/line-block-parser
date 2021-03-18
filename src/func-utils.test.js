@@ -19,6 +19,12 @@ u.log("false", u.nullOrUndefined(false));
 u.log('"a"', u.nullOrUndefined("a"));
 u.log("[1]", u.nullOrUndefined([1]));
 
+hr("id");
+u.log("id(2)", u.id(2));
+u.log("id([1,2])", u.id([1, 2]));
+u.log("id({a: 1})", u.id({ a: 1 }));
+u.log("id(null)", u.id(null));
+
 hr("compose2");
 const intoArr = (a) => [a];
 const inc = (k) => k + 1;

@@ -53,10 +53,10 @@ const infoDecorator = (lineContext) => {
   };
 };
 
+const emptyCallback = fu.id;
+
 const flatCallback = (decorator) => (lineContext) =>
   setParserOutput(decorator(lineContext), lineContext);
-
-const emptyCallback = (lineContext) => lineContext;
 
 const infoCallback = flatCallback(infoDecorator);
 
