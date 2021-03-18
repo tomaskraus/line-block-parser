@@ -36,7 +36,7 @@ const setParserOutput = fu.curry2((value, lineContext) =>
 
 const infoCallback = (lineContext) =>
   setParserOutput(
-    { num: lineContext.lineNumber, out: lineContext.line },
+    { num: lineContext[PROP_LINE_NUMBER], out: lineContext[PROP_LINE] },
     lineContext
   );
 
@@ -94,7 +94,7 @@ class Parser {
     return lines.reduce(
       pt.parserReducer,
       pt.createInitialLineContextWithParser(initialLineContext)
-    ).result;
+    )[PROP_RESULT];
   }
 
   static consumeLine(line, lineContext) {
@@ -124,10 +124,10 @@ class Parser {
         // } else {
         // }
 
-        if (!fu.nullOrUndefined(lineContext2.parser.out)) {
+        if (!fu.nullOrUndefined(lineContext2[PROP_PARSER].out)) {
           return fu.overProp(
             PROP_RESULT,
-            (arr) => [...arr, lineContext2.parser.out],
+            (arr) => [...arr, lineContext2[PROP_PARSER].out],
             lineContext2
           );
         }
