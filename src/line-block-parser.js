@@ -23,6 +23,8 @@ const NO_BLOCK_BEGIN = -1;
 
 const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
+  startTagLine: null,
+  endTagLine: null,
   acc: [],
   out: null,
   type: "init",
@@ -60,6 +62,17 @@ const infoDecorator = (lineContext) => {
   };
 };
 
+const plainAccumulatorDecorator = (lineContext) => lineContext[PROP_PARSER].acc;
+
+const infoAccumulatorDecorator = (lineContext) => {
+  return {
+    startLineNumber: lineContext[PROP_PARSER].beginBlockLineNum,
+    startTagLine: lineContext[PROP_PARSER].startTagLine,
+    endTagLine: lineContext[PROP_PARSER].endTagLine,
+    data: lineContext[PROP_PARSER].acc,
+  };
+};
+
 const emptyCallback = fu.id;
 
 const flatCallback = (decorator) => (lineContext) =>
@@ -78,9 +91,9 @@ const addToAccumulatorCallback = (decorator) => (lineContext) =>
 
 const emptyAccumulatorCallback = setParserState("acc", []);
 
-const consumeAccumulatorCallback = (lineContext) =>
+const consumeAccumulatorCallback = (decorator) => (lineContext) =>
   fu.compose2(emptyAccumulatorCallback, (lc) =>
-    setParserOutput(lineContext[PROP_PARSER].acc, lc)
+    setParserOutput(decorator(lc), lc)
   )(lineContext);
 
 const mode = {
@@ -110,13 +123,13 @@ const mode = {
   },
   PLAIN_GROUP_BLOCK: {
     beginMark: emptyAccumulatorCallback,
-    endMark: consumeAccumulatorCallback,
+    endMark: consumeAccumulatorCallback(plainAccumulatorDecorator),
     block: addToAccumulatorCallback(plainDecorator),
     notBlock: emptyCallback,
   },
   INFO_GROUP_BLOCK: {
     beginMark: emptyAccumulatorCallback,
-    endMark: consumeAccumulatorCallback,
+    endMark: consumeAccumulatorCallback(infoAccumulatorDecorator),
     block: addToAccumulatorCallback(infoDecorator),
     notBlock: emptyCallback,
   },
@@ -143,7 +156,7 @@ class Parser {
   }
 
   parseLines(lines) {
-    return Parser.flush(
+    return this.flush(
       lines.reduce(
         this.parserReducer.bind(this), //bind to preserve context
         Parser.initialLineContext()
@@ -159,13 +172,10 @@ class Parser {
     )(lineContext);
   }
 
-  static flush = (lineContext) => {
-    //fu.log("FLUSH acc: ", lineContext[PROP_PARSER]);
-    if (lineContext[PROP_PARSER].acc.length === 0) {
-      return lineContext;
-    }
-    return fu.compose2(appendToResult, consumeAccumulatorCallback)(lineContext);
-  };
+  flush = (lineContext) =>
+    lineContext[PROP_PARSER].acc.length > 0
+      ? fu.compose2(appendToResult, this.callbacks.endMark)(lineContext)
+      : lineContext;
 
   parserReducer(lineContext, line) {
     let lc = Parser.consumeLine(line, lineContext);
@@ -176,6 +186,8 @@ class Parser {
       if (lc.line.trim() === this.beginMark) {
         //fu.log("BEGIN MARK");
         pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
+        pState.startTagLine = lc.line;
+        pState.endTagLine = null;
         pState.type = "beginMark";
         lc = this.callbacks.beginMark(lc);
       } else {
@@ -187,8 +199,10 @@ class Parser {
       if (lc.line.trim() === this.endMark) {
         //fu.log("END MARK");
         pState.type = "endMark";
+        pState.endTagLine = lc.line;
         lc = this.callbacks.endMark(lc);
         lc[PROP_PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+        lc[PROP_PARSER].startTagLine = null;
       } else {
         //fu.log("BLOCK");
         pState.type = "block";

@@ -115,3 +115,12 @@ const linesWithBlockNotClosed2 = [
   "--   To see a lamb at school.",
 ];
 testLines(linesWithBlockNotClosed2, "linesWithBlockNotClosed2");
+
+fu.log(
+  "======INFO BLOCK MODE detail============================================================================"
+);
+parser2.setMode(LBP.mode.INFO_GROUP_BLOCK);
+const res = parser2.parseLines(linesWithBlockNotClosed2);
+fu.log("", res);
+fu.log("data[0]-------------");
+fu.log("", res[0].data);
