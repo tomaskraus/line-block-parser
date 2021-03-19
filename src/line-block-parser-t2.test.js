@@ -1,7 +1,7 @@
 const fu = require("./func-utils");
-const LBP = require("./line-block-parser");
+const { Parser } = require("./line-block-parser");
 
-const parser2 = LBP.Parser.create("/*", "*/");
+const parser2 = Parser.create("/*", "*/");
 
 const testLines = (lines, label = "") => {
   fu.log(
@@ -10,23 +10,23 @@ const testLines = (lines, label = "") => {
   fu.log("", lines);
 
   fu.log("-- parser2 (PLAIN_FLAT_BLOCK mode) ---------");
-  parser2.setMode(LBP.mode.PLAIN_FLAT_BLOCK);
+  parser2.setMode(Parser.mode.PLAIN_FLAT_BLOCK);
   fu.log("", parser2.parseLines(lines));
 
   fu.log("-- parser2 (PLAIN_FLAT_NOT_BLOCK mode) ---------");
-  parser2.setMode(LBP.mode.PLAIN_FLAT_NOT_BLOCK);
+  parser2.setMode(Parser.mode.PLAIN_FLAT_NOT_BLOCK);
   fu.log("", parser2.parseLines(lines));
 
   fu.log("-- parser2 (INFO_FLAT_ALL mode) ---------");
-  parser2.setMode(LBP.mode.INFO_FLAT_ALL);
+  parser2.setMode(Parser.mode.INFO_FLAT_ALL);
   fu.log("", parser2.parseLines(lines));
 
   fu.log("-- parser2 (PLAIN_GROUP_BLOCK mode) ---------");
-  parser2.setMode(LBP.mode.PLAIN_GROUP_BLOCK);
+  parser2.setMode(Parser.mode.PLAIN_GROUP_BLOCK);
   fu.log("", parser2.parseLines(lines));
 
   fu.log("-- parser2 (INFO_GROUP_BLOCK mode) ---------");
-  parser2.setMode(LBP.mode.INFO_GROUP_BLOCK);
+  parser2.setMode(Parser.mode.INFO_GROUP_BLOCK);
   fu.log("", parser2.parseLines(lines));
 };
 
@@ -119,7 +119,7 @@ testLines(linesWithBlockNotClosed2, "linesWithBlockNotClosed2");
 fu.log(
   "======INFO BLOCK MODE detail============================================================================"
 );
-parser2.setMode(LBP.mode.INFO_GROUP_BLOCK);
+parser2.setMode(Parser.mode.INFO_GROUP_BLOCK);
 const res = parser2.parseLines(linesWithBlockNotClosed2);
 fu.log("", res);
 fu.log("data[0]-------------");

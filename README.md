@@ -8,10 +8,10 @@ We can choose those marks.
 Simple example:
 
 ```js
-const LBP = require("line-block-parser");
+const { Parser } = require("line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = LBP.Parser.create("/*", "*/"); //params: begin mark, end mark
+const jsCommentParser = Parser.create("/*", "*/"); //params: start tag, end tag
 
 //these are lines to parse
 const lines = [

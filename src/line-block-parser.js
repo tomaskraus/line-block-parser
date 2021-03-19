@@ -96,48 +96,48 @@ const flushAccumulatorCallback = (decorator) => (lineContext) =>
     setParserOutput(decorator(lc), lc)
   )(lineContext);
 
-const mode = {
-  PLAIN_FLAT_ALL: {
-    startTagCB: plainCallback,
-    endTagCB: plainCallback,
-    blockCB: plainCallback,
-    notBlockCB: plainCallback,
-  },
-  PLAIN_FLAT_BLOCK: {
-    startTagCB: plainCallback,
-    endTagCB: plainCallback,
-    blockCB: plainCallback,
-    notBlockCB: emptyCallback,
-  },
-  PLAIN_FLAT_NOT_BLOCK: {
-    startTagCB: emptyCallback,
-    endTagCB: emptyCallback,
-    blockCB: emptyCallback,
-    notBlockCB: plainCallback,
-  },
-  INFO_FLAT_ALL: {
-    startTagCB: infoCallback,
-    endTagCB: infoCallback,
-    blockCB: infoCallback,
-    notBlockCB: infoCallback,
-  },
-  PLAIN_GROUP_BLOCK: {
-    startTagCB: emptyTheAccumulatorCallback,
-    endTagCB: flushAccumulatorCallback(plainAccumulatorDecorator),
-    blockCB: addToAccumulatorCallback(plainDecorator),
-    notBlockCB: emptyCallback,
-  },
-  INFO_GROUP_BLOCK: {
-    startTagCB: emptyTheAccumulatorCallback,
-    endTagCB: flushAccumulatorCallback(infoAccumulatorDecorator),
-    blockCB: addToAccumulatorCallback(infoDecorator),
-    notBlockCB: emptyCallback,
-  },
-};
-
 class Parser {
+  static mode = {
+    PLAIN_FLAT_ALL: {
+      startTagCB: plainCallback,
+      endTagCB: plainCallback,
+      blockCB: plainCallback,
+      notBlockCB: plainCallback,
+    },
+    PLAIN_FLAT_BLOCK: {
+      startTagCB: plainCallback,
+      endTagCB: plainCallback,
+      blockCB: plainCallback,
+      notBlockCB: emptyCallback,
+    },
+    PLAIN_FLAT_NOT_BLOCK: {
+      startTagCB: emptyCallback,
+      endTagCB: emptyCallback,
+      blockCB: emptyCallback,
+      notBlockCB: plainCallback,
+    },
+    INFO_FLAT_ALL: {
+      startTagCB: infoCallback,
+      endTagCB: infoCallback,
+      blockCB: infoCallback,
+      notBlockCB: infoCallback,
+    },
+    PLAIN_GROUP_BLOCK: {
+      startTagCB: emptyTheAccumulatorCallback,
+      endTagCB: flushAccumulatorCallback(plainAccumulatorDecorator),
+      blockCB: addToAccumulatorCallback(plainDecorator),
+      notBlockCB: emptyCallback,
+    },
+    INFO_GROUP_BLOCK: {
+      startTagCB: emptyTheAccumulatorCallback,
+      endTagCB: flushAccumulatorCallback(infoAccumulatorDecorator),
+      blockCB: addToAccumulatorCallback(infoDecorator),
+      notBlockCB: emptyCallback,
+    },
+  };
+
   static defaultCallbacks() {
-    return mode.PLAIN_GROUP_BLOCK;
+    return Parser.mode.INFO_GROUP_BLOCK;
   }
 
   constructor(startTag, endTag) {
@@ -172,9 +172,10 @@ class Parser {
     )(lineContext);
   }
 
+  //considered the same effect as end-tag callback call, but only for non-empty accumulator
   flush = (lineContext) =>
     lineContext[PROP_PARSER].acc.length > 0
-      ? fu.compose2(appendToResult, this.callbacks.endTagCB)(lineContext) //callbacks.endTagCB usually flushes the block
+      ? fu.compose2(appendToResult, this.callbacks.endTagCB)(lineContext)
       : lineContext;
 
   parserReducer(lineContext, line) {
@@ -225,5 +226,4 @@ class Parser {
 
 module.exports = {
   Parser,
-  mode,
 };
