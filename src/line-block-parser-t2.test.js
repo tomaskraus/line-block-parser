@@ -30,6 +30,9 @@ const testLines = (lines, label = "") => {
   fu.log("", parser2.parseLines(lines));
 };
 
+const emptyLines = [];
+testLines(emptyLines, "emptyLines");
+
 const lines = [
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
   "Mary had a little lamb,",
