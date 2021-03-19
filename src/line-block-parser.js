@@ -89,10 +89,10 @@ const addToAccumulatorCallback = (decorator) => (lineContext) =>
     lineContext
   );
 
-const emptyAccumulatorCallback = setParserState("acc", []);
+const emptyTheAccumulatorCallback = setParserState("acc", []);
 
-const consumeAccumulatorCallback = (decorator) => (lineContext) =>
-  fu.compose2(emptyAccumulatorCallback, (lc) =>
+const flushAccumulatorCallback = (decorator) => (lineContext) =>
+  fu.compose2(emptyTheAccumulatorCallback, (lc) =>
     setParserOutput(decorator(lc), lc)
   )(lineContext);
 
@@ -122,14 +122,14 @@ const mode = {
     notBlockCB: infoCallback,
   },
   PLAIN_GROUP_BLOCK: {
-    startTagCB: emptyAccumulatorCallback,
-    endTagCB: consumeAccumulatorCallback(plainAccumulatorDecorator),
+    startTagCB: emptyTheAccumulatorCallback,
+    endTagCB: flushAccumulatorCallback(plainAccumulatorDecorator),
     blockCB: addToAccumulatorCallback(plainDecorator),
     notBlockCB: emptyCallback,
   },
   INFO_GROUP_BLOCK: {
-    startTagCB: emptyAccumulatorCallback,
-    endTagCB: consumeAccumulatorCallback(infoAccumulatorDecorator),
+    startTagCB: emptyTheAccumulatorCallback,
+    endTagCB: flushAccumulatorCallback(infoAccumulatorDecorator),
     blockCB: addToAccumulatorCallback(infoDecorator),
     notBlockCB: emptyCallback,
   },
