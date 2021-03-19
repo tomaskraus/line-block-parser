@@ -98,40 +98,40 @@ const consumeAccumulatorCallback = (decorator) => (lineContext) =>
 
 const mode = {
   PLAIN_FLAT_ALL: {
-    beginMark: plainCallback,
-    endMark: plainCallback,
-    block: plainCallback,
-    notBlock: plainCallback,
+    startTagCB: plainCallback,
+    endTagCB: plainCallback,
+    blockCB: plainCallback,
+    notBlockCB: plainCallback,
   },
   PLAIN_FLAT_BLOCK: {
-    beginMark: plainCallback,
-    endMark: plainCallback,
-    block: plainCallback,
-    notBlock: emptyCallback,
+    startTagCB: plainCallback,
+    endTagCB: plainCallback,
+    blockCB: plainCallback,
+    notBlockCB: emptyCallback,
   },
   PLAIN_FLAT_NOT_BLOCK: {
-    beginMark: emptyCallback,
-    endMark: emptyCallback,
-    block: emptyCallback,
-    notBlock: plainCallback,
+    startTagCB: emptyCallback,
+    endTagCB: emptyCallback,
+    blockCB: emptyCallback,
+    notBlockCB: plainCallback,
   },
   INFO_FLAT_ALL: {
-    beginMark: infoCallback,
-    endMark: infoCallback,
-    block: infoCallback,
-    notBlock: infoCallback,
+    startTagCB: infoCallback,
+    endTagCB: infoCallback,
+    blockCB: infoCallback,
+    notBlockCB: infoCallback,
   },
   PLAIN_GROUP_BLOCK: {
-    beginMark: emptyAccumulatorCallback,
-    endMark: consumeAccumulatorCallback(plainAccumulatorDecorator),
-    block: addToAccumulatorCallback(plainDecorator),
-    notBlock: emptyCallback,
+    startTagCB: emptyAccumulatorCallback,
+    endTagCB: consumeAccumulatorCallback(plainAccumulatorDecorator),
+    blockCB: addToAccumulatorCallback(plainDecorator),
+    notBlockCB: emptyCallback,
   },
   INFO_GROUP_BLOCK: {
-    beginMark: emptyAccumulatorCallback,
-    endMark: consumeAccumulatorCallback(infoAccumulatorDecorator),
-    block: addToAccumulatorCallback(infoDecorator),
-    notBlock: emptyCallback,
+    startTagCB: emptyAccumulatorCallback,
+    endTagCB: consumeAccumulatorCallback(infoAccumulatorDecorator),
+    blockCB: addToAccumulatorCallback(infoDecorator),
+    notBlockCB: emptyCallback,
   },
 };
 
@@ -140,14 +140,14 @@ class Parser {
     return mode.PLAIN_GROUP_BLOCK;
   }
 
-  constructor(beginMark, endMark) {
-    this.beginMark = beginMark;
-    this.endMark = endMark;
+  constructor(startTag, endTag) {
+    this.startTag = startTag;
+    this.endTag = endTag;
     this.callbacks = Parser.defaultCallbacks();
   }
 
-  static create(beginkMark, endMark) {
-    return new Parser(beginkMark, endMark);
+  static create(startTag, beginTag) {
+    return new Parser(startTag, beginTag);
   }
 
   setMode(callbacks) {
@@ -174,7 +174,7 @@ class Parser {
 
   flush = (lineContext) =>
     lineContext[PROP_PARSER].acc.length > 0
-      ? fu.compose2(appendToResult, this.callbacks.endMark)(lineContext)
+      ? fu.compose2(appendToResult, this.callbacks.endTagCB)(lineContext) //callbacks.endTagCB usually flushes the block
       : lineContext;
 
   parserReducer(lineContext, line) {
@@ -183,30 +183,30 @@ class Parser {
 
     //fu.log("line: ", `'${lc.line}'`);
     if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (lc.line.trim() === this.beginMark) {
-        //fu.log("BEGIN MARK");
+      if (lc.line.trim() === this.startTag) {
+        //fu.log("START TAG");
         pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
         pState.startTagLine = lc.line;
         pState.endTagLine = null;
-        pState.type = "beginMark";
-        lc = this.callbacks.beginMark(lc);
+        pState.type = "startTag";
+        lc = this.callbacks.startTagCB(lc);
       } else {
         //fu.log("NOT BLOCK");
         pState.type = "notBlock";
-        lc = this.callbacks.notBlock(lc);
+        lc = this.callbacks.notBlockCB(lc);
       }
     } else {
-      if (lc.line.trim() === this.endMark) {
-        //fu.log("END MARK");
-        pState.type = "endMark";
+      if (lc.line.trim() === this.endTag) {
+        //fu.log("END TAG");
+        pState.type = "endTag";
         pState.endTagLine = lc.line;
-        lc = this.callbacks.endMark(lc);
+        lc = this.callbacks.endTagCB(lc);
         lc[PROP_PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
         lc[PROP_PARSER].startTagLine = null;
       } else {
         //fu.log("BLOCK");
         pState.type = "block";
-        lc = this.callbacks.block(lc);
+        lc = this.callbacks.blockCB(lc);
       }
     }
 
