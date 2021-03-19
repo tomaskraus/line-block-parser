@@ -146,7 +146,7 @@ class Parser {
     return Parser.flush(
       lines.reduce(
         this.parserReducer.bind(this), //bind to preserve context
-        createInitialLineContextWithParser(initialLineContext)
+        Parser.initialLineContext()
       )
     )[PROP_RESULT];
   }
@@ -201,15 +201,15 @@ class Parser {
     }
     return lc;
   }
+
+  static initialLineContext = () =>
+    fu.compose2(
+      fu.setProp(PROP_RESULT, []),
+      fu.setProp(PROP_PARSER, initialParserState)
+    )(initialLineContext);
 }
 
-const createInitialLineContextWithParser = fu.compose2(
-  fu.setProp(PROP_RESULT, []),
-  fu.setProp(PROP_PARSER, initialParserState)
-);
-
 module.exports = {
-  initialLineContext,
   Parser,
   mode,
 };
