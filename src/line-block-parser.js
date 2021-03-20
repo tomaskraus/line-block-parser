@@ -101,40 +101,40 @@ const MakeSafeEndBlockRegExp = (s) =>
 
 class Parser {
   static mode = {
-    PLAIN_FLAT_BLOCK: {
+    BLOCK_PLAIN_FLAT: {
       startTagCB: plainCallback,
       endTagCB: plainCallback,
       blockCB: plainCallback,
       notBlockCB: emptyCallback,
     },
-    PLAIN_FLAT_NOT_BLOCK: {
-      startTagCB: emptyCallback,
-      endTagCB: emptyCallback,
-      blockCB: emptyCallback,
-      notBlockCB: plainCallback,
-    },
-    INFO_FLAT_ALL: {
-      startTagCB: infoCallback,
-      endTagCB: infoCallback,
-      blockCB: infoCallback,
-      notBlockCB: infoCallback,
-    },
-    PLAIN_GROUP_BLOCK: {
+    BLOCK_PLAIN_GROUP: {
       startTagCB: emptyTheAccumulatorCallback,
       endTagCB: flushAccumulatorCallback(plainAccumulatorDecorator),
       blockCB: addToAccumulatorCallback(plainDecorator),
       notBlockCB: emptyCallback,
     },
-    INFO_GROUP_BLOCK: {
+    BLOCK_INFO_GROUP: {
       startTagCB: emptyTheAccumulatorCallback,
       endTagCB: flushAccumulatorCallback(infoAccumulatorDecorator),
       blockCB: addToAccumulatorCallback(infoDecorator),
       notBlockCB: emptyCallback,
     },
+    NOTBLOCK_PLAIN_FLAT: {
+      startTagCB: emptyCallback,
+      endTagCB: emptyCallback,
+      blockCB: emptyCallback,
+      notBlockCB: plainCallback,
+    },
+    ALL_INFO_FLAT: {
+      startTagCB: infoCallback,
+      endTagCB: infoCallback,
+      blockCB: infoCallback,
+      notBlockCB: infoCallback,
+    },
   };
 
   static defaultCallbacks() {
-    return Parser.mode.INFO_GROUP_BLOCK;
+    return Parser.mode.BLOCK_INFO_GROUP;
   }
 
   constructor(startTagStr, endTagStr) {

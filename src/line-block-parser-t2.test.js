@@ -9,24 +9,24 @@ const testLines = (lines, label = "") => {
   );
   fu.log("", lines);
 
-  fu.log("-- parser2 (PLAIN_FLAT_BLOCK mode) ---------");
-  parser2.setMode(Parser.mode.PLAIN_FLAT_BLOCK);
+  fu.log("-- parser2 (BLOCK_PLAIN_FLAT mode) ---------");
+  parser2.setMode(Parser.mode.BLOCK_PLAIN_FLAT);
   fu.log("", parser2.parseLines(lines));
 
-  fu.log("-- parser2 (PLAIN_FLAT_NOT_BLOCK mode) ---------");
-  parser2.setMode(Parser.mode.PLAIN_FLAT_NOT_BLOCK);
+  fu.log("-- parser2 (NOTBLOCK_PLAIN_FLAT mode) ---------");
+  parser2.setMode(Parser.mode.NOTBLOCK_PLAIN_FLAT);
   fu.log("", parser2.parseLines(lines));
 
-  fu.log("-- parser2 (INFO_FLAT_ALL mode) ---------");
-  parser2.setMode(Parser.mode.INFO_FLAT_ALL);
+  fu.log("-- parser2 (ALL_INFO_FLAT mode) ---------");
+  parser2.setMode(Parser.mode.ALL_INFO_FLAT);
   fu.log("", parser2.parseLines(lines));
 
-  fu.log("-- parser2 (PLAIN_GROUP_BLOCK mode) ---------");
-  parser2.setMode(Parser.mode.PLAIN_GROUP_BLOCK);
+  fu.log("-- parser2 (BLOCK_PLAIN_GROUP mode) ---------");
+  parser2.setMode(Parser.mode.BLOCK_PLAIN_GROUP);
   fu.log("", parser2.parseLines(lines));
 
-  fu.log("-- parser2 (INFO_GROUP_BLOCK mode) ---------");
-  parser2.setMode(Parser.mode.INFO_GROUP_BLOCK);
+  fu.log("-- parser2 (BLOCK_INFO_GROUP mode) ---------");
+  parser2.setMode(Parser.mode.BLOCK_INFO_GROUP);
   fu.log("", parser2.parseLines(lines));
 };
 
@@ -171,7 +171,7 @@ testLines(
 fu.log(
   "======INFO BLOCK MODE detail===(linesWithBlockNotClosed2)========================================================================="
 );
-parser2.setMode(Parser.mode.INFO_GROUP_BLOCK);
+parser2.setMode(Parser.mode.BLOCK_INFO_GROUP);
 const res = parser2.parseLines(linesWithBlockNotClosed2);
 fu.log("", res);
 fu.log("data[0]-------------");
