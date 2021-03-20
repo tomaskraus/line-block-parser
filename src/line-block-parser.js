@@ -96,6 +96,12 @@ const flushAccumulatorCallback = (decorator) => (lineContext) =>
     setParserOutput(decorator(lc), lc)
   )(lineContext);
 
+// from: https://stackoverflow.com/questions/4371565/create-regexps-on-the-fly-using-string-variables
+const escapeRegExp = (s) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+
+const MakeSpaceSafeRegExpFromString = (s) =>
+  new RegExp("^\\s*" + escapeRegExp(s) + "(\\s+.*|\\s*)$");
+
 class Parser {
   static mode = {
     PLAIN_FLAT_ALL: {
@@ -140,14 +146,14 @@ class Parser {
     return Parser.mode.INFO_GROUP_BLOCK;
   }
 
-  constructor(startTag, endTag) {
-    this.startTag = startTag;
-    this.endTag = endTag;
+  constructor(startTagStr, endTagStr) {
+    this.startTagRegExp = MakeSpaceSafeRegExpFromString(startTagStr);
+    this.endTagRegExp = MakeSpaceSafeRegExpFromString(endTagStr);
     this.callbacks = Parser.defaultCallbacks();
   }
 
-  static create(startTag, beginTag) {
-    return new Parser(startTag, beginTag);
+  static create(startTagStr, endTagStr) {
+    return new Parser(startTagStr, endTagStr);
   }
 
   setMode(callbacks) {
@@ -184,7 +190,7 @@ class Parser {
 
     //fu.log("line: ", `'${lc.line}'`);
     if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (lc.line.trim() === this.startTag) {
+      if (this.startTagRegExp.test(lc.line)) {
         //fu.log("START TAG");
         pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
         pState.startTagLine = lc.line;
@@ -197,7 +203,7 @@ class Parser {
         lc = this.callbacks.notBlockCB(lc);
       }
     } else {
-      if (lc.line.trim() === this.endTag) {
+      if (this.endTagRegExp.test(lc.line)) {
         //fu.log("END TAG");
         pState.type = "endTag";
         pState.endTagLine = lc.line;
