@@ -119,8 +119,19 @@ const linesWithBlockNotClosed2 = [
 ];
 testLines(linesWithBlockNotClosed2, "linesWithBlockNotClosed2");
 
+const linesWithBlockNotClosed3 = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "--  Its fleece was white as snow,",
+  "And every where that Mary went",
+  "",
+  "   The lamb was sure to go ;",
+  "/*",
+];
+testLines(linesWithBlockNotClosed3, "linesWithBlockNotClosed3");
+
 fu.log(
-  "======INFO BLOCK MODE detail============================================================================"
+  "======INFO BLOCK MODE detail===(linesWithBlockNotClosed2)========================================================================="
 );
 parser2.setMode(Parser.mode.INFO_GROUP_BLOCK);
 const res = parser2.parseLines(linesWithBlockNotClosed2);
