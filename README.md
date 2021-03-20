@@ -1,17 +1,17 @@
 # Line Block Parser
 
-Recognizes block of lines, enclosed in marks - such as comment blocks etc.
-We can choose those marks.
+Recognizes multi-line blocks - such as block comments etc.
+Simple to use, yet quite powerful.
 
 ## Usage
 
-Simple example:
+### Simple example:
 
 ```js
 const { Parser } = require("line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = Parser.create("/*", "*/"); //params: start tag, end tag
+const jsCommentParser = Parser.create("/*", "*/"); //parameters: start tag, end tag
 
 //these are lines to parse
 const lines = [
@@ -20,12 +20,12 @@ const lines = [
   "/*",
   "  Its fleece was white as snow,",
   "And every where that Mary went",
-  "*/",
+  " */",
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
-  "/*",
+  " /* ",
   "   That was against the rule,",
-  "*/",
+  "*/ ",
   "It made the children laugh and play,",
   "   To see a lamb at school.",
 ];
