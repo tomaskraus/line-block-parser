@@ -161,7 +161,7 @@ class Parser {
     return this.flush(
       lines.reduce(
         this.parserReducer.bind(this), //bind to preserve context
-        Parser.initialLineContext()
+        Parser.createInitialLineContext()
       )
     )[PROP_RESULT];
   }
@@ -219,7 +219,7 @@ class Parser {
     return lc;
   }
 
-  static initialLineContext = () =>
+  static createInitialLineContext = () =>
     fu.compose2(
       fu.setProp(PROP_RESULT, []),
       fu.setProp(PROP_PARSER, initialParserState)
