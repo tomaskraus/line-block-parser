@@ -130,6 +130,24 @@ const linesWithBlockNotClosed3 = [
 ];
 testLines(linesWithBlockNotClosed3, "linesWithBlockNotClosed3");
 
+const linesWithBlockNotClosed_withTagDescription = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "/*",
+  "--  Its fleece was white as snow,",
+  "*/",
+  "And every where that Mary went",
+  "   The lamb was sure to go ;",
+  "/*  this is the last tag  ",
+  "--He followed her to school one day-",
+  "--It made the children laugh and play,",
+  "--   To see a lamb at school.",
+];
+testLines(
+  linesWithBlockNotClosed_withTagDescription,
+  "linesWithBlockNotClosed_withTagDescription"
+);
+
 fu.log(
   "======INFO BLOCK MODE detail===(linesWithBlockNotClosed2)========================================================================="
 );
