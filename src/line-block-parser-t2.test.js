@@ -135,7 +135,7 @@ const linesWithBlockNotClosed_withTagDescription = [
   "Mary had a little lamb,",
   "/*",
   "--  Its fleece was white as snow,",
-  "*/  the first end tag",
+  "the first end tag*/",
   "And every where that Mary went",
   "   The lamb was sure to go ;",
   " /* this is the last tag  ",
@@ -148,24 +148,24 @@ testLines(
   "linesWithBlockNotClosed_withTagDescription"
 );
 
-const linesWithBlockNotClosed_illFormattedTagDescription = [
+const linesWithBlockNotClosed_more_WellFormattedTags = [
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
   "Mary had a little lamb,",
   "/*",
   "--  Its fleece was white as snow,",
-  "*/  the first end tag",
-  "/*illFormatedTag (no space before the description)",
+  "the first end tag*/  ",
+  " /*also well formatted start of a block",
   "And every where that Mary went",
-  " */illFormatedTag (no space before the description) ",
+  " also well formatted end of a block  */  ",
   "   The lamb was sure to go ;",
-  " /* this is the last tag  ",
+  " /* this is the last start tag  ",
   "--He followed her to school one day-",
   "--It made the children laugh and play,",
   "--   To see a lamb at school.",
 ];
 testLines(
-  linesWithBlockNotClosed_illFormattedTagDescription,
-  "linesWithBlockNotClosed_illFormattedTagDescription"
+  linesWithBlockNotClosed_more_WellFormattedTags,
+  "linesWithBlockNotClosed_more_WellFormattedTags"
 );
 
 fu.log(

@@ -55,18 +55,18 @@ const appendToResult = (lineContext) =>
 const plainDecorator = (lineContext) => lineContext[PROP_LINE];
 
 const infoDecorator = (lineContext) => ({
-    lineNumber: lineContext[PROP_LINE_NUMBER],
-    type: lineContext[PROP_PARSER].type,
-    line: lineContext[PROP_LINE],
+  lineNumber: lineContext[PROP_LINE_NUMBER],
+  type: lineContext[PROP_PARSER].type,
+  line: lineContext[PROP_LINE],
 });
 
 const plainAccumulatorDecorator = (lineContext) => lineContext[PROP_PARSER].acc;
 
 const infoAccumulatorDecorator = (lineContext) => ({
-    startLineNumber: lineContext[PROP_PARSER].beginBlockLineNum,
-    startTagLine: lineContext[PROP_PARSER].startTagLine,
-    endTagLine: lineContext[PROP_PARSER].endTagLine,
-    data: lineContext[PROP_PARSER].acc,
+  startLineNumber: lineContext[PROP_PARSER].beginBlockLineNum,
+  startTagLine: lineContext[PROP_PARSER].startTagLine,
+  endTagLine: lineContext[PROP_PARSER].endTagLine,
+  data: lineContext[PROP_PARSER].acc,
 });
 
 const emptyCallback = fu.id;
@@ -95,8 +95,11 @@ const flushAccumulatorCallback = (decorator) => (lineContext) =>
 // from: https://stackoverflow.com/questions/4371565/create-regexps-on-the-fly-using-string-variables
 const escapeRegExp = (s) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 
-const MakeSpaceSafeRegExpFromString = (s) =>
-  new RegExp("^\\s*" + escapeRegExp(s) + "(\\s+.*|\\s*)$");
+const MakeSafeStartBlockRegExp = (s) =>
+  new RegExp("^\\s*" + escapeRegExp(s) + "(.*)$");
+
+const MakeSafeEndBlockRegExp = (s) =>
+  new RegExp("^(.*)" + escapeRegExp(s) + "\\s*$");
 
 class Parser {
   static mode = {
@@ -143,8 +146,8 @@ class Parser {
   }
 
   constructor(startTagStr, endTagStr) {
-    this.startTagRegExp = MakeSpaceSafeRegExpFromString(startTagStr);
-    this.endTagRegExp = MakeSpaceSafeRegExpFromString(endTagStr);
+    this.startTagRegExp = MakeSafeStartBlockRegExp(startTagStr);
+    this.endTagRegExp = MakeSafeEndBlockRegExp(endTagStr);
     this.callbacks = Parser.defaultCallbacks();
   }
 
