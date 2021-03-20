@@ -36,9 +36,9 @@ const overParserState = fu.curry3((propName, fn, lineContext) => {
   return fu.setProp(PROP_PARSER, newParserState, lineContext);
 });
 
-const setParserState = fu.curry3((propName, value, lineContext) => {
-  return overParserState(propName, (_) => value, lineContext);
-});
+const setParserState = fu.curry3((propName, value, lineContext) =>
+  overParserState(propName, (_) => value, lineContext)
+);
 
 // setParserOutput :: a -> lineContext -> lineContext
 const setParserOutput = fu.curry2((value, lineContext) =>
@@ -54,24 +54,20 @@ const appendToResult = (lineContext) =>
 
 const plainDecorator = (lineContext) => lineContext[PROP_LINE];
 
-const infoDecorator = (lineContext) => {
-  return {
+const infoDecorator = (lineContext) => ({
     lineNumber: lineContext[PROP_LINE_NUMBER],
     type: lineContext[PROP_PARSER].type,
     line: lineContext[PROP_LINE],
-  };
-};
+});
 
 const plainAccumulatorDecorator = (lineContext) => lineContext[PROP_PARSER].acc;
 
-const infoAccumulatorDecorator = (lineContext) => {
-  return {
+const infoAccumulatorDecorator = (lineContext) => ({
     startLineNumber: lineContext[PROP_PARSER].beginBlockLineNum,
     startTagLine: lineContext[PROP_PARSER].startTagLine,
     endTagLine: lineContext[PROP_PARSER].endTagLine,
     data: lineContext[PROP_PARSER].acc,
-  };
-};
+});
 
 const emptyCallback = fu.id;
 
