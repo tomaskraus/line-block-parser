@@ -103,12 +103,6 @@ const MakeSafeEndBlockRegExp = (s) =>
 
 class Parser {
   static mode = {
-    PLAIN_FLAT_ALL: {
-      startTagCB: plainCallback,
-      endTagCB: plainCallback,
-      blockCB: plainCallback,
-      notBlockCB: plainCallback,
-    },
     PLAIN_FLAT_BLOCK: {
       startTagCB: plainCallback,
       endTagCB: plainCallback,
