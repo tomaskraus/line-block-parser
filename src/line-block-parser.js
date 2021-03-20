@@ -4,8 +4,6 @@
  *
  */
 
-//TODO add header to INFO_GROUP_BLOCK mode
-
 //TODO add proper begin-end pair check
 
 const fu = require("./func-utils");
