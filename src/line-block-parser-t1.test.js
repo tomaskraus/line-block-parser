@@ -1,5 +1,5 @@
 const fu = require("./func-utils");
-const { Parser } = require("./line-block-parser");
+const { Parser, Tags } = require("./line-block-parser");
 
 const lines = [
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
@@ -22,7 +22,7 @@ fu.log(lines);
 
 fu.log("-------");
 
-const parser = Parser.create("/*", "*/");
+const parser = Parser.create(Tags.js_block.start, Tags.js_block.end);
 fu.log("parser", parser);
 
 fu.log("-- parser ---------");
@@ -30,7 +30,7 @@ fu.log("", parser.parseLines(lines));
 
 fu.log("-------");
 
-const parser2 = Parser.create("/*", "*/");
+const parser2 = Parser.create(Tags.js_block.start, Tags.js_block.end);
 fu.log("parser2", parser2);
 fu.log("orig:", parser);
 

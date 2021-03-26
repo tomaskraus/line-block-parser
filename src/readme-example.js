@@ -1,7 +1,7 @@
-const { Parser } = require("./line-block-parser");
+const { Parser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = Parser.create("/*", "*/"); //params: start tag, end tag
+const jsCommentParser = Parser.create(Tags.js_block.start, Tags.js_block.end); //params: start tag, end tag
 
 //these are lines to parse
 const lines = [

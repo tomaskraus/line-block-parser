@@ -93,11 +93,13 @@ const flushAccumulatorCallback = (decorator) => (lineContext) =>
 // from: https://stackoverflow.com/questions/4371565/create-regexps-on-the-fly-using-string-variables
 const escapeRegExp = (s) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
 
-const MakeSafeStartBlockRegExp = (s) =>
-  new RegExp("^\\s*" + escapeRegExp(s) + "(.*)$");
-
-const MakeSafeEndBlockRegExp = (s) =>
-  new RegExp("^(.*)" + escapeRegExp(s) + "\\s*$");
+const Tags = {
+  js_block: {
+    start: /^\s*\/\*(.*)$/,
+    end: /^(.*)\*\/\s*$/,
+  },
+  js_line: {},
+};
 
 class Parser {
   static mode = {
@@ -137,14 +139,14 @@ class Parser {
     return Parser.mode.BLOCK_INFO_GROUP;
   }
 
-  constructor(startTagStr, endTagStr) {
-    this.startTagRegExp = MakeSafeStartBlockRegExp(startTagStr);
-    this.endTagRegExp = MakeSafeEndBlockRegExp(endTagStr);
+  constructor(startTagRegExp, endTagRegExp) {
+    this.startTagRegExp = startTagRegExp;
+    this.endTagRegExp = endTagRegExp;
     this.callbacks = Parser.defaultCallbacks();
   }
 
-  static create(startTagStr, endTagStr) {
-    return new Parser(startTagStr, endTagStr);
+  static create(startTagRegExp, endTagRegExp) {
+    return new Parser(startTagRegExp, endTagRegExp);
   }
 
   setMode(callbacks) {
@@ -223,4 +225,5 @@ class Parser {
 
 module.exports = {
   Parser,
+  Tags,
 };
