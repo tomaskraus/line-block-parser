@@ -181,13 +181,13 @@ class Parser {
     )[PROP_RESULT];
   }
 
-  static consumeLine(line, lineContext) {
-    return fu.compose3(
+  static consumeLine = fu.curry2((line, lineContext) =>
+    fu.compose3(
       setParserOutput(null),
       fu.overProp(PROP_LINE_NUMBER, (x) => x + 1),
       fu.setProp(PROP_LINE, line)
-    )(lineContext);
-  }
+    )(lineContext)
+  );
 
   //considered the same effect as end-tag callback call, but only for non-empty accumulator
   flush = (lineContext) =>
@@ -196,8 +196,10 @@ class Parser {
       : lineContext;
 
   parserReducer(lineContext, line) {
-    let lc = Parser.consumeLine(line, lineContext);
-    lc = this.lexer.consume(lc);
+    let lc = fu.compose2(
+      this.lexer.consume,
+      Parser.consumeLine(line)
+    )(lineContext);
     // fu.log(lc);
 
     let pState = lc[PROP_PARSER];
