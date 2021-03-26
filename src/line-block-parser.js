@@ -12,6 +12,12 @@ const PROP_LINE = "line";
 const PROP_LINE_NUMBER = "lineNumber";
 const PROP_RESULT = "result";
 const PROP_PARSER = "parser";
+const PROP_LEXER = "lexer";
+
+const LEXER_INIT = "init";
+const LEXER_START_TAG = "startTag";
+const LEXER_END_TAG = "endTag";
+const LEXER_LINE = "line";
 
 const initialLineContext = {};
 initialLineContext[PROP_LINE_NUMBER] = 0;
@@ -101,6 +107,19 @@ const Tags = {
   js_line: {},
 };
 
+const createLexer = (startTagRegExp, endTagRegExp = null) => {
+  return {
+    consume: (lc) => {
+      if (startTagRegExp.test(lc.line))
+        return fu.setProp(PROP_LEXER, LEXER_START_TAG, lc);
+      if (endTagRegExp !== null && endTagRegExp.test(lc.line))
+        return fu.setProp(PROP_LEXER, LEXER_END_TAG, lc);
+
+      return fu.setProp(PROP_LEXER, LEXER_LINE, lc);
+    },
+  };
+};
+
 class Parser {
   static mode = {
     BLOCK_PLAIN_FLAT: {
@@ -140,8 +159,7 @@ class Parser {
   }
 
   constructor(startTagRegExp, endTagRegExp) {
-    this.startTagRegExp = startTagRegExp;
-    this.endTagRegExp = endTagRegExp;
+    this.lexer = createLexer(startTagRegExp, endTagRegExp);
     this.callbacks = Parser.defaultCallbacks();
   }
 
@@ -179,11 +197,14 @@ class Parser {
 
   parserReducer(lineContext, line) {
     let lc = Parser.consumeLine(line, lineContext);
+    lc = this.lexer.consume(lc);
+    // fu.log(lc);
+
     let pState = lc[PROP_PARSER];
 
     //fu.log("line: ", `'${lc.line}'`);
     if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (this.startTagRegExp.test(lc.line)) {
+      if (lc[PROP_LEXER] === LEXER_START_TAG) {
         //fu.log("START TAG");
         pState.beginBlockLineNum = lc[PROP_LINE_NUMBER] + 1;
         pState.startTagLine = lc.line;
@@ -196,7 +217,7 @@ class Parser {
         lc = this.callbacks.notBlockCB(lc);
       }
     } else {
-      if (this.endTagRegExp.test(lc.line)) {
+      if (lc[PROP_LEXER] === LEXER_END_TAG) {
         //fu.log("END TAG");
         pState.type = "endTag";
         pState.endTagLine = lc.line;
@@ -217,9 +238,10 @@ class Parser {
   }
 
   static createInitialLineContext = () =>
-    fu.compose2(
+    fu.compose3(
       fu.setProp(PROP_RESULT, []),
-      fu.setProp(PROP_PARSER, initialParserState)
+      fu.setProp(PROP_PARSER, initialParserState),
+      fu.setProp(PROP_LEXER, LEXER_INIT)
     )(initialLineContext);
 }
 
