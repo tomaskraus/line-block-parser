@@ -24,7 +24,7 @@ const LEXER = {
 
 const initialLineContext = {};
 initialLineContext[LC.LINE_NUMBER] = 0;
-initialLineContext[LC.LINE] = "";
+initialLineContext[LC.LINE] = null;
 
 const NO_BLOCK_BEGIN = -1;
 
