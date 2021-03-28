@@ -1,7 +1,7 @@
 const fu = require("./func-utils");
-const { Parser } = require("./line-block-parser");
+const { Parser, Tags } = require("./line-block-parser");
 
-const parser2 = Parser.create("/*", "*/");
+const parser2 = Parser.create(Tags.js_block.start, Tags.js_block.end);
 
 const testLines = (lines, label = "") => {
   fu.log(
