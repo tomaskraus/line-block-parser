@@ -11,9 +11,8 @@ const fu = require("./func-utils");
 const LC = {
   LINE: "line",
   LINE_NUMBER: "lineNumber",
-  RESULT: "result",
   PARSER: "parser",
-  LEXER: "lexer",
+  RESULT: "result",
 };
 
 const LEXER = {
@@ -113,13 +112,22 @@ const Tags = {
 
 const createLexer = (startTagRegExp, endTagRegExp = null) => {
   return {
+    // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
     consume: (lc) => {
       if (startTagRegExp.test(lc.line))
-        return fu.setProp(LC.LEXER, LEXER.START_TAG, lc);
+        return fu.overProp(
+          LC.LINE,
+          (s) => ({ type: LEXER.START_TAG, data: s }),
+          lc
+        );
       if (endTagRegExp !== null && endTagRegExp.test(lc.line))
-        return fu.setProp(LC.LEXER, LEXER.END_TAG, lc);
+        return fu.overProp(
+          LC.LINE,
+          (s) => ({ type: LEXER.END_TAG, data: s }),
+          lc
+        );
 
-      return fu.setProp(LC.LEXER, LEXER.LINE, lc);
+      return fu.overProp(LC.LINE, (s) => ({ type: LEXER.LINE, data: s }), lc);
     },
   };
 };
@@ -204,35 +212,44 @@ class Parser {
       this.lexer.consume,
       Parser.consumeLine(line)
     )(lineContext);
-    // fu.log(lc);
+    //fu.log(lc);
 
     let pState = lc[LC.PARSER];
 
     //fu.log("line: ", `'${lc.line}'`);
     if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (lc[LC.LEXER] === LEXER.START_TAG) {
+      if (lc.line.type === LEXER.START_TAG) {
         //fu.log("START TAG");
         pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
-        pState.startTagLine = lc.line;
+        pState.startTagLine = lc.line.data;
         pState.endTagLine = null;
         pState.type = "startTag";
+
+        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
         lc = this.callbacks.startTagCB(lc);
       } else {
         //fu.log("NOT BLOCK");
         pState.type = "notBlock";
+
+        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
         lc = this.callbacks.notBlockCB(lc);
       }
     } else {
-      if (lc[LC.LEXER] === LEXER.END_TAG) {
+      if (lc.line.type === LEXER.END_TAG) {
         //fu.log("END TAG");
         pState.type = "endTag";
-        pState.endTagLine = lc.line;
+        pState.endTagLine = lc.line.data;
+
+        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
         lc = this.callbacks.endTagCB(lc);
+
         lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
         lc[LC.PARSER].startTagLine = null;
       } else {
         //fu.log("BLOCK");
         pState.type = "block";
+
+        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
         lc = this.callbacks.blockCB(lc);
       }
     }
@@ -244,10 +261,9 @@ class Parser {
   }
 
   static createInitialLineContext = () =>
-    fu.compose3(
+    fu.compose2(
       fu.setProp(LC.RESULT, []),
-      fu.setProp(LC.PARSER, initialParserState),
-      fu.setProp(LC.LEXER, LEXER.INIT)
+      fu.setProp(LC.PARSER, initialParserState)
     )(initialLineContext);
 }
 
