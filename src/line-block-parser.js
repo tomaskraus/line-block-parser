@@ -8,6 +8,11 @@
 
 const fu = require("./func-utils");
 
+const DEFAULTS = {
+  PARSER_TYPE: "pair",
+  GROUPING: false,
+};
+
 const LC = {
   LINE: "line",
   LINE_NUMBER: "lineNumber",
@@ -32,7 +37,6 @@ const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
   startTagLine: null,
   endTagLine: null,
-  acc: [],
   out: null,
   type: "init",
 };
@@ -188,7 +192,7 @@ class Parser {
     return this.flush(
       lines.reduce(
         this.parserReducer.bind(this), //bind to preserve context
-        Parser.createInitialLineContext()
+        Parser.createInitialLineContext(createAccum(DEFAULTS.GROUPING))
       )
     )[LC.RESULT];
   }
@@ -260,14 +264,41 @@ class Parser {
     return lc;
   }
 
-  static createInitialLineContext = () =>
-    fu.compose2(
+  static createInitialLineContext = (accumulatorObj) =>
+    fu.compose3(
       fu.setProp(LC.RESULT, []),
+      accumulatorObj.initialize,
       fu.setProp(LC.PARSER, initialParserState)
     )(initialLineContext);
 }
+
+const getAccValue = (lineContext) => lineContext[LC.PARSER].acc;
+const overAcc = fu.curry2((fn, lc) => overParserState("acc", fn, lc));
+
+//const accOutputCallback = (outputData, lineContext) =>
+
+const createAccum = (groupingFlag) => ({
+  initialize: (lineContext) => setParserState("acc", [], lineContext),
+  append: fu.curry2((newValue, lineContext) => {
+    if (getAccValue(lineContext).length === 0) {
+      if (groupingFlag) {
+      } else {
+      }
+    } else {
+    }
+    return;
+  }),
+  flush: (lineContext) => lineContext,
+});
 
 module.exports = {
   Parser,
   Tags,
 };
+
+//----------------------------------------------------
+
+// const lc = Parser.createInitialLineContext(createAccum(DEFAULTS.GROUPING));
+// fu.log(getAccValue(lc));
+// const lc2 = overAcc((arr) => [...arr, 123], lc);
+// fu.log(lc2);
