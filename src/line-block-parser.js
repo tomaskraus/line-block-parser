@@ -188,12 +188,18 @@ class Parser {
     return this;
   }
 
-  static createReducer = (lexer, parserEngine) => (lineContext, line) =>
-    fu.compose3(
+  static createReducer = (lexer, parserEngine) => (lineContext, line) => {
+    const lc = fu.compose3(
       parserEngine,
       lexer.consume,
       Parser.consumeLine(line)
     )(lineContext);
+
+    if (!fu.nullOrUndefined(lc[LC.PARSER].out)) {
+      return appendToResult(lc);
+    }
+    return lc;
+  };
 
   parseLines(lines) {
     return this.flush(
@@ -270,9 +276,6 @@ const createPairParserEngine = (callbacks) => (lc) => {
     }
   }
 
-  if (!fu.nullOrUndefined(lc[LC.PARSER].out)) {
-    return appendToResult(lc);
-  }
   return lc;
 };
 
