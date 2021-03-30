@@ -188,10 +188,20 @@ class Parser {
     return this;
   }
 
+  static createReducer = (lexer, parserEngine) => (lineContext, line) =>
+    fu.compose3(
+      parserEngine,
+      lexer.consume,
+      Parser.consumeLine(line)
+    )(lineContext);
+
   parseLines(lines) {
     return this.flush(
       lines.reduce(
-        this.parserReducer.bind(this), //bind to preserve context
+        Parser.createReducer(
+          this.lexer,
+          createPairParserEngine(this.callbacks)
+        ).bind(this), //bind to preserve context
         Parser.createInitialLineContext(createAccum(DEFAULTS.GROUPING))
       )
     )[LC.RESULT];
@@ -211,59 +221,6 @@ class Parser {
       ? fu.compose2(appendToResult, this.callbacks.endTagCB)(lineContext)
       : lineContext;
 
-  parserReducer(lineContext, line) {
-    let lc = fu.compose2(
-      this.lexer.consume,
-      Parser.consumeLine(line)
-    )(lineContext);
-    //fu.log(lc);
-
-    let pState = lc[LC.PARSER];
-
-    //fu.log("line: ", `'${lc.line}'`);
-    if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (lc.line.type === LEXER.START_TAG) {
-        //fu.log("START TAG");
-        pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
-        pState.startTagLine = lc.line.data;
-        pState.endTagLine = null;
-        pState.type = "startTag";
-
-        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
-        lc = this.callbacks.startTagCB(lc);
-      } else {
-        //fu.log("NOT BLOCK");
-        pState.type = "notBlock";
-
-        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
-        lc = this.callbacks.notBlockCB(lc);
-      }
-    } else {
-      if (lc.line.type === LEXER.END_TAG) {
-        //fu.log("END TAG");
-        pState.type = "endTag";
-        pState.endTagLine = lc.line.data;
-
-        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
-        lc = this.callbacks.endTagCB(lc);
-
-        lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
-        lc[LC.PARSER].startTagLine = null;
-      } else {
-        //fu.log("BLOCK");
-        pState.type = "block";
-
-        lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
-        lc = this.callbacks.blockCB(lc);
-      }
-    }
-
-    if (!fu.nullOrUndefined(lc[LC.PARSER].out)) {
-      return appendToResult(lc);
-    }
-    return lc;
-  }
-
   static createInitialLineContext = (accumulatorObj) =>
     fu.compose3(
       fu.setProp(LC.RESULT, []),
@@ -271,6 +228,53 @@ class Parser {
       fu.setProp(LC.PARSER, initialParserState)
     )(initialLineContext);
 }
+
+const createPairParserEngine = (callbacks) => (lc) => {
+  let pState = lc[LC.PARSER];
+
+  //fu.log("line: ", `'${lc.line}'`);
+  if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
+    if (lc.line.type === LEXER.START_TAG) {
+      //fu.log("START TAG");
+      pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
+      pState.startTagLine = lc.line.data;
+      pState.endTagLine = null;
+      pState.type = "startTag";
+
+      lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
+      lc = callbacks.startTagCB(lc);
+    } else {
+      //fu.log("NOT BLOCK");
+      pState.type = "notBlock";
+
+      lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
+      lc = callbacks.notBlockCB(lc);
+    }
+  } else {
+    if (lc.line.type === LEXER.END_TAG) {
+      //fu.log("END TAG");
+      pState.type = "endTag";
+      pState.endTagLine = lc.line.data;
+
+      lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
+      lc = callbacks.endTagCB(lc);
+
+      lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+      lc[LC.PARSER].startTagLine = null;
+    } else {
+      //fu.log("BLOCK");
+      pState.type = "block";
+
+      lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
+      lc = callbacks.blockCB(lc);
+    }
+  }
+
+  if (!fu.nullOrUndefined(lc[LC.PARSER].out)) {
+    return appendToResult(lc);
+  }
+  return lc;
+};
 
 const getAccValue = (lineContext) => lineContext[LC.PARSER].acc;
 const overAcc = fu.curry2((fn, lc) => overParserState("acc", fn, lc));
