@@ -31,7 +31,7 @@ const curry2 = (f) => (...args) => {
   return (a) => (b) => f(a, b);
 };
 
-// curry2 :: ((a -> b -> c) -> d) -> (a -> b -> c -> d)
+// curry3 :: ((a -> b -> c) -> d) -> (a -> b -> c -> d)
 const curry3 = (f) => (...args) => {
   if (args.length >= 3) {
     return f(args[0], args[1], args[2]);
