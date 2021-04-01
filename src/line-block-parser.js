@@ -218,8 +218,6 @@ const getAccValue = (lineContext) => {
 };
 const overAcc = fu.curry2((fn, lc) => overParserState("acc", fn, lc));
 
-//const accOutputCallback = (outputData, lineContext) =>
-
 const createAccum = (groupingFlag) => {
   const gFlag = groupingFlag;
   const accObj = {
