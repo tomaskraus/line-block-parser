@@ -102,7 +102,7 @@ const appendToResult = (lineContext) =>
 
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
-  state: lineContext[LC.PARSER]["type"],
+  state: lineContext[LC.PARSER]["state"],
   data,
 });
 
@@ -181,7 +181,7 @@ const createPairParserEngine = (accum) => (lc) => {
       return accum.append(lc.line, lc);
     } else {
       //fu.log("NOT BLOCK");
-      pState.state = "notBlock";
+      pState.state = "outOfBlock";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
       return accum.append(lc.line, lc);
@@ -202,7 +202,7 @@ const createPairParserEngine = (accum) => (lc) => {
       return lc;
     } else {
       //fu.log("BLOCK");
-      pState.state = "block";
+      pState.state = "inBlock";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
       return accum.append(lc.line, lc);
