@@ -127,36 +127,30 @@ class Parser {
     return new Parser(startTagRegExp, endTagRegExp);
   }
 
-  static createReducer = (lexer, parserEngine, accumulator) => (
-    lineContext,
-    line
-  ) => {
+  static createReducer = (lexer, parserEngine) => (lineContext, line) => {
     const lc = fu.compose3(
       parserEngine,
       lexer.consume,
-      Parser.consumeLine(line)
+      fu.compose2(Parser.consumeLine(line), setParserProp("accOut", null))
     )(lineContext);
 
     if (!fu.nullOrUndefined(getAccOut(lc))) {
-      return fu.compose2(clearAcc, appendToResult)(lc);
+      return appendToResult(lc);
     }
     return lc;
   };
 
   parseLines(lines) {
     const resCtx = lines.reduce(
-      Parser.createReducer(this.lexer, this.parserEngine, this.accum).bind(
-        this
-      ), //bind to preserve context
+      Parser.createReducer(this.lexer, this.parserEngine).bind(this), //bind to preserve context
       Parser.createInitialLineContext()
     );
-    fu.log("parseLines result LC: ", resCtx);
+    //fu.log("parseLines result LC: ", resCtx);
     return this.accum.flush(null, resCtx)[LC.RESULT];
   }
 
   static consumeLine = fu.curry2((line, lineContext) =>
-    fu.compose3(
-      setParserProp("accOut", null),
+    fu.compose2(
       fu.overProp(LC.LINE_NUMBER, (x) => x + 1),
       fu.setProp(LC.LINE, line)
     )(lineContext)
