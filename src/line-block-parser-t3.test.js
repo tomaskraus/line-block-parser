@@ -10,8 +10,7 @@ const testLines = (lines, label = "") => {
   fu.log("", lines);
 
   fu.log("-- parser2 (ALL_INFO_FLAT mode) ---------");
-  parser2.setMode(Parser.mode.ALL_INFO_FLAT);
-  fu.log("", parser2.parseLines(lines));
+  fu.log("test result: ", parser2.parseLines(lines));
 };
 
 //------------------------------------------------------------------------------------------------
