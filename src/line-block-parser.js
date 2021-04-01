@@ -73,7 +73,7 @@ const initialParserState = {
   startTagLine: null,
   endTagLine: null,
   out: null,
-  type: "init",
+  state: "init",
 };
 
 // overParserState :: string -> (a -> b) -> lineContext -> lineContext
@@ -175,13 +175,13 @@ const createPairParserEngine = (accum) => (lc) => {
       pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
       pState.startTagLine = lc.line;
       pState.endTagLine = null;
-      pState.type = "startTag";
+      pState.state = "startTag";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
       return accum.append(lc.line, lc);
     } else {
       //fu.log("NOT BLOCK");
-      pState.type = "notBlock";
+      pState.state = "notBlock";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
       return accum.append(lc.line, lc);
@@ -189,7 +189,7 @@ const createPairParserEngine = (accum) => (lc) => {
   } else {
     if (lc.line.type === LEXER.END_TAG) {
       //fu.log("END TAG");
-      pState.type = "endTag";
+      pState.state = "endTag";
       pState.endTagLine = lc.line;
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
@@ -202,7 +202,7 @@ const createPairParserEngine = (accum) => (lc) => {
       return lc;
     } else {
       //fu.log("BLOCK");
-      pState.type = "block";
+      pState.state = "block";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
       return accum.append(lc.line, lc);
