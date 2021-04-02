@@ -73,8 +73,9 @@ const initialParserState = {
   startTagLine: null,
   endTagLine: null,
   acc: [], //accumulator
-  accOut: null, //accumulator - flushed output
+  accOut: [], //accumulator - flushed output
   state: "init",
+  lineType: null, //from lexer
 };
 
 // overParserProp :: string -> (a -> b) -> lineContext -> lineContext
@@ -95,6 +96,8 @@ const getAccOut = (lineContext) => lineContext[LC.PARSER].accOut;
 
 const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
 
+const clearAccOut = setParserProp("accOut", []);
+
 //moveToAccOutput :: lineContext -> lineContext
 const moveToAccOutput = (lineContext) =>
   fu.compose2(
@@ -108,35 +111,48 @@ const appendToResult = (lineContext) =>
     (arr) => [...arr, ...getAccOut(lineContext)],
     lineContext
   );
-//---------------------------------------------------------------------------------------------
 
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
+  lineType: lineContext[LC.LINE]["type"],
   state: lineContext[LC.PARSER]["state"],
   data,
 });
 
+const plainParserDecorator = (data, _) => data;
+
+const groupedParserDecorator = (AccumulatorData, lineContext) => ({
+  lineNumber: lineContext[LC.LINE_NUMBER],
+  state: lineContext[LC.PARSER]["state"],
+  startTagLine: lineContext[LC.PARSER]["startTagLine"],
+  endTagLine: lineContext[LC.PARSER]["endTagLine"],
+  data: AccumulatorData,
+});
+
+//---------------------------------------------------------------------------------------------
+
 class Parser {
-  constructor(startTagRegExp, endTagRegExp) {
+  constructor(startTagRegExp, endTagRegExp, isGrouped) {
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
-    this.accum = createAccum();
+    this.accum = createAccum(isGrouped);
     this.parserEngine = createPairParserEngine(this.accum);
   }
 
-  static create(startTagRegExp, endTagRegExp) {
-    return new Parser(startTagRegExp, endTagRegExp);
+  static create(startTagRegExp, endTagRegExp, isGrouped = DEFAULTS.GROUPING) {
+    return new Parser(startTagRegExp, endTagRegExp, isGrouped);
   }
 
   static createReducer = (lexer, parserEngine) => (lineContext, line) => {
     const lc = fu.compose3(
       parserEngine,
       lexer.consume,
-      fu.compose2(Parser.consumeLine(line), setParserProp("accOut", null))
+      fu.compose2(Parser.consumeLine(line), clearAccOut)
+      // fu.compose2(Parser.consumeLine(line), fu.id)
     )(lineContext);
 
-    if (!fu.nullOrUndefined(getAccOut(lc))) {
-      return appendToResult(lc);
-    }
+    //if (!fu.nullOrUndefined(getAccOut(lc))) {
+    return appendToResult(lc);
+    //}
     return lc;
   };
 
@@ -174,18 +190,20 @@ const createPairParserEngine = (accum) => (lc) => {
   //fu.log("engine accum: ", accum);
 
   let pState = lc[LC.PARSER];
+  pState.lineType = lc.type;
 
   //fu.log("line: ", `'${lc.line}'`);
   if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
     if (lc.line.type === LEXER.START_TAG) {
+      accum.flush(lc.line, lc);
       //fu.log("START TAG");
       pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
       pState.startTagLine = lc.line;
       pState.endTagLine = null;
-      pState.state = "startTag";
+      pState.state = "inBlock";
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
-      return accum.append(lc.line, lc);
+      return accum.start(lc.line, lc);
     } else {
       //fu.log("NOT BLOCK");
       pState.state = "outOfBlock";
@@ -196,7 +214,7 @@ const createPairParserEngine = (accum) => (lc) => {
   } else {
     if (lc.line.type === LEXER.END_TAG) {
       //fu.log("END TAG");
-      pState.state = "endTag";
+      pState.state = "inBlock";
       pState.endTagLine = lc.line;
 
       //lc = fu.overProp(LC.LINE, (obj) => obj.data, lc);
@@ -219,26 +237,56 @@ const createPairParserEngine = (accum) => (lc) => {
 
 //----------------------------------------------------------------------------------------
 
-const createAccum = () => {
+const createAccum = (groupedFlag) =>
+  groupedFlag === true ? createGroupedAccum() : createFlatAccum();
+
+const createFlatAccum = () => {
   const accObj = {};
 
   accObj.flush = (additionalData, lineContext) => {
-    //fu.log("flush additional data: ", additionalData);
     if (additionalData !== null) {
-      // fu.log("additional data: ", additionalData);
-      const retLc = overParserProp(
-        "acc",
-        (a) => [...a, infoParserDecorator(additionalData.data, lineContext)],
-        lineContext
+      return moveToAccOutput(
+        overParserProp(
+          "acc",
+          (a) => [...a, infoParserDecorator(additionalData.data, lineContext)],
+          lineContext
+        )
       );
-      return moveToAccOutput(retLc);
     }
     return moveToAccOutput(lineContext);
   };
 
-  accObj.append = fu.curry2((newValue, lineContext) => {
+  accObj.append = (newValue, lineContext) => {
     return accObj.flush(newValue, lineContext);
-  });
+  };
+
+  accObj.start = accObj.append;
+
+  return accObj;
+};
+
+const createGroupedAccum = () => {
+  const accObj = {};
+
+  accObj.start = (_, lineContext) => lineContext;
+
+  accObj.append = (data, lineContext) => {
+    return overParserProp(
+      "acc",
+      (a) => [...a, plainParserDecorator(data.data, lineContext)],
+      lineContext
+    );
+  };
+
+  accObj.flush = (_, lineContext) => {
+    return moveToAccOutput(
+      overParserProp(
+        "acc",
+        (accum) => [groupedParserDecorator(accum, lineContext)],
+        lineContext
+      )
+    );
+  };
 
   return accObj;
 };
