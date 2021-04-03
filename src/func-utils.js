@@ -2,8 +2,6 @@
  * utilities
  */
 
-const log = console.log;
-
 //nullOrEmpty :: a -> bool
 const nullOrUndefined = (a) => {
   return a === null || typeof a === "undefined";
@@ -30,6 +28,8 @@ const curry2 = (f) => (...args) => {
   }
   return (a) => (b) => f(a, b);
 };
+
+const log = curry2(console.log);
 
 // curry3 :: ((a -> b -> c) -> d) -> (a -> b -> c -> d)
 const curry3 = (f) => (...args) => {
