@@ -8,7 +8,7 @@ const valueReturnCallback = (data) => {
   return data.data;
 };
 
-const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end);
+const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, false);
 
 const parserGrouped = Parser.create(
   Tags.js_block.start,

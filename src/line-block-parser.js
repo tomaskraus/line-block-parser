@@ -260,7 +260,7 @@ const createGroupedAccum = (resultCallback) => {
 const defaultResultCallback = fu.id;
 
 const DEFAULT_SETTINGS = {
-  GROUPING: false,
+  GROUPING: true,
   PARSER_TYPE: "pair",
 };
 
