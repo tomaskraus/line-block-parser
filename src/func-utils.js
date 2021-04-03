@@ -29,7 +29,16 @@ const curry2 = (f) => (...args) => {
   return (a) => (b) => f(a, b);
 };
 
-const log = curry2(console.log);
+const log = console.log;
+
+//tap :: (a -> b) -> a -> a
+const tap = curry2((f, a) => {
+  f(a);
+  return a;
+});
+
+//tapLog :: string -> a -> a
+const tapLog = curry2((label, a) => tap((x) => log(label, x), a));
 
 // curry3 :: ((a -> b -> c) -> d) -> (a -> b -> c -> d)
 const curry3 = (f) => (...args) => {
@@ -61,9 +70,11 @@ const overProp = curry3((propName, fn, obj) => {
 });
 
 module.exports = {
-  log,
   nullOrUndefined,
   id,
+  tap,
+  log,
+  tapLog,
   compose2,
   compose3,
   curry2,
