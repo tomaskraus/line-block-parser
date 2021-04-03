@@ -5,9 +5,6 @@
 //nullOrEmpty :: a -> bool
 const nullOrUndefined = (a) => {
   return a === null || typeof a === "undefined";
-
-  //if (a == null || typeof === "undefined") return true;
-  //if (typeof a)
 };
 
 //id :: a -> a
