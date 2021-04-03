@@ -69,13 +69,19 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
 
 const NO_BLOCK_BEGIN = -1;
 
+const P_STATE = {
+  INIT: "init",
+  IN_BLOCK: "inBlock",
+  OUT_OF_BLOCK: "outOfBlock",
+};
+
 const initialParserState = {
   beginBlockLineNum: NO_BLOCK_BEGIN,
   beginNotBlockLineNum: 1,
   startTagLine: null,
   endTagLine: null,
   acc: [], //accumulator
-  state: "init",
+  state: P_STATE.INIT,
   lineType: null, //from lexer
 };
 
@@ -97,7 +103,7 @@ const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
 
 //moveAccAndClear :: (a -> b) -> a -> lineContext -> lineContext
 const moveAccAndClear = (resultCallback, data, lineContext) => {
-  if (lineContext[LC.PARSER]["state"] === "init") return lineContext;
+  if (lineContext[LC.PARSER].state === P_STATE.INIT) return lineContext;
 
   const cRes = resultCallback(data);
   return fu.compose2(
@@ -111,21 +117,21 @@ const moveAccAndClear = (resultCallback, data, lineContext) => {
 
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
-  lineType: lineContext[LC.LINE]["type"],
-  state: lineContext[LC.PARSER]["state"],
+  lineType: lineContext[LC.LINE].type,
+  state: lineContext[LC.PARSER].state,
   data,
 });
 
 const plainParserDecorator = (data, _) => data.data;
 
 const groupedParserDecorator = (AccumulatorData, lineContext) => ({
-  state: lineContext[LC.PARSER]["state"],
+  state: lineContext[LC.PARSER].state,
   startLineNumber:
-    lineContext[LC.PARSER]["state"] === "inBlock"
-      ? lineContext[LC.PARSER]["beginBlockLineNum"]
-      : lineContext[LC.PARSER]["beginNotBlockLineNum"],
-  startTagLine: lineContext[LC.PARSER]["startTagLine"],
-  endTagLine: lineContext[LC.PARSER]["endTagLine"],
+    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
+      ? lineContext[LC.PARSER].beginBlockLineNum
+      : lineContext[LC.PARSER].beginNotBlockLineNum,
+  startTagLine: lineContext[LC.PARSER].startTagLine,
+  endTagLine: lineContext[LC.PARSER].endTagLine,
   data: AccumulatorData,
 });
 
@@ -202,19 +208,19 @@ const createPairParserEngine = (accum) => (lc) => {
       pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
       pState2.startTagLine = lc2.line.data;
       pState2.endTagLine = null;
-      pState2.state = "inBlock";
+      pState2.state = P_STATE.IN_BLOCK;
 
       return accum.start(lc2.line, lc2);
     } else {
       //fu.log("NOT BLOCK");
-      pState.state = "outOfBlock";
+      pState.state = P_STATE.OUT_OF_BLOCK;
 
       return accum.append(lc.line, lc);
     }
   } else {
     if (lc.line.type === LEXER.END_TAG) {
       //fu.log("END TAG");
-      pState.state = "inBlock";
+      pState.state = P_STATE.IN_BLOCK;
       pState.beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
       pState.endTagLine = lc.line.data;
 
@@ -227,7 +233,7 @@ const createPairParserEngine = (accum) => (lc) => {
       return lc;
     } else {
       //fu.log("BLOCK");
-      pState.state = "inBlock";
+      pState.state = P_STATE.IN_BLOCK;
 
       return accum.append(lc.line, lc);
     }
