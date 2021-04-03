@@ -8,11 +8,6 @@
 
 const fu = require("./func-utils");
 
-const DEFAULTS = {
-  PARSER_TYPE: "pair",
-  GROUPING: false,
-};
-
 //---------------------------------------------------------------------------------------------
 
 const LC = {
@@ -95,101 +90,22 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
   overParserProp(propName, (_) => value, lineContext)
 );
 
-//---------------------------------------------------------------------------------------------
+//========================================================================================
 
-const getAcc = (lineContext) => lineContext[LC.PARSER].acc;
+const consumeLine = fu.curry2((line, lineContext) =>
+  fu.compose2(
+    fu.overProp(LC.LINE_NUMBER, (x) => x + 1),
+    fu.setProp(LC.LINE, line)
+  )(lineContext)
+);
 
-const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
-
-//moveAccAndClear :: (a -> b) -> a -> lineContext -> lineContext
-const moveAccAndClear = (resultCallback, data, lineContext) => {
-  if (lineContext[LC.PARSER].state === P_STATE.INIT) return lineContext;
-
-  const cRes = resultCallback(data);
-  return fu.compose2(
-    // fu.tapLog("maac after"),
-    clearAcc,
-    fu.overProp(LC.RESULT, (arr) =>
-      fu.nullOrUndefined(cRes) ? arr : [...arr, cRes]
-    )
+const createReducer = (lexer, parserEngine) => (lineContext, line) =>
+  fu.compose3(
+    parserEngine,
+    lexer.consume,
+    consumeLine(line)
+    // fu.compose2(Parser.consumeLine(line), fu.id)
   )(lineContext);
-};
-
-const infoParserDecorator = (data, lineContext) => ({
-  lineNumber: lineContext[LC.LINE_NUMBER],
-  lineType: lineContext[LC.LINE].type,
-  state: lineContext[LC.PARSER].state,
-  data,
-});
-
-const plainParserDecorator = (data, _) => data.data;
-
-const groupedParserDecorator = (AccumulatorData, lineContext) => ({
-  state: lineContext[LC.PARSER].state,
-  startLineNumber:
-    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
-      ? lineContext[LC.PARSER].beginBlockLineNum
-      : lineContext[LC.PARSER].beginNotBlockLineNum,
-  startTagLine: lineContext[LC.PARSER].startTagLine,
-  endTagLine: lineContext[LC.PARSER].endTagLine,
-  data: AccumulatorData,
-});
-
-const defaultResultCallback = (data) => data;
-
-//---------------------------------------------------------------------------------------------
-
-class Parser {
-  constructor(startTagRegExp, endTagRegExp, isGrouped, resultCallback) {
-    this.lexer = createLexer(startTagRegExp, endTagRegExp);
-    this.accum = createAccum(isGrouped, resultCallback);
-    this.parserEngine = createPairParserEngine(this.accum);
-  }
-
-  static create(
-    startTagRegExp,
-    endTagRegExp,
-    isGrouped = DEFAULTS.GROUPING,
-    resultCallback = defaultResultCallback
-  ) {
-    return new Parser(startTagRegExp, endTagRegExp, isGrouped, resultCallback);
-  }
-
-  static createReducer = (lexer, parserEngine) => (lineContext, line) =>
-    fu.compose3(
-      parserEngine,
-      lexer.consume,
-      Parser.consumeLine(line)
-      // fu.compose2(Parser.consumeLine(line), fu.id)
-    )(lineContext);
-
-  parseLines(lines) {
-    const resCtx = lines.reduce(
-      Parser.createReducer(this.lexer, this.parserEngine).bind(this), //bind to preserve context
-      Parser.createInitialLineContext()
-    );
-    // fu.log("parseLines result LC 2: ", resCtx);
-    // fu.log("x---------------------------------------------------");
-    // fu.log("acc: ", this.accum);
-    // const res = this.accum.flush(null, resCtx);
-    // fu.log("res: ", res);
-    // fu.log("x-----   ----  -----   -------------------------------------");
-    return this.accum.flush(null, resCtx)[LC.RESULT];
-  }
-
-  static consumeLine = fu.curry2((line, lineContext) =>
-    fu.compose2(
-      fu.overProp(LC.LINE_NUMBER, (x) => x + 1),
-      fu.setProp(LC.LINE, line)
-    )(lineContext)
-  );
-
-  static createInitialLineContext = () =>
-    fu.compose2(
-      fu.setProp(LC.RESULT, []),
-      fu.setProp(LC.PARSER, initialParserState)
-    )(initialLineContext);
-}
 
 const createPairParserEngine = (accum) => (lc) => {
   //fu.log("engine accum: ", accum);
@@ -240,6 +156,27 @@ const createPairParserEngine = (accum) => (lc) => {
   }
 };
 
+//========================================================================================
+
+const getAcc = (lineContext) => lineContext[LC.PARSER].acc;
+
+const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
+
+//flushAccum :: (a -> b) -> a -> lineContext -> lineContext
+const flushAccum = (resultCallback, data, lineContext) => {
+  if (lineContext[LC.PARSER].state === P_STATE.INIT) {
+    return lineContext;
+  }
+  const cRes = resultCallback(data);
+  return fu.compose2(
+    // fu.tapLog("maac after"),
+    clearAcc,
+    fu.overProp(LC.RESULT, (arr) =>
+      fu.nullOrUndefined(cRes) ? arr : [...arr, cRes]
+    )
+  )(lineContext);
+};
+
 //----------------------------------------------------------------------------------------
 
 const createAccum = (groupedFlag, resultCallback) =>
@@ -247,19 +184,28 @@ const createAccum = (groupedFlag, resultCallback) =>
     ? createGroupedAccum(resultCallback)
     : createFlatAccum(resultCallback);
 
+//----------------------------------------------------------------------------------------
+
+const infoParserDecorator = (data, lineContext) => ({
+  lineNumber: lineContext[LC.LINE_NUMBER],
+  lineType: lineContext[LC.LINE].type,
+  state: lineContext[LC.PARSER].state,
+  data,
+});
+
 const createFlatAccum = (resultCallback) => {
   const accObj = {};
 
   accObj.flush = (additionalData, lineContext) => {
     if (additionalData !== null) {
-      return moveAccAndClear(
+      return flushAccum(
         resultCallback,
         infoParserDecorator(additionalData.data, lineContext),
         lineContext
       );
     }
     return getAcc(lineContext).length > 0
-      ? moveAccAndClear(resultCallback, getAcc(lineContext), lineContext)
+      ? flushAccum(resultCallback, getAcc(lineContext), lineContext)
       : lineContext;
   };
 
@@ -271,6 +217,21 @@ const createFlatAccum = (resultCallback) => {
 
   return accObj;
 };
+
+//----------------------------------------------------------------------------------------
+
+const groupedParserDecorator = (AccumulatorData, lineContext) => ({
+  state: lineContext[LC.PARSER].state,
+  startLineNumber:
+    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
+      ? lineContext[LC.PARSER].beginBlockLineNum
+      : lineContext[LC.PARSER].beginNotBlockLineNum,
+  startTagLine: lineContext[LC.PARSER].startTagLine,
+  endTagLine: lineContext[LC.PARSER].endTagLine,
+  data: AccumulatorData,
+});
+
+const plainParserDecorator = (data, _) => data.data;
 
 const createGroupedAccum = (resultCallback) => {
   const accObj = {};
@@ -285,7 +246,7 @@ const createGroupedAccum = (resultCallback) => {
     );
 
   accObj.flush = (_, lineContext) =>
-    moveAccAndClear(
+    flushAccum(
       resultCallback,
       groupedParserDecorator(getAcc(lineContext), lineContext),
       lineContext
@@ -293,6 +254,48 @@ const createGroupedAccum = (resultCallback) => {
 
   return accObj;
 };
+
+//========================================================================================
+
+const defaultResultCallback = fu.id;
+
+const DEFAULT_SETTINGS = {
+  GROUPING: false,
+  PARSER_TYPE: "pair",
+};
+
+class Parser {
+  static initialLineContext = fu.compose2(
+    fu.setProp(LC.RESULT, []),
+    fu.setProp(LC.PARSER, initialParserState)
+  )(initialLineContext);
+
+  constructor(startTagRegExp, endTagRegExp, isGrouped, resultCallback) {
+    this.accum = createAccum(isGrouped, resultCallback);
+    this.lexer = createLexer(startTagRegExp, endTagRegExp);
+    this.parserEngine = createPairParserEngine(this.accum);
+    this.reducer = createReducer(this.lexer, this.parserEngine);
+  }
+
+  static create(
+    startTagRegExp,
+    endTagRegExp,
+    isGrouped = DEFAULT_SETTINGS.GROUPING,
+    resultCallback = defaultResultCallback
+  ) {
+    return new Parser(startTagRegExp, endTagRegExp, isGrouped, resultCallback);
+  }
+
+  parseLines(lines) {
+    const resCtx = lines.reduce(
+      this.reducer.bind(this), //bind to preserve context
+      Parser.initialLineContext
+    );
+    return this.accum.flush(null, resCtx)[LC.RESULT];
+  }
+}
+
+//========================================================================================
 
 module.exports = {
   Parser,
