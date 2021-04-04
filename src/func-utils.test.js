@@ -99,16 +99,22 @@ u.log("cplus3()(1)", cplus3()(1));
 u.log("cplus3()(1)(2)", cplus3()(1)(2));
 u.log("cplus3()(1)(2)(3)", cplus3()(1)(2)(3));
 
-hr("prop");
+hr("tap");
+u.log("tap(x => console.log(x + 1))(2)", u.tap((x) => console.log(x + 1))(2));
+u.log(
+  "tap(x => console.log(x * 2), 4)",
+  u.tap((x) => console.log(x * 2), 4)
+);
 
+hr("prop");
 u.log('prop("length", "abcd")', u.prop("length", "abcd"));
 const len = u.prop("length");
 u.log('len("abcd")', len("abcd"));
 u.log("len([2,3,4])", len([2, 3, 4]));
 u.log('prop("length", 123)', u.prop("length", 123));
 u.log(
-  'prop("1st-place", { "1st-place": 2233 })',
-  u.prop("1st-place", { "1st-place": 2233 })
+  'prop("1st-place")({ "1st-place": 2233 })',
+  u.prop("1st-place")({ "1st-place": 2233 })
 );
 
 hr();
