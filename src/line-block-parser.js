@@ -5,6 +5,7 @@
  */
 
 //TODO add proper begin-end pair check
+//TODO add input param type check
 
 const fu = require("./func-utils");
 
