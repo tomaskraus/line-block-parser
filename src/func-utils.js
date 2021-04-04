@@ -2,6 +2,10 @@
  * utilities
  */
 
+//log :: a -> ()
+//log :: (a, b) -> ()
+const log = console.log;
+
 //nullOrUndefined :: a -> bool
 const nullOrUndefined = (a) => {
   return a === null || typeof a === "undefined";
@@ -34,17 +38,6 @@ const curry2 = (f) => (...args) => {
   return (a) => (b) => f(a, b);
 };
 
-const log = console.log;
-
-//tap :: (a -> b) -> a -> a
-const tap = curry2((f, a) => {
-  f(a);
-  return a;
-});
-
-//tapLog :: string -> a -> a
-const tapLog = curry2((label, a) => tap((x) => log(label, x), a));
-
 // curry3 :: ((a -> b -> c) -> d) -> (a -> b -> c -> d)
 const curry3 = (f) => (...args) => {
   if (args.length >= 3) {
@@ -56,6 +49,15 @@ const curry3 = (f) => (...args) => {
   }
   return (a) => (b) => (c) => f(a, b, c);
 };
+
+//tap :: (a -> b) -> a -> a
+const tap = curry2((f, a) => {
+  f(a);
+  return a;
+});
+
+//tapLog :: string -> a -> a
+const tapLog = curry2((label, a) => tap((x) => log(label, x), a));
 
 // prop :: name -> obj -> value
 const prop = curry2((propName, obj) => obj[propName]);
@@ -75,16 +77,16 @@ const overProp = curry3((propName, fn, obj) => {
 });
 
 module.exports = {
+  log,
   nullOrUndefined,
   empty,
   id,
-  tap,
-  log,
-  tapLog,
   compose2,
   compose3,
   curry2,
   curry3,
+  tap,
+  tapLog,
   prop,
   setProp,
   overProp,
