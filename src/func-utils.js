@@ -7,6 +7,14 @@ const nullOrUndefined = (a) => {
   return a === null || typeof a === "undefined";
 };
 
+//isEmpty :: arrayLike -> bool
+const empty = (xs) => {
+  if (nullOrUndefined(xs.length)) {
+    throw new TypeError(`Has no "length" property: ${xs}`);
+  }
+  return xs.length === 0;
+};
+
 //id :: a -> a
 const id = (a) => a;
 
@@ -68,6 +76,7 @@ const overProp = curry3((propName, fn, obj) => {
 
 module.exports = {
   nullOrUndefined,
+  empty,
   id,
   tap,
   log,

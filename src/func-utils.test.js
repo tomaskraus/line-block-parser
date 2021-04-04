@@ -5,7 +5,7 @@ const hr = (caption = null) =>
 
 hr("nullOrUndefined");
 u.log("null", u.nullOrUndefined(null));
-u.log("{}.something_undefined", u.nullOrUndefined({}.something_undefined));
+u.log("undefined", u.nullOrUndefined(undefined));
 u.log(
   "something_undeclared",
   "//error" /*u.nullOrUndefined(something_undeclared)*/
@@ -18,6 +18,32 @@ u.log("2", u.nullOrUndefined(false));
 u.log("false", u.nullOrUndefined(false));
 u.log('"a"', u.nullOrUndefined("a"));
 u.log("[1]", u.nullOrUndefined([1]));
+
+hr("empty");
+u.log("[]", u.empty([]));
+u.log("[0]", u.empty([0]));
+u.log("''", u.empty(""));
+u.log("'0'", u.empty("0"));
+u.log(
+  "{}",
+  "//error"
+  /*u.empty({})*/
+);
+u.log(
+  "123",
+  "//error"
+  /*u.empty(123)*/
+);
+u.log(
+  "null",
+  "//error"
+  /*u.empty(null)*/
+);
+u.log(
+  "undefined",
+  "//error"
+  /*u.empty(undefined)*/
+);
 
 hr("id");
 u.log("id(2)", u.id(2));
