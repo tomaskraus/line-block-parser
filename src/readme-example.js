@@ -1,7 +1,11 @@
 const { Parser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = Parser.create(Tags.js_block.start, Tags.js_block.end); //params: start tag, end tag
+const jsCommentParser = Parser.create(
+  Tags.js_block.start,
+  Tags.js_block.end,
+  false
+); //params: start tag, end tag
 
 //these are lines to parse
 const lines = [
@@ -21,6 +25,10 @@ const lines = [
 ];
 
 //let's go
-const blocksFound = jsCommentParser.parseLines(lines);
+const blocksFound = jsCommentParser
+  .parseLines(lines)
+  .data //data
+  .filter((a) => a.state === "inBlock" && a.lineType === "line")
+  .map((a) => a.data);
 
 console.log(blocksFound);

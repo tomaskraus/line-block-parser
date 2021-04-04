@@ -15,13 +15,15 @@ const LC = {
   LINE: "line",
   LINE_NUMBER: "lineNumber",
   PARSER: "parser",
-  RESULT: "result",
+  DATA: "data",
+  ERRORS: "errors",
 };
 
 const initialLineContext = {};
 initialLineContext[LC.LINE_NUMBER] = 0;
 initialLineContext[LC.LINE] = null;
-initialLineContext[LC.RESULT] = [];
+initialLineContext[LC.DATA] = [];
+initialLineContext[LC.ERRORS] = [];
 
 //---------------------------------------------------------------------------------------------
 
@@ -172,7 +174,7 @@ const flushAccum = (resultCallback, data, lineContext) => {
   return fu.compose2(
     // fu.tapLog("maac after"),
     clearAcc,
-    fu.overProp(LC.RESULT, (arr) =>
+    fu.overProp(LC.DATA, (arr) =>
       fu.nullOrUndefined(cRes) ? arr : [...arr, cRes]
     )
   )(lineContext);
@@ -267,7 +269,7 @@ const DEFAULT_SETTINGS = {
 
 class Parser {
   static initialLineContext = fu.compose2(
-    fu.setProp(LC.RESULT, []),
+    fu.setProp(LC.DATA, []),
     fu.setProp(LC.PARSER, initialParserState)
   )(initialLineContext);
 
@@ -287,12 +289,17 @@ class Parser {
     return new Parser(startTagRegExp, endTagRegExp, isGrouped, resultCallback);
   }
 
+  flush(lineContext) {
+    const { errors, data } = this.accum.flush(null, lineContext);
+    return { errors, data };
+  }
+
   parseLines(lines) {
     const resCtx = lines.reduce(
       this.reducer.bind(this), //bind to preserve context
       Parser.initialLineContext
     );
-    return this.accum.flush(null, resCtx)[LC.RESULT];
+    return this.flush(resCtx);
   }
 }
 
