@@ -105,6 +105,11 @@ u.log('prop("length", "abcd")', u.prop("length", "abcd"));
 const len = u.prop("length");
 u.log('len("abcd")', len("abcd"));
 u.log("len([2,3,4])", len([2, 3, 4]));
+u.log('prop("length", 123)', u.prop("length", 123));
+u.log(
+  'prop("1st-place", { "1st-place": 2233 })',
+  u.prop("1st-place", { "1st-place": 2233 })
+);
 
 hr();
 
