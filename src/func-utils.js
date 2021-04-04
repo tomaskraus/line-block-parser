@@ -2,7 +2,7 @@
  * utilities
  */
 
-//nullOrEmpty :: a -> bool
+//nullOrUndefined :: a -> bool
 const nullOrUndefined = (a) => {
   return a === null || typeof a === "undefined";
 };
