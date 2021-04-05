@@ -185,39 +185,12 @@ const flushAccum = (resultCallback, data, lineContext) => {
 
 //----------------------------------------------------------------------------------------
 
-const createAccum = (groupedFlag, resultCallback) =>
-  createFlatAccum(resultCallback);
-
-//----------------------------------------------------------------------------------------
-
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
   lineType: lineContext[LC.LINE].type,
   state: lineContext[LC.PARSER].state,
   data,
 });
-
-const createFlatAccum = (resultCallback) => {
-  const accObj = {};
-
-  accObj.flush = (additionalData, lineContext) => {
-    if (additionalData !== null) {
-      return flushAccum(
-        resultCallback,
-        infoParserDecorator(additionalData.data, lineContext),
-        lineContext
-      );
-    }
-    return getAcc(lineContext).length > 0
-      ? flushAccum(resultCallback, getAcc(lineContext), lineContext)
-      : lineContext;
-  };
-
-  accObj.consume = (lineContext) =>
-    accObj.flush(lineContext[LC.LINE], lineContext);
-
-  return accObj;
-};
 
 //----------------------------------------------------------------------------------------
 
@@ -233,6 +206,34 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
 });
 
 const plainParserDecorator = (data, _) => data.data;
+
+//----------------------------------------------------------------------------------------
+const createAccum = (groupedFlag, resultCallback) => {
+  const accObj = {};
+
+  accObj.flush = (additionalData, lineContext) => {
+    if (additionalData !== null) {
+      return flushAccum(
+        resultCallback,
+        infoParserDecorator(additionalData.data, lineContext),
+        lineContext
+      );
+    }
+    return getAcc(lineContext).length > 0
+      ? flushAccum(resultCallback, getAcc(lineContext), lineContext)
+      : lineContext;
+  };
+
+  accObj.consume = (lineContext) => {
+    if (!groupedFlag) {
+      return accObj.flush(lineContext[LC.LINE], lineContext);
+    }
+  };
+
+  return accObj;
+};
+
+//----------------------------------------------------------------------------------------
 
 const isValidToFlush = (lineContext) => {
   if (
