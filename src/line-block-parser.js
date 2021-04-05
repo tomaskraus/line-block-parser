@@ -19,11 +19,14 @@ const LC = {
   ERRORS: "errors",
 };
 
-const initialLineContext = {};
-initialLineContext[LC.LINE_NUMBER] = 0;
-initialLineContext[LC.LINE] = null;
-initialLineContext[LC.DATA] = [];
-initialLineContext[LC.ERRORS] = [];
+const initialLineContext = () => {
+  const ilc = {};
+  ilc[LC.LINE_NUMBER] = 0;
+  ilc[LC.LINE] = null;
+  ilc[LC.DATA] = [];
+  ilc[LC.ERRORS] = [];
+  return ilc;
+};
 
 //---------------------------------------------------------------------------------------------
 
@@ -73,7 +76,7 @@ const P_STATE = {
   OUT_OF_BLOCK: "outOfBlock",
 };
 
-const initialParserState = {
+const initialParserState = () => ({
   beginBlockLineNum: NO_BLOCK_BEGIN,
   beginNotBlockLineNum: 1,
   startTagLine: null,
@@ -81,7 +84,7 @@ const initialParserState = {
   acc: [], //accumulator
   state: P_STATE.INIT,
   lineType: null, //from lexer
-};
+});
 
 // overParserProp :: string -> (a -> b) -> lineContext -> lineContext
 const overParserProp = fu.curry3((propName, fn, lineContext) => {
@@ -105,6 +108,7 @@ const consumeLine = fu.curry2((line, lineContext) =>
 const createReducer = (lexer, parserEngine) => (lineContext, line) =>
   fu.compose3(
     parserEngine,
+    //fu.compose2(fu.tapLog("lc Before parseEngine:"), lexer.consume),
     lexer.consume,
     consumeLine(line)
     // fu.compose2(Parser.consumeLine(line), fu.id)
@@ -116,10 +120,11 @@ const createPairParserEngine = (accum) => (lc) => {
   let pState = lc[LC.PARSER];
   pState.lineType = lc.line.type;
 
-  //fu.log("line: ", `'${lc.line}'`);
+  // fu.log("lc: ", lc);
   if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
     if (lc.line.type === LEXER.START_TAG) {
-      lc2 = accum.flush(null, lc);
+      //pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
+      let lc2 = accum.flush(null, lc);
       //fu.log("START TAG");
       let pState2 = lc2[LC.PARSER];
       pState2.lineType = lc2.line.type;
@@ -140,13 +145,13 @@ const createPairParserEngine = (accum) => (lc) => {
     if (lc.line.type === LEXER.END_TAG) {
       //fu.log("END TAG");
       pState.state = P_STATE.IN_BLOCK;
-      pState.beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
       pState.endTagLine = lc.line.data;
 
       lc = accum.flush(lc.line, lc);
       //fu.log("END lc: ", lc);
 
       lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+      lc[LC.PARSER].beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
       lc[LC.PARSER].startTagLine = null;
       lc[LC.PARSER].endTagLine = null;
       return lc;
@@ -171,6 +176,9 @@ const flushAccum = (resultCallback, data, lineContext) => {
     return lineContext;
   }
   const cRes = resultCallback(data);
+  // if (fu.nullOrUndefined(data) && fu.empty(lineContext[LC.PARSER].acc)) {
+  //   return lineContext;
+  // }
   return fu.compose2(
     // fu.tapLog("maac after"),
     clearAcc,
@@ -249,11 +257,13 @@ const createGroupedAccum = (resultCallback) => {
     );
 
   accObj.flush = (_, lineContext) =>
-    flushAccum(
-      resultCallback,
-      groupedParserDecorator(getAcc(lineContext), lineContext),
-      lineContext
-    );
+    fu.empty(getAcc(lineContext))
+      ? lineContext
+      : flushAccum(
+          resultCallback,
+          groupedParserDecorator(getAcc(lineContext), lineContext),
+          lineContext
+        );
 
   return accObj;
 };
@@ -268,10 +278,11 @@ const DEFAULT_SETTINGS = {
 };
 
 class Parser {
-  static initialLineContext = fu.compose2(
-    fu.setProp(LC.DATA, []),
-    fu.setProp(LC.PARSER, initialParserState)
-  )(initialLineContext);
+  static initialLineContext = () =>
+    fu.compose2(
+      fu.setProp(LC.DATA, []),
+      fu.setProp(LC.PARSER, initialParserState())
+    )(initialLineContext());
 
   constructor(startTagRegExp, endTagRegExp, isGrouped, resultCallback) {
     this.accum = createAccum(isGrouped, resultCallback);
@@ -297,8 +308,9 @@ class Parser {
   parseLines(lines) {
     const resCtx = lines.reduce(
       this.reducer.bind(this), //bind to preserve context
-      Parser.initialLineContext
+      Parser.initialLineContext()
     );
+    //fu.log("-- -- --BEFORE FLUSH:", resCtx);
     return this.flush(resCtx);
   }
 }
