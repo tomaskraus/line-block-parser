@@ -24,7 +24,8 @@ const initialLineContext = () => {
   const ilc = {};
   ilc[LC.LINE_NUMBER] = 0;
   ilc[LC.LINE] = null;
-  ilc[LC.ACCUM] = [];
+  // ilc[LC.PARSER] = null;
+  // ilc[LC.ACCUM] = null;
   ilc[LC.DATA] = [];
   ilc[LC.ERRORS] = [];
   return ilc;
@@ -167,9 +168,15 @@ const createPairParserEngine = (accum) => (lc) => {
 
 //========================================================================================
 
-const getAcc = (lineContext) => lineContext[LC.ACCUM];
+const initialAccumState = () => ({
+  state: "init",
+  data: [],
+});
 
-const clearAcc = (lineContext) => fu.setProp(LC.ACCUM, [], lineContext);
+const getAcc = (lineContext) => lineContext[LC.ACCUM].data;
+
+const clearAcc = (lineContext) =>
+  fu.setProp(LC.ACCUM, initialAccumState(), lineContext);
 
 //flushAccum :: (a -> b) -> a -> lineContext -> lineContext
 const flushAccum = (resultCallback, data, lineContext) => {
@@ -257,7 +264,10 @@ const createGroupedAccum = (resultCallback) => {
   accObj.append = (data, lineContext) =>
     fu.overProp(
       LC.ACCUM,
-      (a) => [...a, plainParserDecorator(data, lineContext)],
+      (aObj) => ({
+        state: aObj.state,
+        data: [...aObj.data, plainParserDecorator(data, lineContext)],
+      }),
       lineContext
     );
 
@@ -284,8 +294,9 @@ const DEFAULT_SETTINGS = {
 
 class Parser {
   static initialLineContext = () =>
-    fu.compose2(
+    fu.compose3(
       fu.setProp(LC.DATA, []),
+      fu.setProp(LC.ACCUM, initialAccumState()),
       fu.setProp(LC.PARSER, initialParserState())
     )(initialLineContext());
 
