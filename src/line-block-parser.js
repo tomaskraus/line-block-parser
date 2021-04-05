@@ -15,6 +15,7 @@ const LC = {
   LINE: "line",
   LINE_NUMBER: "lineNumber",
   PARSER: "parser",
+  ACCUM: "accum",
   DATA: "data",
   ERRORS: "errors",
 };
@@ -23,6 +24,7 @@ const initialLineContext = () => {
   const ilc = {};
   ilc[LC.LINE_NUMBER] = 0;
   ilc[LC.LINE] = null;
+  ilc[LC.ACCUM] = [];
   ilc[LC.DATA] = [];
   ilc[LC.ERRORS] = [];
   return ilc;
@@ -81,7 +83,6 @@ const initialParserState = () => ({
   beginNotBlockLineNum: 1,
   startTagLine: null,
   endTagLine: null,
-  acc: [], //accumulator
   state: P_STATE.INIT,
   lineType: null, //from lexer
 });
@@ -166,9 +167,9 @@ const createPairParserEngine = (accum) => (lc) => {
 
 //========================================================================================
 
-const getAcc = (lineContext) => lineContext[LC.PARSER].acc;
+const getAcc = (lineContext) => lineContext[LC.ACCUM];
 
-const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
+const clearAcc = (lineContext) => fu.setProp(LC.ACCUM, [], lineContext);
 
 //flushAccum :: (a -> b) -> a -> lineContext -> lineContext
 const flushAccum = (resultCallback, data, lineContext) => {
@@ -254,8 +255,8 @@ const createGroupedAccum = (resultCallback) => {
   accObj.start = (_, lineContext) => lineContext;
 
   accObj.append = (data, lineContext) =>
-    overParserProp(
-      "acc",
+    fu.overProp(
+      LC.ACCUM,
       (a) => [...a, plainParserDecorator(data, lineContext)],
       lineContext
     );
