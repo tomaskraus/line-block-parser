@@ -1,5 +1,5 @@
-const fu = require("./func-utils");
-const { Parser, Tags } = require("./line-block-parser");
+const fu = require("../src/func-utils");
+const { Parser, Tags } = require("../src/line-block-parser");
 
 const nothingReturnCallback = (data) => fu.log("- - - - - - data: ", data);
 
