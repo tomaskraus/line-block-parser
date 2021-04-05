@@ -172,13 +172,7 @@ const clearAcc = (lineContext) => setParserProp("acc", [], lineContext);
 
 //flushAccum :: (a -> b) -> a -> lineContext -> lineContext
 const flushAccum = (resultCallback, data, lineContext) => {
-  if (lineContext[LC.PARSER].state === P_STATE.INIT) {
-    return lineContext;
-  }
   const cRes = resultCallback(data);
-  // if (fu.nullOrUndefined(data) && fu.empty(lineContext[LC.PARSER].acc)) {
-  //   return lineContext;
-  // }
   return fu.compose2(
     // fu.tapLog("maac after"),
     clearAcc,
@@ -244,6 +238,16 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
 
 const plainParserDecorator = (data, _) => data.data;
 
+const isValidToFlush = (lineContext) => {
+  if (
+    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
+    lineContext[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN
+  ) {
+    return false;
+  }
+  return lineContext[LC.PARSER].state != P_STATE.INIT;
+};
+
 const createGroupedAccum = (resultCallback) => {
   const accObj = {};
 
@@ -257,13 +261,13 @@ const createGroupedAccum = (resultCallback) => {
     );
 
   accObj.flush = (_, lineContext) =>
-    fu.empty(getAcc(lineContext))
-      ? lineContext
-      : flushAccum(
+    isValidToFlush(lineContext)
+      ? flushAccum(
           resultCallback,
           groupedParserDecorator(getAcc(lineContext), lineContext),
           lineContext
-        );
+        )
+      : lineContext;
 
   return accObj;
 };
@@ -301,6 +305,7 @@ class Parser {
   }
 
   flush(lineContext) {
+    //fu.log("--- before PARSER flush data:", lineContext);
     const { errors, data } = this.accum.flush(null, lineContext);
     return { errors, data };
   }
