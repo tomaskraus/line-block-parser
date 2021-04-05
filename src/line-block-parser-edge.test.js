@@ -38,26 +38,59 @@ const noCommentLines = [
   "Mary had a little lamb,",
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
-  "--   That was against the rule,",
-  "",
-  "It made the children laugh and play,",
-  "   To see a lamb at school.",
 ];
 testLines(noCommentLines, "no comment");
 
 //
 
 const wholeComment = [
-  // "ee",
   "  /* ",
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
   "Mary had a little lamb,",
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
-  "--   That was against the rule,",
-  "",
-  "It made the children laugh and play,",
-  "   To see a lamb at school.",
   "   */    ",
 ];
 testLines(wholeComment, "whole comment");
+
+//
+
+const consecutiveComments = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "   */    ",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "   */    ",
+  "He followed her to school one day-",
+];
+testLines(consecutiveComments, "consecutiveComments");
+
+//
+
+const emptyComment = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "  /* ",
+  "   */    ",
+  "   The lamb was sure to go ;",
+];
+testLines(emptyComment, "empty comment");
+
+//
+
+const emptyComment2 = [
+  "  /* ",
+  "   */    ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "  /* ",
+  "   */    ",
+  "   The lamb was sure to go ;",
+  "He followed her to school one day-",
+  "  /* ",
+];
+testLines(emptyComment2, "empty comment 2");
+
+//
