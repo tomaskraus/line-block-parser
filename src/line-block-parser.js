@@ -100,73 +100,6 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 
 //========================================================================================
 
-const consumeLine = fu.curry2((line, lineContext) =>
-  fu.compose2(
-    fu.overProp(LC.LINE_NUMBER, (x) => x + 1),
-    fu.setProp(LC.LINE, line)
-  )(lineContext)
-);
-
-const createReducer = (lexer, parserEngine) => (lineContext, line) =>
-  fu.compose3(
-    parserEngine,
-    //fu.compose2(fu.tapLog("lc Before parseEngine:"), lexer.consume),
-    lexer.consume,
-    consumeLine(line)
-    // fu.compose2(Parser.consumeLine(line), fu.id)
-  )(lineContext);
-
-const createPairParserEngine = (accum) => (lc) => {
-  //fu.log("engine accum: ", accum);
-
-  let pState = lc[LC.PARSER];
-  pState.lineType = lc.line.type;
-
-  // fu.log("lc: ", lc);
-  if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
-    if (lc.line.type === LEXER.START_TAG) {
-      let lc2 = accum.flush(null, lc);
-      //fu.log("START TAG");
-      let pState2 = lc2[LC.PARSER];
-      pState2.lineType = lc2.line.type;
-
-      pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
-      pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
-      pState2.startTagLine = lc2.line.data;
-      pState2.endTagLine = null;
-      pState2.state = P_STATE.IN_BLOCK;
-
-      return accum.start(lc2.line, lc2);
-    } else {
-      //fu.log("NOT BLOCK");
-      pState.state = P_STATE.OUT_OF_BLOCK;
-
-      return accum.append(lc.line, lc);
-    }
-  } else {
-    if (lc.line.type === LEXER.END_TAG) {
-      //fu.log("END TAG");
-      pState.state = P_STATE.IN_BLOCK;
-      pState.endTagLine = lc.line.data;
-
-      lc = accum.flush(lc.line, lc);
-
-      lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
-      lc[LC.PARSER].beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
-      lc[LC.PARSER].startTagLine = null;
-      lc[LC.PARSER].endTagLine = null;
-      return lc;
-    } else {
-      //fu.log("BLOCK");
-      pState.state = P_STATE.IN_BLOCK;
-
-      return accum.append(lc.line, lc);
-    }
-  }
-};
-
-//========================================================================================
-
 const A_STATE = {
   READY: "ready",
   INIT: "init",
@@ -269,6 +202,75 @@ const createAccumulator = (groupedFlag, resultCallback) => {
 
   return accObj;
 };
+
+//========================================================================================
+
+const consumeLine = fu.curry2((line, lineContext) =>
+  fu.compose2(
+    fu.overProp(LC.LINE_NUMBER, (x) => x + 1),
+    fu.setProp(LC.LINE, line)
+  )(lineContext)
+);
+
+const createReducer = (lexer, parserEngine) => (lineContext, line) =>
+  fu.compose3(
+    parserEngine.consume,
+    //fu.compose2(fu.tapLog("lc Before parseEngine:"), lexer.consume),
+    lexer.consume,
+    consumeLine(line)
+    // fu.compose2(Parser.consumeLine(line), fu.id)
+  )(lineContext);
+
+const createPairParserEngine = (accum) => ({
+  consume: (lc) => {
+    //fu.log("engine accum: ", accum);
+
+    let pState = lc[LC.PARSER];
+    pState.lineType = lc.line.type;
+
+    // fu.log("lc: ", lc);
+    if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
+      if (lc.line.type === LEXER.START_TAG) {
+        let lc2 = accum.flush(null, lc);
+        //fu.log("START TAG");
+        let pState2 = lc2[LC.PARSER];
+        pState2.lineType = lc2.line.type;
+
+        pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
+        pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
+        pState2.startTagLine = lc2.line.data;
+        pState2.endTagLine = null;
+        pState2.state = P_STATE.IN_BLOCK;
+
+        return accum.start(lc2.line, lc2);
+      } else {
+        //fu.log("NOT BLOCK");
+        pState.state = P_STATE.OUT_OF_BLOCK;
+
+        return accum.append(lc.line, lc);
+      }
+    } else {
+      if (lc.line.type === LEXER.END_TAG) {
+        //fu.log("END TAG");
+        pState.state = P_STATE.IN_BLOCK;
+        pState.endTagLine = lc.line.data;
+
+        lc = accum.flush(lc.line, lc);
+
+        lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
+        lc[LC.PARSER].beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
+        lc[LC.PARSER].startTagLine = null;
+        lc[LC.PARSER].endTagLine = null;
+        return lc;
+      } else {
+        //fu.log("BLOCK");
+        pState.state = P_STATE.IN_BLOCK;
+
+        return accum.append(lc.line, lc);
+      }
+    }
+  },
+});
 
 //========================================================================================
 
