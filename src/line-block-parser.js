@@ -137,8 +137,6 @@ const initialAccumState = () => ({
 
 //----------------------------------------------------------------------------------------
 
-const getAcc = (lineContext) => lineContext[LC.ACCUM].data;
-
 const clearAcc = (lineContext) =>
   fu.setProp(LC.ACCUM, initialAccumState(), lineContext);
 
@@ -174,7 +172,7 @@ const createAccumulator = (groupedFlag, resultCallback) => {
       return isValidToFlush(lineContext)
         ? flushAccum(
             resultCallback,
-            groupedParserDecorator(getAcc(lineContext), lineContext),
+            groupedParserDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
         : lineContext;
