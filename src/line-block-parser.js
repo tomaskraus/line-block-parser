@@ -169,7 +169,7 @@ const isValidToFlush = (lineContext) => {
 const createAccumulator = (groupedFlag, resultCallback) => {
   const accObj = {};
 
-  accObj.flush = (dataToFlush, lineContext) => {
+  accObj.flush = fu.curry2((dataToFlush, lineContext) => {
     if (groupedFlag) {
       return isValidToFlush(lineContext)
         ? flushAccum(
@@ -186,7 +186,7 @@ const createAccumulator = (groupedFlag, resultCallback) => {
           infoParserDecorator(dataToFlush.data, lineContext),
           lineContext
         );
-  };
+  });
 
   accObj.append = (data, lineContext) =>
     groupedFlag === true
@@ -200,10 +200,11 @@ const createAccumulator = (groupedFlag, resultCallback) => {
         )
       : accObj.flush(data, lineContext);
 
-  accObj.start = (data, lineContext) =>
+  accObj.start = fu.curry2((data, lineContext) =>
     groupedFlag === true
       ? overAcc((_) => ({ data: [], state: A_STATE.READY }), lineContext)
-      : accObj.flush(data, lineContext);
+      : accObj.flush(data, lineContext)
+  );
 
   return accObj;
 };
@@ -230,46 +231,55 @@ const createPairParserEngine = (accum) => ({
   consume: (lc) => {
     //fu.log("engine accum: ", accum);
 
-    let pState = lc[LC.PARSER];
-
     // fu.log("lc: ", lc);
-    if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
+    if (lc[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN) {
       if (lc.line.type === LEXER.START_TAG) {
-        let lc2 = accum.flush(null, lc);
-        //fu.log("START TAG");
-        let pState2 = lc2[LC.PARSER];
-
-        pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
-        pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
-        pState2.startTagLine = lc2.line.data;
-        pState2.endTagLine = null;
-        pState2.state = P_STATE.IN_BLOCK;
-
-        return accum.start(lc2.line, lc2);
+        return fu.compose3(
+          (lc3) => accum.start(lc3.line, lc3),
+          (lc2) =>
+            fu.overProp(LC.PARSER, (p) => ({
+              ...p,
+              beginBlockLineNum: lc2[LC.LINE_NUMBER] + 1,
+              beginNotBlockLineNum: NO_BLOCK_BEGIN,
+              startTagLine: lc2.line.data,
+              endTagLine: null,
+              state: P_STATE.IN_BLOCK,
+            }))(lc2),
+          accum.flush(null)
+        )(lc);
       } else {
         //fu.log("NOT BLOCK");
-        pState.state = P_STATE.OUT_OF_BLOCK;
-
-        return accum.append(lc.line, lc);
+        return fu.compose2(
+          (lc2) => accum.append(lc2.line, lc2),
+          setParserProp("state", P_STATE.OUT_OF_BLOCK)
+        )(lc);
       }
     } else {
       if (lc.line.type === LEXER.END_TAG) {
         //fu.log("END TAG");
-        pState.state = P_STATE.IN_BLOCK;
-        pState.endTagLine = lc.line.data;
-
-        lc = accum.flush(lc.line, lc);
-
-        lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
-        lc[LC.PARSER].beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
-        lc[LC.PARSER].startTagLine = null;
-        lc[LC.PARSER].endTagLine = null;
-        return lc;
+        return fu.compose3(
+          (lc4) =>
+            fu.overProp(LC.PARSER, (p) => ({
+              ...p,
+              beginBlockLineNum: NO_BLOCK_BEGIN,
+              beginNotBlockLineNum: lc4[LC.LINE_NUMBER] + 1,
+              startTagLine: null,
+              endTagLine: null,
+            }))(lc4),
+          (lc3) => accum.flush(lc3.line, lc3),
+          (lc2) =>
+            fu.overProp(LC.PARSER, (p) => ({
+              ...p,
+              state: P_STATE.IN_BLOCK,
+              endTagLine: lc2.line.data,
+            }))(lc2)
+        )(lc);
       } else {
         //fu.log("BLOCK");
-        pState.state = P_STATE.IN_BLOCK;
-
-        return accum.append(lc.line, lc);
+        return fu.compose2(
+          (lc2) => accum.append(lc2.line, lc2),
+          setParserProp("state", P_STATE.IN_BLOCK)
+        )(lc);
       }
     }
   },
