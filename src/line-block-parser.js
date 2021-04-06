@@ -231,7 +231,6 @@ const createPairParserEngine = (accum) => ({
     //fu.log("engine accum: ", accum);
 
     let pState = lc[LC.PARSER];
-    pState.lineType = lc.line.type;
 
     // fu.log("lc: ", lc);
     if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
@@ -239,7 +238,6 @@ const createPairParserEngine = (accum) => ({
         let lc2 = accum.flush(null, lc);
         //fu.log("START TAG");
         let pState2 = lc2[LC.PARSER];
-        pState2.lineType = lc2.line.type;
 
         pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
         pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
