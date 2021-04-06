@@ -111,7 +111,7 @@ const infoParserDecorator = (data, lineContext) => ({
   data,
 });
 
-const groupedParserDecorator = (AccumulatorData, lineContext) => ({
+const groupedParserDecorator = (data, lineContext) => ({
   state: P_STATE.names[lineContext[LC.PARSER].state],
   startLineNumber:
     lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
@@ -119,7 +119,7 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
       : lineContext[LC.PARSER].beginNotBlockLineNum,
   startTagLine: lineContext[LC.PARSER].startTagLine,
   endTagLine: lineContext[LC.PARSER].endTagLine,
-  data: AccumulatorData,
+  data,
 });
 
 //----------------------------------------------------------------------------------------
