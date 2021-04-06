@@ -102,6 +102,28 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 
 //========================================================================================
 
+const plainParserDecorator = (data, _) => data.data;
+
+const infoParserDecorator = (data, lineContext) => ({
+  lineNumber: lineContext[LC.LINE_NUMBER],
+  lineType: LEXER.names[lineContext[LC.LINE].type],
+  state: P_STATE.names[lineContext[LC.PARSER].state],
+  data,
+});
+
+const groupedParserDecorator = (AccumulatorData, lineContext) => ({
+  state: P_STATE.names[lineContext[LC.PARSER].state],
+  startLineNumber:
+    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
+      ? lineContext[LC.PARSER].beginBlockLineNum
+      : lineContext[LC.PARSER].beginNotBlockLineNum,
+  startTagLine: lineContext[LC.PARSER].startTagLine,
+  endTagLine: lineContext[LC.PARSER].endTagLine,
+  data: AccumulatorData,
+});
+
+//----------------------------------------------------------------------------------------
+
 const A_STATE = {
   READY: 0,
   INIT: 1,
@@ -112,6 +134,8 @@ const initialAccumState = () => ({
   state: A_STATE.INIT,
   data: [],
 });
+
+//----------------------------------------------------------------------------------------
 
 const getAcc = (lineContext) => lineContext[LC.ACCUM].data;
 
@@ -133,28 +157,6 @@ const flushAccum = (resultCallback, data, lineContext) => {
     )
   )(lineContext);
 };
-
-//----------------------------------------------------------------------------------------
-
-const plainParserDecorator = (data, _) => data.data;
-
-const infoParserDecorator = (data, lineContext) => ({
-  lineNumber: lineContext[LC.LINE_NUMBER],
-  lineType: LEXER.names[lineContext[LC.LINE].type],
-  state: P_STATE.names[lineContext[LC.PARSER].state],
-  data,
-});
-
-const groupedParserDecorator = (AccumulatorData, lineContext) => ({
-  state: P_STATE.names[lineContext[LC.PARSER].state],
-  startLineNumber:
-    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
-      ? lineContext[LC.PARSER].beginBlockLineNum
-      : lineContext[LC.PARSER].beginNotBlockLineNum,
-  startTagLine: lineContext[LC.PARSER].startTagLine,
-  endTagLine: lineContext[LC.PARSER].endTagLine,
-  data: AccumulatorData,
-});
 
 //----------------------------------------------------------------------------------------
 
