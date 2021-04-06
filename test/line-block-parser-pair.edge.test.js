@@ -94,3 +94,14 @@ const emptyComment2 = [
 testLines(emptyComment2, "empty comment 2");
 
 //
+
+const openComment = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "   */    ",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "He followed her to school one day-",
+];
+testLines(openComment, "open comment");
