@@ -215,12 +215,13 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
   data: AccumulatorData,
 });
 
-//
+//----------------------------------------------------------------------------------------
 
 const isValidToFlush = (lineContext) => {
   return lineContext[LC.ACCUM].state === "ready";
 };
-//----------------------------------------------------------------------------------------
+
+//
 
 const createAccumulator = (groupedFlag, resultCallback) => {
   const accObj = {};
