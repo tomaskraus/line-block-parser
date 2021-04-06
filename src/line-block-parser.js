@@ -42,10 +42,11 @@ const Tags = {
 };
 
 const LEXER = {
-  INIT: "init",
-  START_TAG: "startTag",
-  END_TAG: "endTag",
-  LINE: "line",
+  INIT: 0,
+  START_TAG: 1,
+  END_TAG: 2,
+  LINE: 3,
+  names: ["init", "startTag", "endTag", "line"],
 };
 
 const createLexer = (startTagRegExp, endTagRegExp = null) => {
@@ -74,9 +75,10 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
 const NO_BLOCK_BEGIN = -1;
 
 const P_STATE = {
-  INIT: "init",
-  IN_BLOCK: "inBlock",
-  OUT_OF_BLOCK: "outOfBlock",
+  INIT: 0,
+  IN_BLOCK: 1,
+  OUT_OF_BLOCK: 2,
+  names: ["init", "inBlock", "outOfBlock"],
 };
 
 const initialParserState = () => ({
@@ -101,8 +103,9 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 //========================================================================================
 
 const A_STATE = {
-  READY: "ready",
-  INIT: "init",
+  READY: 0,
+  INIT: 1,
+  names: ["ready", "init"],
 };
 
 const initialAccumState = () => ({
@@ -137,13 +140,13 @@ const plainParserDecorator = (data, _) => data.data;
 
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
-  lineType: lineContext[LC.LINE].type,
-  state: lineContext[LC.PARSER].state,
+  lineType: LEXER.names[lineContext[LC.LINE].type],
+  state: P_STATE.names[lineContext[LC.PARSER].state],
   data,
 });
 
 const groupedParserDecorator = (AccumulatorData, lineContext) => ({
-  state: lineContext[LC.PARSER].state,
+  state: P_STATE.names[lineContext[LC.PARSER].state],
   startLineNumber:
     lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
       ? lineContext[LC.PARSER].beginBlockLineNum
