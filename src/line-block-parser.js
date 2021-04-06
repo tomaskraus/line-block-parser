@@ -167,8 +167,13 @@ const createPairParserEngine = (accum) => (lc) => {
 
 //========================================================================================
 
+const A_STATE = {
+  READY: "ready",
+  INIT: "init",
+};
+
 const initialAccumState = () => ({
-  state: "init",
+  state: A_STATE.INIT,
   data: [],
 });
 
@@ -218,7 +223,7 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
 //----------------------------------------------------------------------------------------
 
 const isValidToFlush = (lineContext) => {
-  return lineContext[LC.ACCUM].state === "ready";
+  return lineContext[LC.ACCUM].state === A_STATE.READY;
 };
 
 //
@@ -250,7 +255,7 @@ const createAccumulator = (groupedFlag, resultCallback) => {
       ? fu.overProp(
           LC.ACCUM,
           (aObj) => ({
-            state: "ready",
+            state: A_STATE.READY,
             data: [...aObj.data, plainParserDecorator(data, lineContext)],
           }),
           lineContext
@@ -259,7 +264,7 @@ const createAccumulator = (groupedFlag, resultCallback) => {
 
   accObj.start = (data, lineContext) =>
     groupedFlag === true
-      ? overAcc((_) => ({ data: [], state: "ready" }), lineContext)
+      ? overAcc((_) => ({ data: [], state: A_STATE.READY }), lineContext)
       : accObj.flush(data, lineContext);
 
   return accObj;
