@@ -107,17 +107,16 @@ const consumeLine = fu.curry2((line, lineContext) =>
   )(lineContext)
 );
 
-const createReducer = (lexer, parserEngine, accumulator) => (
-  lineContext,
-  line
-) =>
+const createReducer = (lexer, parserEngine) => (lineContext, line) =>
   fu.compose3(
-    accumulator.consume,
     parserEngine,
-    fu.compose2(lexer.consume, consumeLine(line))
+    //fu.compose2(fu.tapLog("lc Before parseEngine:"), lexer.consume),
+    lexer.consume,
+    consumeLine(line)
+    // fu.compose2(Parser.consumeLine(line), fu.id)
   )(lineContext);
 
-const createPairParserEngine = () => (lc) => {
+const createPairParserEngine = (accum) => (lc) => {
   //fu.log("engine accum: ", accum);
 
   let pState = lc[LC.PARSER];
@@ -126,24 +125,32 @@ const createPairParserEngine = () => (lc) => {
   // fu.log("lc: ", lc);
   if (pState.beginBlockLineNum === NO_BLOCK_BEGIN) {
     if (lc.line.type === LEXER.START_TAG) {
+      //pState2.beginNotBlockLineNum = NO_BLOCK_BEGIN;
+      let lc2 = accum.flush(null, lc);
       //fu.log("START TAG");
-      pState.state = P_STATE.IN_BLOCK;
-      pState.beginBlockLineNum = lc[LC.LINE_NUMBER] + 1;
-      lc[LC.PARSER].beginNotBlockLineNum = NO_BLOCK_BEGIN;
-      pState.startTagLine = lc.line.data;
-      pState.endTagLine = null;
+      let pState2 = lc2[LC.PARSER];
+      pState2.lineType = lc2.line.type;
 
-      return lc;
+      pState2.beginBlockLineNum = lc2[LC.LINE_NUMBER] + 1;
+      pState2.startTagLine = lc2.line.data;
+      pState2.endTagLine = null;
+      pState2.state = P_STATE.IN_BLOCK;
+
+      return accum.start(lc2.line, lc2);
     } else {
       //fu.log("NOT BLOCK");
       pState.state = P_STATE.OUT_OF_BLOCK;
 
-      return lc;
+      return accum.append(lc.line, lc);
     }
   } else {
     if (lc.line.type === LEXER.END_TAG) {
       //fu.log("END TAG");
+      pState.state = P_STATE.IN_BLOCK;
       pState.endTagLine = lc.line.data;
+
+      lc = accum.flush(lc.line, lc);
+      //fu.log("END lc: ", lc);
 
       lc[LC.PARSER].beginBlockLineNum = NO_BLOCK_BEGIN;
       lc[LC.PARSER].beginNotBlockLineNum = lc[LC.LINE_NUMBER] + 1;
@@ -154,7 +161,7 @@ const createPairParserEngine = () => (lc) => {
       //fu.log("BLOCK");
       pState.state = P_STATE.IN_BLOCK;
 
-      return lc;
+      return accum.append(lc.line, lc);
     }
   }
 };
@@ -185,12 +192,42 @@ const flushAccum = (resultCallback, data, lineContext) => {
 
 //----------------------------------------------------------------------------------------
 
+const createAccum = (groupedFlag, resultCallback) =>
+  groupedFlag === true
+    ? createGroupedAccum(resultCallback)
+    : createFlatAccum(resultCallback);
+
+//----------------------------------------------------------------------------------------
+
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
   lineType: lineContext[LC.LINE].type,
   state: lineContext[LC.PARSER].state,
   data,
 });
+
+const createFlatAccum = (resultCallback) => {
+  const accObj = {};
+
+  accObj.flush = (dataToFlush, lineContext) => {
+    if (dataToFlush === null) {
+      return lineContext;
+    }
+    return flushAccum(
+      resultCallback,
+      infoParserDecorator(dataToFlush.data, lineContext),
+      lineContext
+    );
+  };
+
+  accObj.append = (newValue, lineContext) => {
+    return accObj.flush(newValue, lineContext);
+  };
+
+  accObj.start = accObj.append;
+
+  return accObj;
+};
 
 //----------------------------------------------------------------------------------------
 
@@ -207,34 +244,6 @@ const groupedParserDecorator = (AccumulatorData, lineContext) => ({
 
 const plainParserDecorator = (data, _) => data.data;
 
-//----------------------------------------------------------------------------------------
-const createAccum = (groupedFlag, resultCallback) => {
-  const accObj = {};
-
-  accObj.flush = (additionalData, lineContext) => {
-    if (additionalData !== null) {
-      return flushAccum(
-        resultCallback,
-        infoParserDecorator(additionalData.data, lineContext),
-        lineContext
-      );
-    }
-    return getAcc(lineContext).length > 0
-      ? flushAccum(resultCallback, getAcc(lineContext), lineContext)
-      : lineContext;
-  };
-
-  accObj.consume = (lineContext) => {
-    if (!groupedFlag) {
-      return accObj.flush(lineContext[LC.LINE], lineContext);
-    }
-  };
-
-  return accObj;
-};
-
-//----------------------------------------------------------------------------------------
-
 const isValidToFlush = (lineContext) => {
   if (
     lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
@@ -243,6 +252,33 @@ const isValidToFlush = (lineContext) => {
     return false;
   }
   return lineContext[LC.PARSER].state != P_STATE.INIT;
+};
+
+const createGroupedAccum = (resultCallback) => {
+  const accObj = {};
+
+  accObj.start = (_, lineContext) => lineContext;
+
+  accObj.append = (data, lineContext) =>
+    fu.overProp(
+      LC.ACCUM,
+      (aObj) => ({
+        state: aObj.state,
+        data: [...aObj.data, plainParserDecorator(data, lineContext)],
+      }),
+      lineContext
+    );
+
+  accObj.flush = (_, lineContext) =>
+    isValidToFlush(lineContext)
+      ? flushAccum(
+          resultCallback,
+          groupedParserDecorator(getAcc(lineContext), lineContext),
+          lineContext
+        )
+      : lineContext;
+
+  return accObj;
 };
 
 //========================================================================================
@@ -263,10 +299,10 @@ class Parser {
     )(initialLineContext());
 
   constructor(startTagRegExp, endTagRegExp, isGrouped, resultCallback) {
-    this.lexer = createLexer(startTagRegExp, endTagRegExp);
-    this.parserEngine = createPairParserEngine();
     this.accum = createAccum(isGrouped, resultCallback);
-    this.reducer = createReducer(this.lexer, this.parserEngine, this.accum);
+    this.lexer = createLexer(startTagRegExp, endTagRegExp);
+    this.parserEngine = createPairParserEngine(this.accum);
+    this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
   static create(
