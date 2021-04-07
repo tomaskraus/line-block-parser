@@ -21,8 +21,9 @@ const testLines = (lines, label = "") => {
   fu.log("test result data: ", parserFlat.parse(lines).data);
   //
   fu.log("-- parser grouped (GROUPED mode, no callback) ---------");
-  const parsedData = parserGrouped.parse(lines).data;
-  fu.log("test result data: ", parsedData);
+  const parsedData = parserGrouped.parse(lines);
+  fu.log("test result data: ", parsedData.data);
+  fu.log("test result errors: ", parsedData.errors);
   // fu.log("data[0]:", parserGrouped.parseLines(lines).data[0]);
   // fu.log("data[1]:", parserGrouped.parseLines(lines).data[1]);
 };
