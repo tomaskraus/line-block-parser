@@ -240,6 +240,34 @@ const createReducer = (lexer, parserEngine) => (lineContext, line) =>
     // fu.compose2(Parser.consumeLine(line), fu.id)
   )(lineContext);
 
+const ERR_TYPE = {
+  DUP_START_TAG: 0,
+  DUP_END_TAG: 1,
+  MISS_END_TAG: 2,
+  names: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG"],
+  descriptions: [
+    "Repeated start tag. No previous matching end-tag found",
+    "Repeated end tag. No previous matching start-tag found",
+    "Missing end tag at the end of the final block",
+  ],
+};
+
+const addError = fu.curry2((errType, lineContext) =>
+  fu.overProp(
+    LC.ERRORS,
+    (errs) => [
+      ...errs,
+      {
+        lineNumber: lineContext[LC.LINE_NUMBER],
+        line: lineContext[LC.LINE].data,
+        errorType: ERR_TYPE.names[errType],
+        description: ERR_TYPE.descriptions[errType],
+      },
+    ],
+    lineContext
+  )
+);
+
 const createPairParserEngine = (accum) => ({
   consume: (lc) => {
     //fu.log("engine accum: ", accum);
@@ -297,8 +325,13 @@ const createPairParserEngine = (accum) => ({
     }
   },
   flush: (lineContext) => {
-    //add err check
-    return accum.flush(null, lineContext);
+    return lineContext[LC.PARSER].state === P_STATE.OUT_OF_BLOCK ||
+      fu.empty(lineContext[LC.ACCUM].data)
+      ? accum.flush(null, lineContext)
+      : fu.compose2(
+          accum.flush(null),
+          addError(ERR_TYPE.MISS_END_TAG)
+        )(lineContext);
   },
 });
 
