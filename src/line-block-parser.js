@@ -244,28 +244,26 @@ const ERR_TYPE = {
   DUP_START_TAG: 0,
   DUP_END_TAG: 1,
   MISS_END_TAG: 2,
-  names: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG"],
+  END_TAG_FIRST: 3,
+  names: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG", "END_TAG_FIRST"],
   descriptions: [
-    "Repeated start tag. No previous matching end-tag found",
-    "Repeated end tag. No previous matching start-tag found",
-    "Missing end tag at the end of the final block",
+    "Repeated start-tag. No previous matching end-tag found",
+    "Repeated end-tag. No previous matching start-tag found",
+    "Missing end-tag at the end of the final block",
+    "End-tag at the very beginning is not allowed",
   ],
 };
 
 const addError = fu.curry2((errType, lineContext) =>
-  fu.overProp(
-    LC.ERRORS,
-    (errs) => [
-      ...errs,
-      {
-        lineNumber: lineContext[LC.LINE_NUMBER],
-        line: lineContext[LC.LINE].data,
-        errorType: ERR_TYPE.names[errType],
-        description: ERR_TYPE.descriptions[errType],
-      },
-    ],
-    lineContext
-  )
+  fu.overProp(LC.ERRORS, (errs) => [
+    ...errs,
+    {
+      lineNumber: lineContext[LC.LINE_NUMBER],
+      line: lineContext[LC.LINE].data,
+      errorType: ERR_TYPE.names[errType],
+      description: ERR_TYPE.descriptions[errType],
+    },
+  ])(lineContext)
 );
 
 const createPairParserEngine = (accum) => ({
@@ -290,8 +288,14 @@ const createPairParserEngine = (accum) => ({
         )(lc);
       } else {
         //fu.log("NOT BLOCK");
-        return fu.compose2(
-          (lc2) => accum.append(lc2.line, lc2),
+        return fu.compose3(
+          (lc3) => accum.append(lc3.line, lc3),
+          (lc2) =>
+            lc2.line.type === LEXER.END_TAG
+              ? lc[LC.LINE_NUMBER] === 1
+                ? addError(ERR_TYPE.END_TAG_FIRST, lc2)
+                : addError(ERR_TYPE.DUP_END_TAG, lc2)
+              : lc2,
           setParserProp("state", P_STATE.OUT_OF_BLOCK)
         )(lc);
       }
@@ -318,20 +322,24 @@ const createPairParserEngine = (accum) => ({
       } else {
         //fu.log("BLOCK");
         return fu.compose2(
-          (lc2) => accum.append(lc2.line, lc2),
-          setParserProp("state", P_STATE.IN_BLOCK)
+          (lc3) => accum.append(lc3.line, lc3),
+          (lc2) =>
+            lc2.line.type === LEXER.START_TAG
+              ? addError(ERR_TYPE.DUP_START_TAG, lc2)
+              : lc2
         )(lc);
       }
     }
   },
+
   flush: (lineContext) => {
-    return lineContext[LC.PARSER].state === P_STATE.OUT_OF_BLOCK ||
-      fu.empty(lineContext[LC.ACCUM].data)
-      ? accum.flush(null, lineContext)
-      : fu.compose2(
+    return lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
+      lineContext[LC.LINE].type != LEXER.END_TAG
+      ? fu.compose2(
           accum.flush(null),
           addError(ERR_TYPE.MISS_END_TAG)
-        )(lineContext);
+        )(lineContext)
+      : accum.flush(null, lineContext);
   },
 });
 

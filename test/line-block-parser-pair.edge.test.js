@@ -18,16 +18,22 @@ const testLines = (lines, label = "") => {
   fu.log("", lines);
   //
   fu.log("-- parser flat (FLAT mode, no callback) ---------");
-  fu.log("test result data: ", parserFlat.parse(lines).data);
+  const parsedFlat = parserFlat.parse(lines);
+  fu.log("test result data: ", parsedFlat.data);
+  fu.log("test result errors: ", parsedFlat.errors);
   //
   fu.log("-- parser grouped (GROUPED mode, no callback) ---------");
-  const parsedData = parserGrouped.parse(lines);
-  fu.log("test result data: ", parsedData.data);
-  fu.log("test result errors: ", parsedData.errors);
-  // fu.log("data[0]:", parserGrouped.parseLines(lines).data[0]);
-  // fu.log("data[1]:", parserGrouped.parseLines(lines).data[1]);
+  const parsedGrouped = parserGrouped.parse(lines);
+  fu.log("test result data: ", parsedGrouped.data);
+  fu.log("test result errors: ", parsedGrouped.errors);
 };
 //------------------------------------------------------------------------------------------------
+
+fu.log(
+  `
+  = =  EDGE CASES  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+  `
+);
 
 const emptyLines = [];
 testLines(emptyLines, "emptyLines");
@@ -79,9 +85,7 @@ const emptyComment = [
 ];
 testLines(emptyComment, "empty comment");
 
-//
-
-const emptyComment2 = [
+const multipleEmptyComment = [
   "  /* ",
   "   */    ",
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
@@ -90,13 +94,12 @@ const emptyComment2 = [
   "   */    ",
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
-  "  /* ",
 ];
-testLines(emptyComment2, "empty comment 2");
+testLines(multipleEmptyComment, "multiple empty comment");
 
 //
 
-const openComment = [
+const unclosedComment = [
   "  /* ",
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
   "Mary had a little lamb,",
@@ -105,4 +108,128 @@ const openComment = [
   "   The lamb was sure to go ;",
   "He followed her to school one day-",
 ];
-testLines(openComment, "open comment");
+testLines(unclosedComment, "unclosed comment");
+
+const emptyUnclosedComment = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "   */    ",
+  "",
+  "  /* ",
+];
+testLines(emptyUnclosedComment, "empty unclosed comment");
+
+//
+
+const repeatedStartTag = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "/*",
+  "Mary had a little lamb,",
+  "   The lamb was sure to go ;",
+  "He followed her to school one day-",
+  "   */    ",
+];
+testLines(repeatedStartTag, "repeated startTag");
+
+const consecutiveStartTag = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "   The lamb was sure to go ;",
+  "/*",
+  " /*",
+  "He followed her to school one day-",
+  "   */    ",
+];
+testLines(consecutiveStartTag, "consecutive startTag");
+
+const multipleRepeatedStartTag = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "/*",
+  "Mary had a little lamb,",
+  "/*",
+  "   The lamb was sure to go ;",
+  " /*",
+  "He followed her to school one day-",
+  "   */    ",
+];
+testLines(multipleRepeatedStartTag, "multiple repeated startTag");
+
+//
+
+const repeatedEndTag = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  " */   ",
+  "Mary had a little lamb,",
+  "   */    ",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "   */    ",
+  "He followed her to school one day-",
+];
+testLines(repeatedEndTag, "repeatedEndTag");
+
+const consecutiveEndTag = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  " */   ",
+  "   */    ",
+  "Mary had a little lamb,",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "   */    ",
+  "He followed her to school one day-",
+];
+testLines(consecutiveEndTag, "consecutive EndTag");
+
+const multipleEndTag = [
+  "  /* ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  " */   ",
+  "   */    ",
+  "Mary had a little lamb,",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "   */    ",
+  "He followed her to school one day-",
+  "*/",
+];
+testLines(multipleEndTag, "multiple EndTag");
+
+//
+
+const endTagAtBegin = [
+  " */ ",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  "  /* ",
+  "   The lamb was sure to go ;",
+  "   */    ",
+  "He followed her to school one day-",
+];
+testLines(endTagAtBegin, "EndTag at the beginning");
+
+//
+
+const multipleErrorTypes = [
+  "*/",
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "Mary had a little lamb,",
+  " /*",
+  " /*",
+  "--  Its fleece was white as snow,",
+  "--And every where that Mary went",
+  "*/  ",
+  "*/  ",
+  "   The lamb was sure to go ;",
+  "He followed her to school one day-",
+  " /* ",
+  "--   That was against the rule,",
+  "*/",
+  " /* ",
+  "It made the children laugh and play,",
+  "   To see a lamb at school.",
+];
+testLines(multipleErrorTypes, "multiple error types");
