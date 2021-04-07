@@ -296,6 +296,10 @@ const createPairParserEngine = (accum) => ({
       }
     }
   },
+  flush: (lineContext) => {
+    //add err check
+    return accum.flush(null, lineContext);
+  },
 });
 
 //========================================================================================
@@ -333,7 +337,7 @@ class Parser {
 
   flush(lineContext) {
     //fu.log("--- before PARSER flush data:", lineContext);
-    const { errors, data } = this.accum.flush(null, lineContext);
+    const { errors, data } = this.parserEngine.flush(lineContext);
     return { errors, data };
   }
 
