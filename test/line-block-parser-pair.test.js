@@ -5,6 +5,8 @@ const nothingReturnCallback = (data) => fu.log("- - - - - - data: ", data);
 
 const valueReturnCallback = (data) => {
   fu.log(". . . . data: ", data);
+  fu.log("belongsToBlock", Parser.belongsToBlock(data));
+  fu.log("isInsideBlock", Parser.isInsideBlock(data));
   return data.data;
 };
 

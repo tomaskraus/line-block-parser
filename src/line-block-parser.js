@@ -104,12 +104,27 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 
 const plainParserDecorator = (data, _) => data.data;
 
+const LINE_INFO = {
+  LINE_NUMBER: "lineNumber",
+  LINE_TYPE: "lineType",
+  STATE: "state",
+};
+
 const infoParserDecorator = (data, lineContext) => ({
   lineNumber: lineContext[LC.LINE_NUMBER],
   lineType: LEXER.names[lineContext[LC.LINE].type],
   state: P_STATE.names[lineContext[LC.PARSER].state],
   data,
 });
+
+const belongsToBlock = (lineInfo) =>
+  lineInfo[LINE_INFO.STATE] === P_STATE.names[P_STATE.IN_BLOCK];
+
+const isInsideBlock = (lineInfo) =>
+  belongsToBlock(lineInfo) &&
+  lineInfo[LINE_INFO.LINE_TYPE] === LEXER.names[LEXER.LINE];
+
+//----------------------------------------------------------------------------------------
 
 const groupedParserDecorator = (data, lineContext) => ({
   state: P_STATE.names[lineContext[LC.PARSER].state],
@@ -122,7 +137,7 @@ const groupedParserDecorator = (data, lineContext) => ({
   data,
 });
 
-//----------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
 const A_STATE = {
   READY: 0,
@@ -330,6 +345,9 @@ class Parser {
     //fu.log("-- -- --BEFORE FLUSH:", resCtx);
     return this.flush(resCtx);
   }
+
+  static belongsToBlock = belongsToBlock;
+  static isInsideBlock = isInsideBlock;
 }
 
 //========================================================================================
