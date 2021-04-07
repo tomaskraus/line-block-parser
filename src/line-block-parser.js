@@ -337,7 +337,7 @@ class Parser {
     return { errors, data };
   }
 
-  parseLines(lines) {
+  parse(lines) {
     const resCtx = lines.reduce(
       this.reducer.bind(this), //bind to preserve context
       Parser.initialLineContext()

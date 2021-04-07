@@ -26,7 +26,7 @@ const lines = [
 
 //let's go
 const blocksFound = jsCommentParser
-  .parseLines(lines)
+  .parse(lines)
   .data //data
   .filter((a) => a.state === "inBlock" && a.lineType === "line")
   .map((a) => a.data);

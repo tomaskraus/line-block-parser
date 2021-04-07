@@ -55,30 +55,30 @@ const testLines = (lines, label = "") => {
   fu.log("", lines);
   //
   fu.log("-- parser flat (FLAT mode, no callback) ---------");
-  fu.log("test result data: ", parserFlat.parseLines(lines).data);
+  fu.log("test result data: ", parserFlat.parse(lines).data);
 
   fu.log("-- parser grouped (GROUPED mode, no callback) ---------");
-  fu.log("test result data: ", parserGrouped.parseLines(lines).data);
+  fu.log("test result data: ", parserGrouped.parse(lines).data);
 
   fu.log(
     "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
   );
   //
   fu.log("-- parser flat (FLAT mode, callback no return) ---------");
-  fu.log("test result data: ", parserFlatCBnoReturn.parseLines(lines).data);
+  fu.log("test result data: ", parserFlatCBnoReturn.parse(lines).data);
 
   fu.log("-- parser grouped (GROUPED mode, callback no return) ---------");
-  fu.log("test result data: ", parserGroupedCB_noReturn.parseLines(lines).data);
+  fu.log("test result data: ", parserGroupedCB_noReturn.parse(lines).data);
 
   fu.log(
     "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - "
   );
   //
   fu.log("-- parser flat (FLAT mode, callback return) ---------");
-  fu.log("test result: data ", parserFlatCB_Return.parseLines(lines).data);
+  fu.log("test result: data ", parserFlatCB_Return.parse(lines).data);
 
   fu.log("-- parser grouped (GROUPED mode, callback return) ---------");
-  fu.log("test result data: ", parserGroupedCB_Return.parseLines(lines).data);
+  fu.log("test result data: ", parserGroupedCB_Return.parse(lines).data);
 };
 
 //------------------------------------------------------------------------------------------------
