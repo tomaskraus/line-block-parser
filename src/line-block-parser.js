@@ -343,11 +343,6 @@ const createPairParserEngine = (accum, errorCallback) => ({
 
 //========================================================================================
 
-const DEFAULT_SETTINGS = {
-  GROUPING: true,
-  PARSER_TYPE: "pair",
-};
-
 class Parser {
   static defaults = () => ({
     grouped: true,
