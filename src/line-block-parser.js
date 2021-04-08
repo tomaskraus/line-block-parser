@@ -252,19 +252,28 @@ const ERR_TYPE = {
   ],
 };
 
-const addError = fu.curry2((errType, lineContext) =>
-  fu.overProp(LC.ERRORS, (errs) => [
-    ...errs,
-    {
-      lineNumber: lineContext[LC.LINE_NUMBER],
-      line: lineContext[LC.LINE].data,
-      errorType: ERR_TYPE.names[errType],
-      description: ERR_TYPE.descriptions[errType],
-    },
-  ])(lineContext)
-);
+const addError = fu.curry3((errorCallback, errType, lineContext) => {
+  const newErr = new Error();
+  newErr.message = ERR_TYPE.descriptions[errType];
+  newErr.lineNumber = lineContext[LC.LINE_NUMBER];
+  newErr.name = "ParserError";
+  const dataFromCallback = errorCallback(newErr);
+  return fu.nullOrUndefined(dataFromCallback)
+    ? lineContext
+    : fu.overProp(
+        LC.ERRORS,
+        (errs) => [...errs, dataFromCallback],
+        lineContext
+      );
+});
 
-const createPairParserEngine = (accum) => ({
+const defaultErrorHandler = (err) => ({
+  name: err.name,
+  message: err.message,
+  lineNumber: err.lineNumber,
+});
+
+const createPairParserEngine = (accum, errorCallback) => ({
   consume: (lc) => {
     if (lc[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN) {
       //fu.log("START TAG");
@@ -289,8 +298,8 @@ const createPairParserEngine = (accum) => ({
           (lc2) =>
             lc2[LC.LINE].type === LEXER.END_TAG
               ? lc[LC.LINE_NUMBER] === 1
-                ? addError(ERR_TYPE.END_TAG_FIRST, lc2)
-                : addError(ERR_TYPE.DUP_END_TAG, lc2)
+                ? addError(errorCallback, ERR_TYPE.END_TAG_FIRST, lc2)
+                : addError(errorCallback, ERR_TYPE.DUP_END_TAG, lc2)
               : lc2,
           setParserProp("state", P_STATE.OUT_OF_BLOCK)
         )(lc);
@@ -321,7 +330,7 @@ const createPairParserEngine = (accum) => ({
           (lc3) => accum.append(lc3.line, lc3),
           (lc2) =>
             lc2[LC.LINE].type === LEXER.START_TAG
-              ? addError(ERR_TYPE.DUP_START_TAG, lc2)
+              ? addError(errorCallback, ERR_TYPE.DUP_START_TAG, lc2)
               : lc2
         )(lc);
       }
@@ -333,14 +342,12 @@ const createPairParserEngine = (accum) => ({
     lineContext[LC.LINE].type != LEXER.END_TAG
       ? fu.compose2(
           accum.flush(null),
-          addError(ERR_TYPE.MISS_END_TAG)
+          addError(errorCallback, ERR_TYPE.MISS_END_TAG)
         )(lineContext)
       : accum.flush(null, lineContext),
 });
 
 //========================================================================================
-
-const defaultDataCallback = fu.id;
 
 const DEFAULT_SETTINGS = {
   GROUPING: true,
@@ -355,10 +362,10 @@ class Parser {
       fu.setProp(LC.PARSER, initialParserState())
     )(initialLineContext());
 
-  constructor(startTagRegExp, endTagRegExp, isGrouped, onData) {
+  constructor(startTagRegExp, endTagRegExp, isGrouped, onData, onError) {
     this.accum = createAccumulator(isGrouped, onData);
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
-    this.parserEngine = createPairParserEngine(this.accum);
+    this.parserEngine = createPairParserEngine(this.accum, onError);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
@@ -366,9 +373,10 @@ class Parser {
     startTagRegExp,
     endTagRegExp,
     isGrouped = DEFAULT_SETTINGS.GROUPING,
-    onData = defaultDataCallback
+    onData = Parser.defaultDataCallback,
+    onError = Parser.defaultErrorHandler
   ) {
-    return new Parser(startTagRegExp, endTagRegExp, isGrouped, onData);
+    return new Parser(startTagRegExp, endTagRegExp, isGrouped, onData, onError);
   }
 
   getReducer = () => this.reducer;
@@ -388,6 +396,9 @@ class Parser {
 
   static belongsToBlock = belongsToBlock;
   static isInsideBlock = isInsideBlock;
+
+  static defaultDataCallback = fu.id;
+  static defaultErrorHandler = defaultErrorHandler;
 }
 
 //========================================================================================

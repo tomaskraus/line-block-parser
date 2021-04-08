@@ -885,10 +885,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 7,
-    line: 'He followed her to school one day-',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 7
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -916,10 +915,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 7,
-    line: 'He followed her to school one day-',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 7
   }
 ]
 -- lines (empty unclosed comment) ------------------------------------------------------------------------
@@ -967,10 +965,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 6,
-    line: '  /* ',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 6
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1002,10 +999,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 6,
-    line: '  /* ',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 6
   }
 ]
 -- lines (repeated startTag) ------------------------------------------------------------------------
@@ -1060,10 +1056,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 3,
-    line: '/*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 3
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1084,10 +1079,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 3,
-    line: '/*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 3
   }
 ]
 -- lines (consecutive startTag) ------------------------------------------------------------------------
@@ -1142,10 +1136,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 5,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1171,10 +1164,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 5,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
   }
 ]
 -- lines (multiple repeated startTag) ------------------------------------------------------------------------
@@ -1231,16 +1223,14 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '/*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 4
   },
   {
-    lineNumber: 6,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 6
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1268,16 +1258,14 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '/*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 4
   },
   {
-    lineNumber: 6,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 6
   }
 ]
 -- lines (repeatedEndTag) ------------------------------------------------------------------------
@@ -1351,10 +1339,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 5,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 5
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1390,10 +1377,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 5,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 5
   }
 ]
 -- lines (consecutive EndTag) ------------------------------------------------------------------------
@@ -1467,10 +1453,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 4
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1506,10 +1491,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 4
   }
 ]
 -- lines (multiple EndTag) ------------------------------------------------------------------------
@@ -1590,16 +1574,14 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 4
   },
   {
-    lineNumber: 10,
-    line: '*/',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 10
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1635,16 +1617,14 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 4,
-    line: '   */    ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 4
   },
   {
-    lineNumber: 10,
-    line: '*/',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 10
   }
 ]
 -- lines (EndTag at the beginning) ------------------------------------------------------------------------
@@ -1704,10 +1684,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 1,
-    line: ' */ ',
-    errorType: 'END_TAG_FIRST',
-    description: 'End-tag at the very beginning is not allowed'
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1740,10 +1719,9 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 1,
-    line: ' */ ',
-    errorType: 'END_TAG_FIRST',
-    description: 'End-tag at the very beginning is not allowed'
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
   }
 ]
 -- lines (multiple error types) ------------------------------------------------------------------------
@@ -1863,28 +1841,24 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 1,
-    line: '*/',
-    errorType: 'END_TAG_FIRST',
-    description: 'End-tag at the very beginning is not allowed'
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
   },
   {
-    lineNumber: 5,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
   },
   {
-    lineNumber: 9,
-    line: '*/  ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 9
   },
   {
-    lineNumber: 17,
-    line: '   To see a lamb at school.',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 17
   }
 ]
 -- parser grouped (GROUPED mode, no callback) ---------
@@ -1942,27 +1916,23 @@ test result data:  [
 ]
 test result errors:  [
   {
-    lineNumber: 1,
-    line: '*/',
-    errorType: 'END_TAG_FIRST',
-    description: 'End-tag at the very beginning is not allowed'
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
   },
   {
-    lineNumber: 5,
-    line: ' /*',
-    errorType: 'DUP_START_TAG',
-    description: 'Repeated start-tag. No previous matching end-tag found'
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
   },
   {
-    lineNumber: 9,
-    line: '*/  ',
-    errorType: 'DUP_END_TAG',
-    description: 'Repeated end-tag. No previous matching start-tag found'
+    name: 'ParserError',
+    message: 'Repeated end-tag. No previous matching start-tag found',
+    lineNumber: 9
   },
   {
-    lineNumber: 17,
-    line: '   To see a lamb at school.',
-    errorType: 'MISS_END_TAG',
-    description: 'Missing end-tag at the end of the final block'
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 17
   }
 ]
