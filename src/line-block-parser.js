@@ -272,15 +272,15 @@ const createPairParserEngine = (accum) => ({
 
     // fu.log("lc: ", lc);
     if (lc[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN) {
-      if (lc.line.type === LEXER.START_TAG) {
+      if (lc[LC.LINE].type === LEXER.START_TAG) {
         return fu.compose3(
-          (lc3) => accum.start(lc3.line, lc3),
+          (lc3) => accum.start(lc3[LC.LINE], lc3),
           (lc2) =>
             fu.overProp(LC.PARSER, (p) => ({
               ...p,
               beginBlockLineNum: lc2[LC.LINE_NUMBER] + 1,
               beginNotBlockLineNum: NO_BLOCK_BEGIN,
-              startTagLine: lc2.line.data,
+              startTagLine: lc2[LC.LINE].data,
               endTagLine: null,
               state: P_STATE.IN_BLOCK,
             }))(lc2),
@@ -291,7 +291,7 @@ const createPairParserEngine = (accum) => ({
         return fu.compose3(
           (lc3) => accum.append(lc3.line, lc3),
           (lc2) =>
-            lc2.line.type === LEXER.END_TAG
+            lc2[LC.LINE].type === LEXER.END_TAG
               ? lc[LC.LINE_NUMBER] === 1
                 ? addError(ERR_TYPE.END_TAG_FIRST, lc2)
                 : addError(ERR_TYPE.DUP_END_TAG, lc2)
@@ -300,7 +300,7 @@ const createPairParserEngine = (accum) => ({
         )(lc);
       }
     } else {
-      if (lc.line.type === LEXER.END_TAG) {
+      if (lc[LC.LINE].type === LEXER.END_TAG) {
         //fu.log("END TAG");
         return fu.compose3(
           (lc4) =>
@@ -316,7 +316,7 @@ const createPairParserEngine = (accum) => ({
             fu.overProp(LC.PARSER, (p) => ({
               ...p,
               state: P_STATE.IN_BLOCK,
-              endTagLine: lc2.line.data,
+              endTagLine: lc2[LC.LINE].data,
             }))(lc2)
         )(lc);
       } else {
@@ -324,7 +324,7 @@ const createPairParserEngine = (accum) => ({
         return fu.compose2(
           (lc3) => accum.append(lc3.line, lc3),
           (lc2) =>
-            lc2.line.type === LEXER.START_TAG
+            lc2[LC.LINE].type === LEXER.START_TAG
               ? addError(ERR_TYPE.DUP_START_TAG, lc2)
               : lc2
         )(lc);
