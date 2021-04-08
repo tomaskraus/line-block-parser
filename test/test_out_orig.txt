@@ -432,6 +432,12 @@ test result errors:  []
 --(emptyLines) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  []
 test result errors:  []
+--(emptyLines) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  []
+test result errors:  []
+--(emptyLines) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+test result data:  []
+test result errors:  []
 == lines (no comment) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -468,6 +474,38 @@ test result data:  [
 ]
 test result errors:  []
 --(no comment) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(no comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(no comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -533,6 +571,38 @@ test result data:  [
 ]
 test result errors:  []
 --(whole comment) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(whole comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(whole comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -639,6 +709,62 @@ test result data:  [
   }
 ]
 test result errors:  []
+--(consecutiveComments) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
+--(consecutiveComments) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
 == lines (empty comment) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -682,6 +808,62 @@ test result data:  [
 ]
 test result errors:  []
 --(empty comment) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 4,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   The lamb was sure to go ;' ]
+  }
+]
+test result errors:  []
+--(empty comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 4,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   The lamb was sure to go ;' ]
+  }
+]
+test result errors:  []
+--(empty comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -773,6 +955,82 @@ test result data:  [
 ]
 test result errors:  []
 --(multiple empty comment) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 3,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 7,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(multiple empty comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 3,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: []
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 7,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
+--(multiple empty comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -902,6 +1160,55 @@ test result errors:  [
     lineNumber: 7
   }
 ]
+--(unclosed comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: null,
+    data: [
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  [ 7 ]
+--(unclosed comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 7
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 6,
+    startTagLine: '  /* ',
+    endTagLine: null,
+    data: [
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
 == lines (empty unclosed comment) ===============================================================================
  [
   '  /* ',
@@ -986,6 +1293,63 @@ test result errors:  [
     lineNumber: 6
   }
 ]
+--(empty unclosed comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: null,
+    data: []
+  }
+]
+test result errors:  [ 6 ]
+--(empty unclosed comment) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 6
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: null,
+    data: []
+  }
+]
+test result errors:  []
 == lines (repeated startTag) ===============================================================================
  [
   '  /* ',
@@ -1066,6 +1430,41 @@ test result errors:  [
     lineNumber: 3
   }
 ]
+--(repeated startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      '/*',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  [ 3 ]
+--(repeated startTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 3
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      '/*',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
 == lines (consecutive startTag) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1151,6 +1550,51 @@ test result errors:  [
     lineNumber: 5
   }
 ]
+--(consecutive startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: '/*',
+    endTagLine: '   */    ',
+    data: [ ' /*', 'He followed her to school one day-' ]
+  }
+]
+test result errors:  [ 5 ]
+--(consecutive startTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 5
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: '/*',
+    endTagLine: '   */    ',
+    data: [ ' /*', 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
 == lines (multiple repeated startTag) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1250,6 +1694,56 @@ test result errors:  [
     lineNumber: 6
   }
 ]
+--(multiple repeated startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: '/*',
+    endTagLine: '   */    ',
+    data: [
+      'Mary had a little lamb,',
+      '/*',
+      '   The lamb was sure to go ;',
+      ' /*',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  [ 4, 6 ]
+--(multiple repeated startTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 4
+ERROR on line: 6
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: '/*',
+    endTagLine: '   */    ',
+    data: [
+      'Mary had a little lamb,',
+      '/*',
+      '   The lamb was sure to go ;',
+      ' /*',
+      'He followed her to school one day-'
+    ]
+  }
+]
+test result errors:  []
 == lines (repeatedEndTag) ===============================================================================
  [
   '  /* ',
@@ -1364,6 +1858,71 @@ test result errors:  [
     lineNumber: 5
   }
 ]
+--(repeatedEndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'Mary had a little lamb,', '   */    ' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  [ 5 ]
+--(repeatedEndTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 5
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'Mary had a little lamb,', '   */    ' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
 == lines (consecutive EndTag) ===============================================================================
  [
   '  /* ',
@@ -1478,6 +2037,71 @@ test result errors:  [
     lineNumber: 4
   }
 ]
+--(consecutive EndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   */    ', 'Mary had a little lamb,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  [ 4 ]
+--(consecutive EndTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 4
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   */    ', 'Mary had a little lamb,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
 == lines (multiple EndTag) ===============================================================================
  [
   '  /* ',
@@ -1609,6 +2233,72 @@ test result errors:  [
     lineNumber: 10
   }
 ]
+--(multiple EndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   */    ', 'Mary had a little lamb,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-', '*/' ]
+  }
+]
+test result errors:  [ 4, 10 ]
+--(multiple EndTag) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 4
+ERROR on line: 10
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 2,
+    startTagLine: '  /* ',
+    endTagLine: ' */   ',
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   */    ', 'Mary had a little lamb,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 7,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-', '*/' ]
+  }
+]
+test result errors:  []
 == lines (EndTag at the beginning) ===============================================================================
  [
   ' */ ',
@@ -1706,6 +2396,65 @@ test result errors:  [
     lineNumber: 1
   }
 ]
+--(EndTag at the beginning) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      ' */ ',
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 7,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  [ 1 ]
+--(EndTag at the beginning) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 1
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      ' */ ',
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: '  /* ',
+    endTagLine: '   */    ',
+    data: [ '   The lamb was sure to go ;' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 7,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+test result errors:  []
 == lines (multiple error types) ===============================================================================
  [
   '*/',
@@ -1918,3 +2667,115 @@ test result errors:  [
     lineNumber: 17
   }
 ]
+--(multiple error types) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '*/',
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: ' /*',
+    endTagLine: '*/  ',
+    data: [
+      ' /*',
+      '--  Its fleece was white as snow,',
+      '--And every where that Mary went'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '*/  ',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 13,
+    startTagLine: ' /* ',
+    endTagLine: '*/',
+    data: [ '--   That was against the rule,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 16,
+    startTagLine: ' /* ',
+    endTagLine: null,
+    data: [
+      'It made the children laugh and play,',
+      '   To see a lamb at school.'
+    ]
+  }
+]
+test result errors:  [ 1, 5, 9, 17 ]
+--(multiple error types) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 1
+ERROR on line: 5
+ERROR on line: 9
+ERROR on line: 17
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '*/',
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: ' /*',
+    endTagLine: '*/  ',
+    data: [
+      ' /*',
+      '--  Its fleece was white as snow,',
+      '--And every where that Mary went'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 9,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '*/  ',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 13,
+    startTagLine: ' /* ',
+    endTagLine: '*/',
+    data: [ '--   That was against the rule,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 16,
+    startTagLine: ' /* ',
+    endTagLine: null,
+    data: [
+      'It made the children laugh and play,',
+      '   To see a lamb at school.'
+    ]
+  }
+]
+test result errors:  []

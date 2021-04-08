@@ -14,7 +14,9 @@ const parserGroupedNullError = Parser.create(
   Tags.js_block.end,
   {
     grouped: true,
-    onError: (err) => null,
+    onError: (err) => {
+      console.log(`ERROR on line: ${err.lineNumber}`);
+    },
   }
 );
 
@@ -47,19 +49,19 @@ const testLines = (lines, label = "") => {
   fu.log("test result data: ", parsedGrouped.data);
   fu.log("test result errors: ", parsedGrouped.errors);
 
-  // fu.log(
-  //   `--(${label}) -- parser grouped custom error (GROUPED mode, custom error callback) ---------`
-  // );
-  // const parsedGroupedCustomError = parserGroupedCustomError.parse(lines);
-  // fu.log("test result data: ", parsedGroupedCustomError.data);
-  // fu.log("test result errors: ", parsedGroupedCustomError.errors);
+  fu.log(
+    `--(${label}) -- parser grouped custom error (GROUPED mode, custom error callback) ---------`
+  );
+  const parsedGroupedCustomError = parserGroupedCustomError.parse(lines);
+  fu.log("test result data: ", parsedGroupedCustomError.data);
+  fu.log("test result errors: ", parsedGroupedCustomError.errors);
 
-  // fu.log(
-  //   `--(${label}) -- parser grouped null error (GROUPED mode, null-returning error callback) ---------`
-  // );
-  // const parsedGroupedNullError = parserGroupedNullError.parse(lines);
-  // fu.log("test result data: ", parsedGroupedNullError.data);
-  // fu.log("test result errors: ", parsedGroupedNullError.errors);
+  fu.log(
+    `--(${label}) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------`
+  );
+  const parsedGroupedNullError = parserGroupedNullError.parse(lines);
+  fu.log("test result data: ", parsedGroupedNullError.data);
+  fu.log("test result errors: ", parsedGroupedNullError.errors);
 };
 //------------------------------------------------------------------------------------------------
 
