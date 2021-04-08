@@ -277,3 +277,17 @@ const multipleErrorTypes = [
   "   To see a lamb at school.",
 ];
 testLines(multipleErrorTypes, "multiple error types");
+
+//
+
+const startEndAtOneLine = [
+  "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
+  "/*Mary had a little lamb,*/",
+  "--  Its fleece was white as snow,",
+  "--And every where that Mary went",
+  " /* ",
+  "--   That was against the rule,",
+  "*/",
+  "It made the children laugh and play,",
+];
+testLines(startEndAtOneLine, "start and end tag at one line");

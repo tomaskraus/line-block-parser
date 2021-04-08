@@ -65,3 +65,5 @@ errors:  [
 ]
 
 ```
+
+TODO: describe behavior of both start and end tag at one line

@@ -2779,3 +2779,164 @@ test result data:  [
   }
 ]
 test result errors:  []
+== lines (start and end tag at one line) ===============================================================================
+ [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  '/*Mary had a little lamb,*/',
+  '--  Its fleece was white as snow,',
+  '--And every where that Mary went',
+  ' /* ',
+  '--   That was against the rule,',
+  '*/',
+  'It made the children laugh and play,'
+]
+--(start and end tag at one line) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 2,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '/*Mary had a little lamb,*/'
+  },
+  {
+    lineNumber: 3,
+    lineType: 'line',
+    state: 'inBlock',
+    data: '--  Its fleece was white as snow,'
+  },
+  {
+    lineNumber: 4,
+    lineType: 'line',
+    state: 'inBlock',
+    data: '--And every where that Mary went'
+  },
+  {
+    lineNumber: 5,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: ' /* '
+  },
+  {
+    lineNumber: 6,
+    lineType: 'line',
+    state: 'inBlock',
+    data: '--   That was against the rule,'
+  },
+  { lineNumber: 7, lineType: 'endTag', state: 'inBlock', data: '*/' },
+  {
+    lineNumber: 8,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'It made the children laugh and play,'
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
+  }
+]
+--(start and end tag at one line) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: '/*Mary had a little lamb,*/',
+    endTagLine: '*/',
+    data: [
+      '--  Its fleece was white as snow,',
+      '--And every where that Mary went',
+      ' /* ',
+      '--   That was against the rule,'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'It made the children laugh and play,' ]
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'Repeated start-tag. No previous matching end-tag found',
+    lineNumber: 5
+  }
+]
+--(start and end tag at one line) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: '/*Mary had a little lamb,*/',
+    endTagLine: '*/',
+    data: [
+      '--  Its fleece was white as snow,',
+      '--And every where that Mary went',
+      ' /* ',
+      '--   That was against the rule,'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'It made the children laugh and play,' ]
+  }
+]
+test result errors:  [ 5 ]
+--(start and end tag at one line) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 5
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: '/*Mary had a little lamb,*/',
+    endTagLine: '*/',
+    data: [
+      '--  Its fleece was white as snow,',
+      '--And every where that Mary went',
+      ' /* ',
+      '--   That was against the rule,'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'It made the children laugh and play,' ]
+  }
+]
+test result errors:  []
