@@ -34,11 +34,9 @@ const initialLineContext = () => {
 //---------------------------------------------------------------------------------------------
 
 const Tags = {
-  js_block: {
-    start: /^\s*\/\*(.*)$/,
-    end: /^(.*)\*\/\s*$/,
-  },
-  js_line: {},
+  JS_BLOCK_COMMENT_START: /^\s*\/\*(.*)$/,
+  JS_BLOCK_COMMENT_END: /^(.*)\*\/\s*$/,
+  JS_LINE_COMMENT: {},
 };
 
 const LEXER = {

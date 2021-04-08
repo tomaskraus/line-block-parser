@@ -1,17 +1,25 @@
 const fu = require("../src/func-utils");
 const { Parser, Tags } = require("../src/line-block-parser");
 
-const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, {
-  grouped: false,
-});
+const parserFlat = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
+  {
+    grouped: false,
+  }
+);
 
-const parserGrouped = Parser.create(Tags.js_block.start, Tags.js_block.end, {
-  grouped: true,
-});
+const parserGrouped = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
+  {
+    grouped: true,
+  }
+);
 
 const parserGroupedNullError = Parser.create(
-  Tags.js_block.start,
-  Tags.js_block.end,
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
   {
     grouped: true,
     onError: (err) => {
@@ -21,8 +29,8 @@ const parserGroupedNullError = Parser.create(
 );
 
 const parserGroupedCustomError = Parser.create(
-  Tags.js_block.start,
-  Tags.js_block.end,
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
   {
     grouped: true,
     onError: (err) => err.lineNumber,

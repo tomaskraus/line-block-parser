@@ -1,9 +1,13 @@
 const { Parser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = Parser.create(Tags.js_block.start, Tags.js_block.end, {
-  grouped: false,
-}); //params: start tag, end tag, options
+const jsCommentParser = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
+  {
+    grouped: false,
+  }
+); //params: start tag, end tag, options
 
 //these are lines to parse
 const lines = [
@@ -36,7 +40,10 @@ console.log(
 );
 
 //using its reducer
-const groupedParser = Parser.create(Tags.js_block.start, Tags.js_block.end); //params: start tag, end tag
+const groupedParser = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END
+); //params: start tag, end tag
 
 const linesBelongsToBlock = (data) =>
   data.filter(Parser.belongsToBlock).map((a) => a.data);
