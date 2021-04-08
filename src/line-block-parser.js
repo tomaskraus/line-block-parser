@@ -160,12 +160,12 @@ const overAcc = fu.curry2((fn, lineContext) =>
 );
 
 //flushAccum :: (a -> b) -> a -> lineContext -> lineContext
-const flushAccum = (resultCallback, data, lineContext) => {
-  const cRes = resultCallback(data);
+const flushAccum = (dataCallback, data, lineContext) => {
+  const dataFromCallback = dataCallback(data);
   return fu.compose2(
     clearAcc,
     fu.overProp(LC.DATA, (arr) =>
-      fu.nullOrUndefined(cRes) ? arr : [...arr, cRes]
+      fu.nullOrUndefined(dataFromCallback) ? arr : [...arr, dataFromCallback]
     )
   )(lineContext);
 };
@@ -178,14 +178,14 @@ const isValidToFlush = (lineContext) => {
 
 //
 
-const createAccumulator = (groupedFlag, resultCallback) => {
+const createAccumulator = (isGrouped, dataCallback) => {
   const accObj = {};
 
   accObj.flush = fu.curry2((dataToFlush, lineContext) =>
-    groupedFlag === true
+    isGrouped === true
       ? isValidToFlush(lineContext)
         ? flushAccum(
-            resultCallback,
+            dataCallback,
             groupedParserDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
@@ -193,14 +193,14 @@ const createAccumulator = (groupedFlag, resultCallback) => {
       : dataToFlush === null
       ? lineContext
       : flushAccum(
-          resultCallback,
+          dataCallback,
           infoParserDecorator(dataToFlush.data, lineContext),
           lineContext
         )
   );
 
   accObj.append = (data, lineContext) =>
-    groupedFlag === true
+    isGrouped === true
       ? fu.overProp(
           LC.ACCUM,
           (aObj) => ({
@@ -212,7 +212,7 @@ const createAccumulator = (groupedFlag, resultCallback) => {
       : accObj.flush(data, lineContext);
 
   accObj.start = fu.curry2((data, lineContext) =>
-    groupedFlag === true
+    isGrouped === true
       ? overAcc((_) => ({ data: [], state: A_STATE.READY }), lineContext)
       : accObj.flush(data, lineContext)
   );
@@ -340,7 +340,7 @@ const createPairParserEngine = (accum) => ({
 
 //========================================================================================
 
-const defaultResultCallback = fu.id;
+const defaultDataCallback = fu.id;
 
 const DEFAULT_SETTINGS = {
   GROUPING: true,
@@ -355,8 +355,8 @@ class Parser {
       fu.setProp(LC.PARSER, initialParserState())
     )(initialLineContext());
 
-  constructor(startTagRegExp, endTagRegExp, isGrouped, resultCallback) {
-    this.accum = createAccumulator(isGrouped, resultCallback);
+  constructor(startTagRegExp, endTagRegExp, isGrouped, onData) {
+    this.accum = createAccumulator(isGrouped, onData);
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
     this.parserEngine = createPairParserEngine(this.accum);
     this.reducer = createReducer(this.lexer, this.parserEngine);
@@ -366,9 +366,9 @@ class Parser {
     startTagRegExp,
     endTagRegExp,
     isGrouped = DEFAULT_SETTINGS.GROUPING,
-    resultCallback = defaultResultCallback
+    onData = defaultDataCallback
   ) {
-    return new Parser(startTagRegExp, endTagRegExp, isGrouped, resultCallback);
+    return new Parser(startTagRegExp, endTagRegExp, isGrouped, onData);
   }
 
   getReducer = () => this.reducer;
