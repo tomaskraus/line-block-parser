@@ -182,24 +182,23 @@ const isValidToFlush = (lineContext) => {
 const createAccumulator = (groupedFlag, resultCallback) => {
   const accObj = {};
 
-  accObj.flush = fu.curry2((dataToFlush, lineContext) => {
-    if (groupedFlag) {
-      return isValidToFlush(lineContext)
+  accObj.flush = fu.curry2((dataToFlush, lineContext) =>
+    groupedFlag === true
+      ? isValidToFlush(lineContext)
         ? flushAccum(
             resultCallback,
             groupedParserDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
-        : lineContext;
-    }
-    return dataToFlush === null
+        : lineContext
+      : dataToFlush === null
       ? lineContext
       : flushAccum(
           resultCallback,
           infoParserDecorator(dataToFlush.data, lineContext),
           lineContext
-        );
-  });
+        )
+  );
 
   accObj.append = (data, lineContext) =>
     groupedFlag === true
@@ -332,15 +331,14 @@ const createPairParserEngine = (accum) => ({
     }
   },
 
-  flush: (lineContext) => {
-    return lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
-      lineContext[LC.LINE].type != LEXER.END_TAG
+  flush: (lineContext) =>
+    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
+    lineContext[LC.LINE].type != LEXER.END_TAG
       ? fu.compose2(
           accum.flush(null),
           addError(ERR_TYPE.MISS_END_TAG)
         )(lineContext)
-      : accum.flush(null, lineContext);
-  },
+      : accum.flush(null, lineContext),
 });
 
 //========================================================================================
