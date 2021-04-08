@@ -351,6 +351,12 @@ const DEFAULT_SETTINGS = {
 };
 
 class Parser {
+  static defaults = () => ({
+    grouped: true,
+    onData: fu.id,
+    onError: defaultErrorHandler,
+  });
+
   static initialLineContext = () =>
     fu.compose3(
       fu.setProp(LC.DATA, []),
@@ -365,13 +371,8 @@ class Parser {
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
-  static create(
-    startTagRegExp,
-    endTagRegExp,
-    grouped = DEFAULT_SETTINGS.GROUPING,
-    onData = Parser.defaultDataCallback,
-    onError = Parser.defaultErrorHandler
-  ) {
+  static create(startTagRegExp, endTagRegExp, options) {
+    const { grouped, onData, onError } = { ...Parser.defaults(), ...options };
     return new Parser(startTagRegExp, endTagRegExp, grouped, onData, onError);
   }
 
@@ -391,9 +392,6 @@ class Parser {
   }
 
   static belongsToBlock = belongsToBlock;
-
-  static defaultDataCallback = fu.id;
-  static defaultErrorHandler = defaultErrorHandler;
 }
 
 //========================================================================================

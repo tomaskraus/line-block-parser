@@ -9,40 +9,36 @@ const valueReturnCallback = (data) => {
   return data.data;
 };
 
-const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, false);
+const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, {
+  grouped: false,
+});
 
-const parserGrouped = Parser.create(
-  Tags.js_block.start,
-  Tags.js_block.end,
-  true
-);
+const parserGrouped = Parser.create(Tags.js_block.start, Tags.js_block.end, {
+  grouped: true,
+});
 //
 const parserFlatCBnoReturn = Parser.create(
   Tags.js_block.start,
   Tags.js_block.end,
-  false,
-  nothingReturnCallback
+  { grouped: false, onData: nothingReturnCallback }
 );
 
 const parserGroupedCB_noReturn = Parser.create(
   Tags.js_block.start,
   Tags.js_block.end,
-  true,
-  nothingReturnCallback
+  { grouped: true, onData: nothingReturnCallback }
 );
 //
 const parserFlatCB_Return = Parser.create(
   Tags.js_block.start,
   Tags.js_block.end,
-  false,
-  valueReturnCallback
+  { grouped: false, onData: valueReturnCallback }
 );
 
 const parserGroupedCB_Return = Parser.create(
   Tags.js_block.start,
   Tags.js_block.end,
-  true,
-  valueReturnCallback
+  { grouped: true, onData: valueReturnCallback }
 );
 
 //-------------------------------------------

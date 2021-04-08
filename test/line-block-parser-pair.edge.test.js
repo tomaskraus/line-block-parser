@@ -1,13 +1,13 @@
 const fu = require("../src/func-utils");
 const { Parser, Tags } = require("../src/line-block-parser");
 
-const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, false);
+const parserFlat = Parser.create(Tags.js_block.start, Tags.js_block.end, {
+  grouped: false,
+});
 
-const parserGrouped = Parser.create(
-  Tags.js_block.start,
-  Tags.js_block.end,
-  true
-);
+const parserGrouped = Parser.create(Tags.js_block.start, Tags.js_block.end, {
+  grouped: true,
+});
 
 //-------------------------------------------
 
