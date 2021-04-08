@@ -1,7 +1,12 @@
 const { Parser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
-const jsCommentParser = Parser.create(Tags.js_block.start, Tags.js_block.end); //params: start tag, end tag
+//
+//Parser.create(start tag, end tag[, options])
+const jsCommentParser = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END
+);
 
 //these are lines to parse
 const lines = [
@@ -17,10 +22,46 @@ const lines = [
   "   That was against the rule,",
   "*/ ",
   "It made the children laugh and play,",
+  "/*",
   "   To see a lamb at school.",
 ];
 
 //let's go
-const blocksFound = jsCommentParser.parseLines(lines);
+const { data, errors } = jsCommentParser.parse(lines);
+console.log(
+  "lines in blocks: ",
+  data.filter(Parser.belongsToBlock).map((a) => a.data)
+);
+console.log("errors: ", errors);
 
-console.log(blocksFound);
+console.log(
+  `----------------------------------------------------------------------------`
+);
+
+//using its reducer
+const groupedParser = Parser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END
+); //params: start tag, end tag
+
+const linesBelongsToBlock = (data) =>
+  data.filter(Parser.belongsToBlock).map((a) => a.data);
+
+//
+
+const { data: dataFromReducer } = groupedParser.flush(
+  lines.reduce(groupedParser.getReducer(), Parser.initialLineContext())
+);
+console.log(
+  "(reducer): lines that belongs to a block: ",
+  linesBelongsToBlock(dataFromReducer)
+);
+//console.log("errors: ", errors);
+
+const { data: dataFromParse, errors: errorsFromParse } = groupedParser.parse(
+  lines
+);
+console.log(
+  "(parse): lines that belongs to a block: ",
+  linesBelongsToBlock(dataFromParse)
+);
