@@ -362,8 +362,8 @@ class Parser {
       fu.setProp(LC.PARSER, initialParserState())
     )(initialLineContext());
 
-  constructor(startTagRegExp, endTagRegExp, isGrouped, onData, onError) {
-    this.accum = createAccumulator(isGrouped, onData);
+  constructor(startTagRegExp, endTagRegExp, grouped, onData, onError) {
+    this.accum = createAccumulator(grouped, onData);
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
     this.parserEngine = createPairParserEngine(this.accum, onError);
     this.reducer = createReducer(this.lexer, this.parserEngine);
@@ -372,11 +372,11 @@ class Parser {
   static create(
     startTagRegExp,
     endTagRegExp,
-    isGrouped = DEFAULT_SETTINGS.GROUPING,
+    grouped = DEFAULT_SETTINGS.GROUPING,
     onData = Parser.defaultDataCallback,
     onError = Parser.defaultErrorHandler
   ) {
-    return new Parser(startTagRegExp, endTagRegExp, isGrouped, onData, onError);
+    return new Parser(startTagRegExp, endTagRegExp, grouped, onData, onError);
   }
 
   getReducer = () => this.reducer;
