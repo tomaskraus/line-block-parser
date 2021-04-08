@@ -117,12 +117,11 @@ const infoParserDecorator = (data, lineContext) => ({
   data,
 });
 
-const belongsToBlock = (lineInfo) =>
-  lineInfo[LINE_INFO.STATE] === P_STATE.names[P_STATE.IN_BLOCK];
+const belongsToBlock = (data) =>
+  data[LINE_INFO.STATE] === P_STATE.names[P_STATE.IN_BLOCK];
 
-const isInsideBlock = (lineInfo) =>
-  belongsToBlock(lineInfo) &&
-  lineInfo[LINE_INFO.LINE_TYPE] === LEXER.names[LEXER.LINE];
+const isInsideBlock = (data) =>
+  belongsToBlock(data) && data[LINE_INFO.LINE_TYPE] === LEXER.names[LEXER.LINE];
 
 //----------------------------------------------------------------------------------------
 
