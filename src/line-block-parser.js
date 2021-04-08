@@ -163,7 +163,6 @@ const overAcc = fu.curry2((fn, lineContext) =>
 const flushAccum = (resultCallback, data, lineContext) => {
   const cRes = resultCallback(data);
   return fu.compose2(
-    // fu.tapLog("maac after"),
     clearAcc,
     fu.overProp(LC.DATA, (arr) =>
       fu.nullOrUndefined(cRes) ? arr : [...arr, cRes]
@@ -233,11 +232,11 @@ const consumeLine = fu.curry2((line, lineContext) =>
 const createReducer = (lexer, parserEngine) => (lineContext, line) =>
   fu.compose3(
     parserEngine.consume,
-    //fu.compose2(fu.tapLog("lc Before parseEngine:"), lexer.consume),
     lexer.consume,
     consumeLine(line)
-    // fu.compose2(Parser.consumeLine(line), fu.id)
   )(lineContext);
+
+//
 
 const ERR_TYPE = {
   DUP_START_TAG: 0,
@@ -267,10 +266,8 @@ const addError = fu.curry2((errType, lineContext) =>
 
 const createPairParserEngine = (accum) => ({
   consume: (lc) => {
-    //fu.log("engine accum: ", accum);
-
-    // fu.log("lc: ", lc);
     if (lc[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN) {
+      //fu.log("START TAG");
       if (lc[LC.LINE].type === LEXER.START_TAG) {
         return fu.compose3(
           (lc3) => accum.start(lc3[LC.LINE], lc3),
@@ -377,7 +374,6 @@ class Parser {
   getReducer = () => this.reducer;
 
   flush(lineContext) {
-    //fu.log("--- before PARSER flush data:", lineContext);
     const { errors, data } = this.parserEngine.flush(lineContext);
     return { errors, data };
   }
@@ -387,7 +383,6 @@ class Parser {
       this.reducer.bind(this), //bind to preserve context
       Parser.initialLineContext()
     );
-    //fu.log("-- -- --BEFORE FLUSH:", resCtx);
     return this.flush(resCtx);
   }
 
@@ -401,10 +396,3 @@ module.exports = {
   Parser,
   Tags,
 };
-
-//----------------------------------------------------
-
-// const lc = Parser.createInitialLineContext(createAccum());
-// fu.log("initialContext accm:", getAccValue(lc));
-// const lc2 = overAcc((arr) => [...arr, 123], lc);
-// fu.log("new accm: ", lc2);
