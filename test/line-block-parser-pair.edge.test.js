@@ -9,23 +9,57 @@ const parserGrouped = Parser.create(Tags.js_block.start, Tags.js_block.end, {
   grouped: true,
 });
 
+const parserGroupedNullError = Parser.create(
+  Tags.js_block.start,
+  Tags.js_block.end,
+  {
+    grouped: true,
+    onError: (err) => null,
+  }
+);
+
+const parserGroupedCustomError = Parser.create(
+  Tags.js_block.start,
+  Tags.js_block.end,
+  {
+    grouped: true,
+    onError: (err) => err.lineNumber,
+  }
+);
+
 //-------------------------------------------
 
 const testLines = (lines, label = "") => {
   fu.log(
-    `-- lines (${label}) ------------------------------------------------------------------------`
+    `== lines (${label}) ===============================================================================`
   );
   fu.log("", lines);
   //
-  fu.log("-- parser flat (FLAT mode, no callback) ---------");
+  fu.log(`--(${label}) -- parser flat (FLAT mode, no callback) ---------`);
   const parsedFlat = parserFlat.parse(lines);
   fu.log("test result data: ", parsedFlat.data);
   fu.log("test result errors: ", parsedFlat.errors);
   //
-  fu.log("-- parser grouped (GROUPED mode, no callback) ---------");
+  fu.log(
+    `--(${label}) -- parser grouped (GROUPED mode, no callback) ---------`
+  );
   const parsedGrouped = parserGrouped.parse(lines);
   fu.log("test result data: ", parsedGrouped.data);
   fu.log("test result errors: ", parsedGrouped.errors);
+
+  // fu.log(
+  //   `--(${label}) -- parser grouped custom error (GROUPED mode, custom error callback) ---------`
+  // );
+  // const parsedGroupedCustomError = parserGroupedCustomError.parse(lines);
+  // fu.log("test result data: ", parsedGroupedCustomError.data);
+  // fu.log("test result errors: ", parsedGroupedCustomError.errors);
+
+  // fu.log(
+  //   `--(${label}) -- parser grouped null error (GROUPED mode, null-returning error callback) ---------`
+  // );
+  // const parsedGroupedNullError = parserGroupedNullError.parse(lines);
+  // fu.log("test result data: ", parsedGroupedNullError.data);
+  // fu.log("test result errors: ", parsedGroupedNullError.errors);
 };
 //------------------------------------------------------------------------------------------------
 

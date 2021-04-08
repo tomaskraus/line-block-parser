@@ -424,22 +424,22 @@ test result data:  [
 
   = =  EDGE CASES  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
   
--- lines (emptyLines) ------------------------------------------------------------------------
+== lines (emptyLines) ===============================================================================
  []
--- parser flat (FLAT mode, no callback) ---------
+--(emptyLines) -- parser flat (FLAT mode, no callback) ---------
 test result data:  []
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(emptyLines) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  []
 test result errors:  []
--- lines (no comment) ------------------------------------------------------------------------
+== lines (no comment) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
   '   The lamb was sure to go ;',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(no comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -467,7 +467,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(no comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -483,7 +483,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- lines (whole comment) ------------------------------------------------------------------------
+== lines (whole comment) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -492,7 +492,7 @@ test result errors:  []
   'He followed her to school one day-',
   '   */    '
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(whole comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -532,7 +532,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(whole comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -548,7 +548,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- lines (consecutiveComments) ------------------------------------------------------------------------
+== lines (consecutiveComments) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -559,7 +559,7 @@ test result errors:  []
   '   */    ',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(consecutiveComments) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -611,7 +611,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(consecutiveComments) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -639,7 +639,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- lines (empty comment) ------------------------------------------------------------------------
+== lines (empty comment) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
@@ -647,7 +647,7 @@ test result errors:  []
   '   */    ',
   '   The lamb was sure to go ;'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(empty comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -681,7 +681,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(empty comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -709,7 +709,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- lines (multiple empty comment) ------------------------------------------------------------------------
+== lines (multiple empty comment) ===============================================================================
  [
   '  /* ',
   '   */    ',
@@ -720,7 +720,7 @@ test result errors:  []
   '   The lamb was sure to go ;',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(multiple empty comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -772,7 +772,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- parser grouped (GROUPED mode, no callback) ---------
+--(multiple empty comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -810,7 +810,7 @@ test result data:  [
   }
 ]
 test result errors:  []
--- lines (unclosed comment) ------------------------------------------------------------------------
+== lines (unclosed comment) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -820,7 +820,7 @@ test result errors:  []
   '   The lamb was sure to go ;',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(unclosed comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -872,7 +872,7 @@ test result errors:  [
     lineNumber: 7
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(unclosed comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -902,7 +902,7 @@ test result errors:  [
     lineNumber: 7
   }
 ]
--- lines (empty unclosed comment) ------------------------------------------------------------------------
+== lines (empty unclosed comment) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -911,7 +911,7 @@ test result errors:  [
   '',
   '  /* '
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(empty unclosed comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -952,7 +952,7 @@ test result errors:  [
     lineNumber: 6
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(empty unclosed comment) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -986,7 +986,7 @@ test result errors:  [
     lineNumber: 6
   }
 ]
--- lines (repeated startTag) ------------------------------------------------------------------------
+== lines (repeated startTag) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -996,7 +996,7 @@ test result errors:  [
   'He followed her to school one day-',
   '   */    '
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(repeated startTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1043,7 +1043,7 @@ test result errors:  [
     lineNumber: 3
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(repeated startTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -1066,7 +1066,7 @@ test result errors:  [
     lineNumber: 3
   }
 ]
--- lines (consecutive startTag) ------------------------------------------------------------------------
+== lines (consecutive startTag) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
@@ -1076,7 +1076,7 @@ test result errors:  [
   'He followed her to school one day-',
   '   */    '
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(consecutive startTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1123,7 +1123,7 @@ test result errors:  [
     lineNumber: 5
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(consecutive startTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -1151,7 +1151,7 @@ test result errors:  [
     lineNumber: 5
   }
 ]
--- lines (multiple repeated startTag) ------------------------------------------------------------------------
+== lines (multiple repeated startTag) ===============================================================================
  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   '/*',
@@ -1162,7 +1162,7 @@ test result errors:  [
   'He followed her to school one day-',
   '   */    '
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(multiple repeated startTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1215,7 +1215,7 @@ test result errors:  [
     lineNumber: 6
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(multiple repeated startTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -1250,7 +1250,7 @@ test result errors:  [
     lineNumber: 6
   }
 ]
--- lines (repeatedEndTag) ------------------------------------------------------------------------
+== lines (repeatedEndTag) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1262,7 +1262,7 @@ test result errors:  [
   '   */    ',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(repeatedEndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1326,7 +1326,7 @@ test result errors:  [
     lineNumber: 5
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(repeatedEndTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -1364,7 +1364,7 @@ test result errors:  [
     lineNumber: 5
   }
 ]
--- lines (consecutive EndTag) ------------------------------------------------------------------------
+== lines (consecutive EndTag) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1376,7 +1376,7 @@ test result errors:  [
   '   */    ',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(consecutive EndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1440,7 +1440,7 @@ test result errors:  [
     lineNumber: 4
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(consecutive EndTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -1478,7 +1478,7 @@ test result errors:  [
     lineNumber: 4
   }
 ]
--- lines (multiple EndTag) ------------------------------------------------------------------------
+== lines (multiple EndTag) ===============================================================================
  [
   '  /* ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1491,7 +1491,7 @@ test result errors:  [
   'He followed her to school one day-',
   '*/'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(multiple EndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1566,7 +1566,7 @@ test result errors:  [
     lineNumber: 10
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(multiple EndTag) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'inBlock',
@@ -1609,7 +1609,7 @@ test result errors:  [
     lineNumber: 10
   }
 ]
--- lines (EndTag at the beginning) ------------------------------------------------------------------------
+== lines (EndTag at the beginning) ===============================================================================
  [
   ' */ ',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1619,7 +1619,7 @@ test result errors:  [
   '   */    ',
   'He followed her to school one day-'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(EndTag at the beginning) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1671,7 +1671,7 @@ test result errors:  [
     lineNumber: 1
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(EndTag at the beginning) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
@@ -1706,7 +1706,7 @@ test result errors:  [
     lineNumber: 1
   }
 ]
--- lines (multiple error types) ------------------------------------------------------------------------
+== lines (multiple error types) ===============================================================================
  [
   '*/',
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -1726,7 +1726,7 @@ test result errors:  [
   'It made the children laugh and play,',
   '   To see a lamb at school.'
 ]
--- parser flat (FLAT mode, no callback) ---------
+--(multiple error types) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
   {
     lineNumber: 1,
@@ -1843,7 +1843,7 @@ test result errors:  [
     lineNumber: 17
   }
 ]
--- parser grouped (GROUPED mode, no callback) ---------
+--(multiple error types) -- parser grouped (GROUPED mode, no callback) ---------
 test result data:  [
   {
     state: 'outOfBlock',
