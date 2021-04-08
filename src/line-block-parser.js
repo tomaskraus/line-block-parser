@@ -376,6 +376,8 @@ class Parser {
     return new Parser(startTagRegExp, endTagRegExp, isGrouped, resultCallback);
   }
 
+  getReducer = () => this.reducer;
+
   flush(lineContext) {
     //fu.log("--- before PARSER flush data:", lineContext);
     const { errors, data } = this.parserEngine.flush(lineContext);

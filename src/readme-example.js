@@ -21,6 +21,7 @@ const lines = [
   "   That was against the rule,",
   "*/ ",
   "It made the children laugh and play,",
+  "/*",
   "   To see a lamb at school.",
 ];
 
@@ -32,3 +33,16 @@ const blocksFound = jsCommentParser
   .map((a) => a.data);
 
 console.log(blocksFound);
+
+console.log(
+  `----------------------------------------------------------------------------`
+);
+
+//using reducer
+const jsP = Parser.create(Tags.js_block.start, Tags.js_block.end, false); //params: start tag, end tag
+
+const { data, errors } = jsP.flush(
+  lines.reduce(jsP.getReducer(), Parser.initialLineContext())
+);
+console.log("data: ", data);
+console.log("errors: ", errors);
