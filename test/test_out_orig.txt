@@ -270,7 +270,6 @@ test result data:  []
   data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  {
   lineNumber: 2,
   lineType: 'line',
@@ -278,10 +277,8 @@ isInsideBlock false
   data: 'Mary had a little lamb,'
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  { lineNumber: 3, lineType: 'startTag', state: 'inBlock', data: ' /*' }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   lineNumber: 4,
   lineType: 'line',
@@ -289,7 +286,6 @@ isInsideBlock false
   data: '--  Its fleece was white as snow,'
 }
 belongsToBlock true
-isInsideBlock true
 . . . . data:  {
   lineNumber: 5,
   lineType: 'line',
@@ -297,10 +293,8 @@ isInsideBlock true
   data: '--And every where that Mary went'
 }
 belongsToBlock true
-isInsideBlock true
 . . . . data:  { lineNumber: 6, lineType: 'endTag', state: 'inBlock', data: '*/  ' }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   lineNumber: 7,
   lineType: 'line',
@@ -308,7 +302,6 @@ isInsideBlock false
   data: '   The lamb was sure to go ;'
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  {
   lineNumber: 8,
   lineType: 'line',
@@ -316,10 +309,8 @@ isInsideBlock false
   data: 'He followed her to school one day-'
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  { lineNumber: 9, lineType: 'startTag', state: 'inBlock', data: ' /* ' }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   lineNumber: 10,
   lineType: 'line',
@@ -327,10 +318,8 @@ isInsideBlock false
   data: '--   That was against the rule,'
 }
 belongsToBlock true
-isInsideBlock true
 . . . . data:  { lineNumber: 11, lineType: 'endTag', state: 'inBlock', data: '*/' }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   lineNumber: 12,
   lineType: 'line',
@@ -338,7 +327,6 @@ isInsideBlock false
   data: 'It made the children laugh and play,'
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  {
   lineNumber: 13,
   lineType: 'line',
@@ -346,7 +334,6 @@ isInsideBlock false
   data: '   To see a lamb at school.'
 }
 belongsToBlock false
-isInsideBlock false
 test result: data  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
@@ -374,7 +361,6 @@ test result: data  [
   ]
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  {
   state: 'inBlock',
   startLineNumber: 4,
@@ -386,7 +372,6 @@ isInsideBlock false
   ]
 }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   state: 'outOfBlock',
   startLineNumber: 7,
@@ -398,7 +383,6 @@ isInsideBlock false
   ]
 }
 belongsToBlock false
-isInsideBlock false
 . . . . data:  {
   state: 'inBlock',
   startLineNumber: 10,
@@ -407,7 +391,6 @@ isInsideBlock false
   data: [ '--   That was against the rule,' ]
 }
 belongsToBlock true
-isInsideBlock false
 . . . . data:  {
   state: 'outOfBlock',
   startLineNumber: 12,
@@ -419,7 +402,6 @@ isInsideBlock false
   ]
 }
 belongsToBlock false
-isInsideBlock false
 test result data:  [
   [
     'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',

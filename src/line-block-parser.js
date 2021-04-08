@@ -120,9 +120,6 @@ const infoParserDecorator = (data, lineContext) => ({
 const belongsToBlock = (data) =>
   data[LINE_INFO.STATE] === P_STATE.names[P_STATE.IN_BLOCK];
 
-const isInsideBlock = (data) =>
-  belongsToBlock(data) && data[LINE_INFO.LINE_TYPE] === LEXER.names[LEXER.LINE];
-
 //----------------------------------------------------------------------------------------
 
 const groupedParserDecorator = (data, lineContext) => ({
@@ -394,7 +391,6 @@ class Parser {
   }
 
   static belongsToBlock = belongsToBlock;
-  static isInsideBlock = isInsideBlock;
 
   static defaultDataCallback = fu.id;
   static defaultErrorHandler = defaultErrorHandler;
