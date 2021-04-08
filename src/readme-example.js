@@ -28,8 +28,7 @@ const lines = [
 //let's go
 const blocksFound = jsCommentParser
   .parse(lines)
-  .data //data
-  .filter((a) => a.state === "inBlock" && a.lineType === "line")
+  .data.filter(Parser.belongsToBlock)
   .map((a) => a.data);
 
 console.log(blocksFound);
@@ -38,11 +37,31 @@ console.log(
   `----------------------------------------------------------------------------`
 );
 
-//using reducer
-const jsP = Parser.create(Tags.js_block.start, Tags.js_block.end, false); //params: start tag, end tag
+//using its reducer
+const groupedParser = Parser.create(
+  Tags.js_block.start,
+  Tags.js_block.end,
+  true
+); //params: start tag, end tag
 
-const { data, errors } = jsP.flush(
-  lines.reduce(jsP.getReducer(), Parser.initialLineContext())
+const linesBelongsToBlock = (data) =>
+  data.filter(Parser.belongsToBlock).map((a) => a.data);
+
+//
+
+const { data, errors } = groupedParser.flush(
+  lines.reduce(groupedParser.getReducer(), Parser.initialLineContext())
 );
-console.log("data: ", data);
-console.log("errors: ", errors);
+console.log(
+  "(reducer): lines that belongs to a block: ",
+  linesBelongsToBlock(data)
+);
+//console.log("errors: ", errors);
+
+const { data: dataFromParse, errors: errorsFromParse } = groupedParser.parse(
+  lines
+);
+console.log(
+  "(parse): lines that belongs to a block: ",
+  linesBelongsToBlock(dataFromParse)
+);
