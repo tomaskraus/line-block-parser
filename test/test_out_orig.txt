@@ -3081,8 +3081,8 @@ test result errors:  []
 lines:  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
-  '/* Its fleece was white as snow,',
-  'And every where that Mary went */     ',
+  '/* Its fleece was white as snow,  ',
+  ' And every where that Mary went */     ',
   '   The lamb was sure to go ;',
   'He followed her to school one day-',
   ' /*  That was against the rule,*/ ',
@@ -3101,9 +3101,9 @@ lines:  [
 }
 {
   block: true,
-  startTagData: '/* Its fleece was white as snow,',
+  startTagData: '/* Its fleece was white as snow,  ',
   lines: [],
-  endTagData: 'And every where that Mary went */     '
+  endTagData: ' And every where that Mary went */     '
 }
 {
   block: false,
