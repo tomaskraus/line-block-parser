@@ -3101,9 +3101,9 @@ lines:  [
 }
 {
   block: true,
-  startTagData: '/* Its fleece was white as snow,  ',
+  startTagData: ' Its fleece was white as snow,  ',
   lines: [],
-  endTagData: ' And every where that Mary went */     '
+  endTagData: ' And every where that Mary went '
 }
 {
   block: false,
@@ -3118,7 +3118,7 @@ lines:  [
 }
 {
   block: true,
-  startTagData: ' /*',
+  startTagData: '',
   lines: [ '   To see a lamb at school.' ],
   endTagData: null
 }

@@ -71,6 +71,15 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
     return fu.overProp(LC.LINE, (s) => ({ type: tagType, data: s }), lc);
   };
 
+  const firstMatch = (regexp, line) => {
+    if (line === null) return null;
+    const matches = regexp.exec(line);
+    return fu.empty(matches) ? "" : matches[1];
+  };
+
+  lexerObj.startTagData = (line) => firstMatch(startTagRegExp, line);
+  lexerObj.endTagData = (line) => firstMatch(endTagRegExp, line);
+
   return lexerObj;
 };
 //---------------------------------------------------------------------------------------------
@@ -158,9 +167,8 @@ const overAcc = fu.curry2((fn, lineContext) =>
   fu.overProp(LC.ACCUM, fn, lineContext)
 );
 
-//flushAccum :: (a -> b) -> a -> lineContext -> lineContext
-const flushAccum = (dataCallback, data, lineContext) => {
-  const dataFromCallback = dataCallback(data);
+const flushAccum = (dataCallback, lexer, data, lineContext) => {
+  const dataFromCallback = dataCallback(data, lexer);
   return fu.compose2(
     clearAcc,
     fu.overProp(LC.DATA, (arr) =>
@@ -177,7 +185,7 @@ const isValidToFlush = (lineContext) => {
 
 //
 
-const createAccumulator = (isGrouped, dataCallback) => {
+const createAccumulator = (isGrouped, lexerObj, dataCallback) => {
   const accObj = {};
 
   accObj.flush = fu.curry2((dataToFlush, lineContext) =>
@@ -185,6 +193,7 @@ const createAccumulator = (isGrouped, dataCallback) => {
       ? isValidToFlush(lineContext)
         ? flushAccum(
             dataCallback,
+            lexerObj,
             groupedParserDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
@@ -193,6 +202,7 @@ const createAccumulator = (isGrouped, dataCallback) => {
       ? lineContext
       : flushAccum(
           dataCallback,
+          lexerObj,
           infoParserDecorator(dataToFlush.data, lineContext),
           lineContext
         )
@@ -363,8 +373,8 @@ class Parser {
     )(initialLineContext());
 
   constructor(startTagRegExp, endTagRegExp, grouped, onData, onError) {
-    this.accum = createAccumulator(grouped, onData);
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
+    this.accum = createAccumulator(grouped, this.lexer, onData);
     this.parserEngine = createPairParserEngine(this.accum, onError);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }

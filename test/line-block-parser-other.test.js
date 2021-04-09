@@ -1,11 +1,11 @@
 const { Parser, Tags } = require("../src/line-block-parser");
 
-const dataHandler = (data) => {
+const dataHandler = (data, lexer) => {
   const d = {
     block: Parser.belongsToBlock(data),
-    startTagData: data.startTagLine,
+    startTagData: lexer.startTagData(data.startTagLine),
     lines: data.data,
-    endTagData: data.endTagLine,
+    endTagData: lexer.endTagData(data.endTagLine),
   };
   console.log(d);
 };
