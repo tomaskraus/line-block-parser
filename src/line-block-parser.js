@@ -363,7 +363,6 @@ class Parser {
   static defaults = () => ({
     grouped: true,
     onData: fu.id,
-    onError: defaultErrorHandler,
   });
 
   static initialLineContext = () =>
@@ -373,6 +372,30 @@ class Parser {
       fu.setProp(LC.PARSER, initialParserState())
     )(initialLineContext());
 
+  static getReducer = (parserObj) => () => parserObj.reducer;
+
+  static parse(parserObj, lines) {
+    const resCtx = lines.reduce(
+      parserObj.reducer.bind(parserObj), //bind to preserve context
+      Parser.initialLineContext()
+    );
+    return parserObj.flush(resCtx);
+  }
+
+  static flush(parserObj, lineContext) {
+    const { errors, data } = parserObj.parserEngine.flush(lineContext);
+    return { errors, data };
+  }
+
+  static belongsToBlock = belongsToBlock;
+}
+
+class PairParser {
+  static defaults = () => ({
+    ...Parser.defaults(),
+    onError: defaultErrorHandler,
+  });
+
   constructor(startTagRegExp, endTagRegExp, grouped, onData, onError) {
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
     this.accum = createAccumulator(grouped, this.lexer.utils, onData);
@@ -381,31 +404,31 @@ class Parser {
   }
 
   static create(startTagRegExp, endTagRegExp, options) {
-    const { grouped, onData, onError } = { ...Parser.defaults(), ...options };
-    return new Parser(startTagRegExp, endTagRegExp, grouped, onData, onError);
-  }
-
-  getReducer = () => this.reducer;
-
-  flush(lineContext) {
-    const { errors, data } = this.parserEngine.flush(lineContext);
-    return { errors, data };
-  }
-
-  parse(lines) {
-    const resCtx = lines.reduce(
-      this.reducer.bind(this), //bind to preserve context
-      Parser.initialLineContext()
+    const { grouped, onData, onError } = {
+      ...PairParser.defaults(),
+      ...options,
+    };
+    return new PairParser(
+      startTagRegExp,
+      endTagRegExp,
+      grouped,
+      onData,
+      onError
     );
-    return this.flush(resCtx);
   }
 
-  static belongsToBlock = belongsToBlock;
+  parse = (lines) => Parser.parse(this, lines);
+
+  flush = (lineContext) => Parser.flush(this, lineContext);
+
+  getReducer = Parser.getReducer(this);
+
+  static belongsToBlock = Parser.belongsToBlock;
 }
 
 //========================================================================================
 
 module.exports = {
-  Parser,
+  PairParser,
   Tags,
 };

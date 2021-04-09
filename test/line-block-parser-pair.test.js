@@ -1,15 +1,15 @@
 const fu = require("../src/func-utils");
-const { Parser, Tags } = require("../src/line-block-parser");
+const { PairParser, Tags } = require("../src/line-block-parser");
 
 const nothingReturnCallback = (data) => fu.log("- - - - - - data: ", data);
 
 const valueReturnCallback = (data) => {
   fu.log(". . . . data: ", data);
-  fu.log("belongsToBlock", Parser.belongsToBlock(data));
+  fu.log("belongsToBlock", PairParser.belongsToBlock(data));
   return data.data;
 };
 
-const parserFlat = Parser.create(
+const parserFlat = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
@@ -17,7 +17,7 @@ const parserFlat = Parser.create(
   }
 );
 
-const parserGrouped = Parser.create(
+const parserGrouped = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
@@ -25,25 +25,25 @@ const parserGrouped = Parser.create(
   }
 );
 //
-const parserFlatCBnoReturn = Parser.create(
+const parserFlatCBnoReturn = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   { grouped: false, onData: nothingReturnCallback }
 );
 
-const parserGroupedCB_noReturn = Parser.create(
+const parserGroupedCB_noReturn = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   { grouped: true, onData: nothingReturnCallback }
 );
 //
-const parserFlatCB_Return = Parser.create(
+const parserFlatCB_Return = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   { grouped: false, onData: valueReturnCallback }
 );
 
-const parserGroupedCB_Return = Parser.create(
+const parserGroupedCB_Return = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   { grouped: true, onData: valueReturnCallback }

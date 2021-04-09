@@ -1,8 +1,8 @@
-const { Parser, Tags } = require("../src/line-block-parser");
+const { PairParser, Tags } = require("../src/line-block-parser");
 
 const dataHandler = (data, lexer) => {
   const d = {
-    block: Parser.belongsToBlock(data),
+    block: PairParser.belongsToBlock(data),
     startTagData: lexer.startTagData(data.startTagLine),
     lines: data.data,
     endTagData: lexer.endTagData(data.endTagLine),
@@ -10,7 +10,7 @@ const dataHandler = (data, lexer) => {
   console.log(d);
 };
 
-const par = Parser.create(
+const par = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
