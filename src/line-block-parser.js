@@ -101,7 +101,6 @@ const initialParserState = () => ({
   startTagLine: null,
   endTagLine: null,
   state: P_STATE.INIT,
-  lineType: null, //from lexer
 });
 
 // overParserProp :: string -> (a -> b) -> lineContext -> lineContext
