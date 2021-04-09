@@ -43,8 +43,9 @@ const LEXER = {
   INIT: 0,
   START_TAG: 1,
   END_TAG: 2,
-  LINE: 3,
-  names: ["init", "startTag", "endTag", "line"],
+  TAG: 3,
+  LINE: 4,
+  names: ["init", "startTag", "endTag", "tag", "line"],
 };
 
 const createLexer = (startTagRegExp, endTagRegExp = null) => {
@@ -58,7 +59,7 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
   lexerObj.consume = (lc) => {
     let tagType = LEXER.LINE;
     if (lexerObj.matchStartTag(lc.line)) {
-      tagType = LEXER.START_TAG;
+      tagType = endTagRegExp !== null ? LEXER.START_TAG : LEXER.TAG;
     }
     if (lexerObj.matchEndTag(lc.line)) {
       if (tagType === LEXER.START_TAG) {
@@ -82,6 +83,7 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
 
   lexerObj.utils.startTagData = (line) => firstMatch(startTagRegExp, line);
   lexerObj.utils.endTagData = (line) => firstMatch(endTagRegExp, line);
+  lexerObj.utils.tagData = lexerObj.utils.startTagData;
 
   return lexerObj;
 };
@@ -142,10 +144,17 @@ const groupedParserDecorator = (data, lineContext) => ({
     lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
       ? lineContext[LC.PARSER].beginBlockLineNum
       : lineContext[LC.PARSER].beginNotBlockLineNum,
-  startTagLine: lineContext[LC.PARSER].startTagLine,
-  endTagLine: lineContext[LC.PARSER].endTagLine,
   data,
 });
+
+const groupedPairParserDecorator = (data, lineContext) => ({
+  startTagLine: lineContext[LC.PARSER].startTagLine,
+  endTagLine: lineContext[LC.PARSER].endTagLine,
+  ...groupedParserDecorator(data, lineContext),
+});
+
+const groupedLineParserDecorator = (data, lineContext) =>
+  groupedParserDecorator(data, lineContext);
 
 //---------------------------------------------------------------------------------------------
 
@@ -187,7 +196,12 @@ const isValidToFlush = (lineContext) => {
 
 //
 
-const createAccumulator = (isGrouped, lexerObjUtils, dataCallback) => {
+const createAccumulator = (
+  isGrouped,
+  groupDecorator,
+  lexerObjUtils,
+  dataCallback
+) => {
   const accObj = {};
 
   accObj.flush = fu.curry2((dataToFlush, lineContext) =>
@@ -196,7 +210,7 @@ const createAccumulator = (isGrouped, lexerObjUtils, dataCallback) => {
         ? flushAccum(
             dataCallback,
             lexerObjUtils,
-            groupedParserDecorator(lineContext[LC.ACCUM].data, lineContext),
+            groupDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
         : lineContext
@@ -363,7 +377,7 @@ const createPairParserEngine = (accum, errorCallback) => ({
 const createLineParserEngine = (accum) => ({
   consume: (lc) => {
     const in_block = lc[LC.PARSER].beginBlockLineNum != NO_BLOCK_BEGIN;
-    const is_tag = lc[LC.LINE].type === LEXER.START_TAG;
+    const is_tag = lc[LC.LINE].type === LEXER.TAG;
 
     if (!in_block && is_tag) {
       //fu.log("START NEW BLOCK");
@@ -458,7 +472,12 @@ class PairParser {
 
   constructor(startTagRegExp, endTagRegExp, grouped, onData, onError) {
     this.lexer = createLexer(startTagRegExp, endTagRegExp);
-    this.accum = createAccumulator(grouped, this.lexer.utils, onData);
+    this.accum = createAccumulator(
+      grouped,
+      groupedPairParserDecorator,
+      this.lexer.utils,
+      onData
+    );
     this.parserEngine = createPairParserEngine(this.accum, onError);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
@@ -493,17 +512,22 @@ class LineParser {
 
   constructor(tagRegExp, grouped, onData) {
     this.lexer = createLexer(tagRegExp);
-    this.accum = createAccumulator(grouped, this.lexer.utils, onData);
+    this.accum = createAccumulator(
+      grouped,
+      groupedLineParserDecorator,
+      this.lexer.utils,
+      onData
+    );
     this.parserEngine = createLineParserEngine(this.accum);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
-  static create(startTagRegExp, options) {
+  static create(tagRegExp, options) {
     const { grouped, onData } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(startTagRegExp, grouped, onData);
+    return new LineParser(tagRegExp, grouped, onData);
   }
 
   parse = (lines) => Parser.parse(this, lines);

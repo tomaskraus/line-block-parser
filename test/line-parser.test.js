@@ -13,7 +13,7 @@ const parserGrouped = LineParser.create(Tags.JS_LINE_COMMENT, {
 //
 const parserFlatCBTagData = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: false,
-  onData: (data, lexer) => `data: "${lexer.startTagData(data.data)}"`,
+  onData: (data, lexer) => `data: "${lexer.tagData(data.data)}"`,
 });
 
 const parserGroupedCB = LineParser.create(Tags.JS_LINE_COMMENT, {
