@@ -48,25 +48,30 @@ const LEXER = {
 };
 
 const createLexer = (startTagRegExp, endTagRegExp = null) => {
-  return {
-    // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
-    consume: (lc) => {
-      if (startTagRegExp.test(lc.line))
-        return fu.overProp(
-          LC.LINE,
-          (s) => ({ type: LEXER.START_TAG, data: s }),
-          lc
-        );
-      if (endTagRegExp !== null && endTagRegExp.test(lc.line))
-        return fu.overProp(
-          LC.LINE,
-          (s) => ({ type: LEXER.END_TAG, data: s }),
-          lc
-        );
+  const lexerObj = {};
 
-      return fu.overProp(LC.LINE, (s) => ({ type: LEXER.LINE, data: s }), lc);
-    },
+  lexerObj.matchStartTag = (line) => startTagRegExp.test(line);
+  lexerObj.matchEndTag = (line) =>
+    endTagRegExp !== null && endTagRegExp.test(line);
+
+  // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
+  lexerObj.consume = (lc) => {
+    let tagType = LEXER.LINE;
+    if (lexerObj.matchStartTag(lc.line)) {
+      tagType = LEXER.START_TAG;
+    }
+    if (lexerObj.matchEndTag(lc.line)) {
+      if (tagType === LEXER.START_TAG) {
+        //treats one-line block as a normal line
+        tagType = LEXER.LINE;
+      } else {
+        tagType = LEXER.END_TAG;
+      }
+    }
+    return fu.overProp(LC.LINE, (s) => ({ type: tagType, data: s }), lc);
   };
+
+  return lexerObj;
 };
 //---------------------------------------------------------------------------------------------
 
