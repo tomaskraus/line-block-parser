@@ -3075,3 +3075,52 @@ test result data:  [
   }
 ]
 test result errors:  []
+
+=-=  OTHER TESTS  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+lines:  [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  '/* Its fleece was white as snow,',
+  'And every where that Mary went */     ',
+  '   The lamb was sure to go ;',
+  'He followed her to school one day-',
+  ' /*  That was against the rule,*/ ',
+  'It made the children laugh and play,',
+  ' /*',
+  '   To see a lamb at school.'
+]
+{
+  block: false,
+  startTagData: null,
+  lines: [
+    'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+    'Mary had a little lamb,'
+  ],
+  endTagData: null
+}
+{
+  block: true,
+  startTagData: '/* Its fleece was white as snow,',
+  lines: [],
+  endTagData: 'And every where that Mary went */     '
+}
+{
+  block: false,
+  startTagData: null,
+  lines: [
+    '   The lamb was sure to go ;',
+    'He followed her to school one day-',
+    ' /*  That was against the rule,*/ ',
+    'It made the children laugh and play,'
+  ],
+  endTagData: null
+}
+{
+  block: true,
+  startTagData: ' /*',
+  lines: [ '   To see a lamb at school.' ],
+  endTagData: null
+}
+parsed data:  []
+parsed errors:  [ 'ERROR on line: 10: Missing end-tag at the end of the final block' ]
