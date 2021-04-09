@@ -74,6 +74,7 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
   const firstMatch = (regexp, line) => {
     if (line === null) return null;
     const matches = regexp.exec(line);
+    if (matches === null) return null;
     return fu.empty(matches) ? "" : matches[1];
   };
 
