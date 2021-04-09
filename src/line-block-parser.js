@@ -204,25 +204,26 @@ const createAccumulator = (
 ) => {
   const accObj = {};
 
-  accObj.flush = fu.curry2((dataToFlush, lineContext) =>
-    isGrouped === true
-      ? isValidToFlush(lineContext)
+  accObj.flush = fu.curry2((dataToFlush, lineContext) => {
+    if (isGrouped === true) {
+      return isValidToFlush(lineContext)
         ? flushAccum(
             dataCallback,
             lexerObjUtils,
             groupDecorator(lineContext[LC.ACCUM].data, lineContext),
             lineContext
           )
-        : lineContext
-      : dataToFlush === null
+        : lineContext;
+    }
+    return dataToFlush === null
       ? lineContext
       : flushAccum(
           dataCallback,
           lexerObjUtils,
           infoParserDecorator(dataToFlush.data, lineContext),
           lineContext
-        )
-  );
+        );
+  });
 
   accObj.append = (data, lineContext) =>
     isGrouped === true
