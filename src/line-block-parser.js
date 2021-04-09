@@ -510,6 +510,8 @@ class PairParser {
   getReducer = Parser.getReducer(this);
 
   static belongsToBlock = Parser.belongsToBlock;
+
+  static initialLineContext = Parser.initialLineContext;
 }
 
 //
@@ -544,6 +546,8 @@ class LineParser {
   getReducer = Parser.getReducer(this);
 
   static belongsToBlock = Parser.belongsToBlock;
+
+  static initialLineContext = Parser.initialLineContext;
 }
 
 //========================================================================================
