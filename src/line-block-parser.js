@@ -301,65 +301,71 @@ const defaultErrorHandler = (err) => ({
 
 const createPairParserEngine = (accum, errorCallback) => ({
   consume: (lc) => {
-    if (lc[LC.PARSER].beginBlockLineNum === NO_BLOCK_BEGIN) {
-      //fu.log("START TAG");
-      if (lc[LC.LINE].type === LEXER.START_TAG) {
-        return fu.compose3(
-          (lc3) => accum.start(lc3[LC.LINE], lc3),
-          (lc2) =>
-            fu.overProp(LC.PARSER, (p) => ({
-              ...p,
-              beginBlockLineNum: lc2[LC.LINE_NUMBER] + 1,
-              beginNotBlockLineNum: NO_BLOCK_BEGIN,
-              startTagLine: lc2[LC.LINE].data,
-              endTagLine: null,
-              state: P_STATE.IN_BLOCK,
-            }))(lc2),
-          accum.flush(null)
-        )(lc);
-      } else {
-        //fu.log("NOT BLOCK");
-        return fu.compose3(
-          (lc3) => accum.append(lc3.line, lc3),
-          (lc2) =>
-            lc2[LC.LINE].type === LEXER.END_TAG
-              ? lc[LC.LINE_NUMBER] === 1
-                ? addError(errorCallback, ERR_TYPE.END_TAG_FIRST, lc2)
-                : addError(errorCallback, ERR_TYPE.DUP_END_TAG, lc2)
-              : lc2,
-          setParserProp("state", P_STATE.OUT_OF_BLOCK)
-        )(lc);
-      }
-    } else {
-      if (lc[LC.LINE].type === LEXER.END_TAG) {
-        //fu.log("END TAG");
-        return fu.compose3(
-          (lc4) =>
-            fu.overProp(LC.PARSER, (p) => ({
-              ...p,
-              beginBlockLineNum: NO_BLOCK_BEGIN,
-              beginNotBlockLineNum: lc4[LC.LINE_NUMBER] + 1,
-              startTagLine: null,
-              endTagLine: null,
-            }))(lc4),
-          (lc3) => accum.flush(lc3.line, lc3),
-          (lc2) =>
-            fu.overProp(LC.PARSER, (p) => ({
-              ...p,
-              state: P_STATE.IN_BLOCK,
-              endTagLine: lc2[LC.LINE].data,
-            }))(lc2)
-        )(lc);
-      } else {
-        //fu.log("BLOCK");
-        return fu.compose2(
-          (lc3) => accum.append(lc3.line, lc3),
-          (lc2) =>
-            lc2[LC.LINE].type === LEXER.START_TAG
-              ? addError(errorCallback, ERR_TYPE.DUP_START_TAG, lc2)
-              : lc2
-        )(lc);
-      }
+    const in_block = lc[LC.PARSER].beginBlockLineNum !== NO_BLOCK_BEGIN;
+    const is_start_tag = lc[LC.LINE].type === LEXER.START_TAG;
+    const is_end_tag = lc[LC.LINE].type === LEXER.END_TAG;
+
+    if (!in_block && is_start_tag) {
+      //fu.log("START BLOCK");
+      return fu.compose3(
+        (lc2) => accum.start(lc2[LC.LINE], lc2),
+        (lc1) =>
+          fu.overProp(LC.PARSER, (p) => ({
+            ...p,
+            beginBlockLineNum: lc1[LC.LINE_NUMBER] + 1,
+            beginNotBlockLineNum: NO_BLOCK_BEGIN,
+            startTagLine: lc1[LC.LINE].data,
+            endTagLine: null,
+            state: P_STATE.IN_BLOCK,
+          }))(lc1),
+        accum.flush(null) //flush the content before
+      )(lc);
+    }
+
+    if (!in_block && !is_start_tag) {
+      //fu.log("NOT BLOCK");
+      return fu.compose3(
+        (lc2) => accum.append(lc2.line, lc2),
+        setParserProp("state", P_STATE.OUT_OF_BLOCK),
+        (lc1) =>
+          lc1[LC.LINE].type === LEXER.END_TAG
+            ? lc[LC.LINE_NUMBER] === 1
+              ? addError(errorCallback, ERR_TYPE.END_TAG_FIRST, lc1)
+              : addError(errorCallback, ERR_TYPE.DUP_END_TAG, lc1)
+            : lc1
+      )(lc);
+    }
+
+    if (in_block && is_end_tag) {
+      //fu.log("END OF BLOCK");
+      return fu.compose3(
+        (lc3) =>
+          fu.overProp(LC.PARSER, (p) => ({
+            ...p,
+            beginBlockLineNum: NO_BLOCK_BEGIN,
+            beginNotBlockLineNum: lc3[LC.LINE_NUMBER] + 1,
+            startTagLine: null,
+            endTagLine: null,
+          }))(lc3),
+        (lc2) => accum.flush(lc2.line, lc2),
+        (lc1) =>
+          fu.overProp(LC.PARSER, (p) => ({
+            ...p,
+            state: P_STATE.IN_BLOCK,
+            endTagLine: lc1[LC.LINE].data,
+          }))(lc1)
+      )(lc);
+    }
+
+    if (in_block && !is_end_tag) {
+      //fu.log("BLOCK");
+      return fu.compose2(
+        (lc2) => accum.append(lc2.line, lc2),
+        (lc1) =>
+          lc1[LC.LINE].type === LEXER.START_TAG
+            ? addError(errorCallback, ERR_TYPE.DUP_START_TAG, lc1)
+            : lc1
+      )(lc);
     }
   },
 
