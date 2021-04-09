@@ -8,12 +8,12 @@ Simple to use, yet quite powerful.
 ### Simple example
 
 ```js
-const { Parser, Tags } = require("./line-block-parser");
+const { PairParser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
 //
 //Parser.create(start tag, end tag[, options])
-const jsCommentParser = Parser.create(
+const jsCommentParser = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END
 );
@@ -40,7 +40,7 @@ const lines = [
 const { data, errors } = jsCommentParser.parse(lines);
 console.log(
   "lines in blocks: ",
-  data.filter(Parser.belongsToBlock).map((a) => a.data)
+  data.filter(PairParser.belongsToBlock).map((a) => a.data)
 );
 console.log("errors: ", errors);
 ```

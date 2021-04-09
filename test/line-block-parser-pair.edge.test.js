@@ -1,7 +1,7 @@
 const fu = require("../src/func-utils");
-const { Parser, Tags } = require("../src/line-block-parser");
+const { PairParser, Tags } = require("../src/line-block-parser");
 
-const parserFlat = Parser.create(
+const parserFlat = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
@@ -9,7 +9,7 @@ const parserFlat = Parser.create(
   }
 );
 
-const parserGrouped = Parser.create(
+const parserGrouped = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
@@ -17,7 +17,7 @@ const parserGrouped = Parser.create(
   }
 );
 
-const parserGroupedNullError = Parser.create(
+const parserGroupedNullError = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
@@ -28,7 +28,7 @@ const parserGroupedNullError = Parser.create(
   }
 );
 
-const parserGroupedCustomError = Parser.create(
+const parserGroupedCustomError = PairParser.create(
   Tags.JS_BLOCK_COMMENT_START,
   Tags.JS_BLOCK_COMMENT_END,
   {
