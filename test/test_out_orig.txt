@@ -3124,3 +3124,613 @@ lines:  [
 }
 parsed data:  []
 parsed errors:  [ 'ERROR on line: 10: Missing end-tag at the end of the final block' ]
+
+  = =  LINE PARSER  = = ------ ------- ----------- ---------- ---------- ------------- -------------
+  
+== lines (emptyLines) ===============================================================================
+ []
+--(emptyLines) -- parser flat (FLAT mode, no callback) ---------
+test result data:  []
+--(emptyLines) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  []
+--(emptyLines) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  []
+--(emptyLines) -- parser grouped (GROUPED mode, callback) ------
+test result data:  []
+--(emptyLines) -- parser flat (FLAT mode, noReturn callback) ---------
+test result data:  []
+--(emptyLines) -- parser grouped (GROUPED mode, noReturn callback) ------
+test result data:  []
+== lines (no comment) ===============================================================================
+ [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  '   The lamb was sure to go ;',
+  'He followed her to school one day-'
+]
+--(no comment) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 2,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'Mary had a little lamb,'
+  },
+  {
+    lineNumber: 3,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: '   The lamb was sure to go ;'
+  },
+  {
+    lineNumber: 4,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'He followed her to school one day-'
+  }
+]
+--(no comment) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ]
+  }
+]
+--(no comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  [ 'data: "null"', 'data: "null"', 'data: "null"', 'data: "null"' ]
+--(no comment) -- parser grouped (GROUPED mode, callback) ------
+test result data:  [
+  {
+    groupedData: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,',
+      '   The lamb was sure to go ;',
+      'He followed her to school one day-'
+    ],
+    block: false
+  }
+]
+--(no comment) -- parser flat (FLAT mode, noReturn callback) ---------
+data:  https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb
+data:  Mary had a little lamb,
+data:     The lamb was sure to go ;
+data:  He followed her to school one day-
+test result data:  []
+--(no comment) -- parser grouped (GROUPED mode, noReturn callback) ------
+grouped data:  [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  '   The lamb was sure to go ;',
+  'He followed her to school one day-'
+]
+test result data:  []
+== lines (whole comment) ===============================================================================
+ [
+  '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  ' //  Mary had a little lamb, ',
+  '//  The lamb was sure to go ;',
+  '  //He followed her to school one day- '
+]
+--(whole comment) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 2,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: ' //  Mary had a little lamb, '
+  },
+  {
+    lineNumber: 3,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '//  The lamb was sure to go ;'
+  },
+  {
+    lineNumber: 4,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '  //He followed her to school one day- '
+  }
+]
+--(whole comment) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      ' //  Mary had a little lamb, ',
+      '//  The lamb was sure to go ;',
+      '  //He followed her to school one day- '
+    ]
+  }
+]
+--(whole comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  [
+  'data: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'data: "  Mary had a little lamb, "',
+  'data: "  The lamb was sure to go ;"',
+  'data: "He followed her to school one day- "'
+]
+--(whole comment) -- parser grouped (GROUPED mode, callback) ------
+test result data:  [
+  {
+    groupedData: [
+      '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      ' //  Mary had a little lamb, ',
+      '//  The lamb was sure to go ;',
+      '  //He followed her to school one day- '
+    ],
+    block: true
+  }
+]
+--(whole comment) -- parser flat (FLAT mode, noReturn callback) ---------
+data:  //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb
+data:   //  Mary had a little lamb, 
+data:  //  The lamb was sure to go ;
+data:    //He followed her to school one day- 
+test result data:  []
+--(whole comment) -- parser grouped (GROUPED mode, noReturn callback) ------
+grouped data:  [
+  '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  ' //  Mary had a little lamb, ',
+  '//  The lamb was sure to go ;',
+  '  //He followed her to school one day- '
+]
+test result data:  []
+== lines (multiple comments) ===============================================================================
+ [
+  ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  ' /*',
+  '--  Its fleece was white as snow,',
+  '//--And every where that Mary went',
+  ' //*/  ',
+  '//   The lamb was sure to go ;',
+  'He followed her to school one day-',
+  ' /* ',
+  ' //  --   That was against the rule,',
+  '*/',
+  'It made the children laugh and play,',
+  '//   To see a lamb at school.'
+]
+--(multiple comments) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 2,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'Mary had a little lamb,'
+  },
+  { lineNumber: 3, lineType: 'line', state: 'outOfBlock', data: ' /*' },
+  {
+    lineNumber: 4,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: '--  Its fleece was white as snow,'
+  },
+  {
+    lineNumber: 5,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '//--And every where that Mary went'
+  },
+  {
+    lineNumber: 6,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: ' //*/  '
+  },
+  {
+    lineNumber: 7,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '//   The lamb was sure to go ;'
+  },
+  {
+    lineNumber: 8,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'He followed her to school one day-'
+  },
+  {
+    lineNumber: 9,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: ' /* '
+  },
+  {
+    lineNumber: 10,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: ' //  --   That was against the rule,'
+  },
+  { lineNumber: 11, lineType: 'line', state: 'outOfBlock', data: '*/' },
+  {
+    lineNumber: 12,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'It made the children laugh and play,'
+  },
+  {
+    lineNumber: 13,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '//   To see a lamb at school.'
+  }
+]
+--(multiple comments) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 2,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'Mary had a little lamb,',
+      ' /*',
+      '--  Its fleece was white as snow,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      '//--And every where that Mary went',
+      ' //*/  ',
+      '//   The lamb was sure to go ;'
+    ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 8,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-', ' /* ' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 10,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ ' //  --   That was against the rule,' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 11,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '*/', 'It made the children laugh and play,' ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 13,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '//   To see a lamb at school.' ]
+  }
+]
+--(multiple comments) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  [
+  'data: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'data: "null"',
+  'data: "null"',
+  'data: "null"',
+  'data: "--And every where that Mary went"',
+  'data: "*/  "',
+  'data: "   The lamb was sure to go ;"',
+  'data: "null"',
+  'data: "null"',
+  'data: "  --   That was against the rule,"',
+  'data: "null"',
+  'data: "null"',
+  'data: "   To see a lamb at school."'
+]
+--(multiple comments) -- parser grouped (GROUPED mode, callback) ------
+test result data:  [
+  {
+    groupedData: [ ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ],
+    block: true
+  },
+  {
+    groupedData: [
+      'Mary had a little lamb,',
+      ' /*',
+      '--  Its fleece was white as snow,'
+    ],
+    block: false
+  },
+  {
+    groupedData: [
+      '//--And every where that Mary went',
+      ' //*/  ',
+      '//   The lamb was sure to go ;'
+    ],
+    block: true
+  },
+  {
+    groupedData: [ 'He followed her to school one day-', ' /* ' ],
+    block: false
+  },
+  {
+    groupedData: [ ' //  --   That was against the rule,' ],
+    block: true
+  },
+  {
+    groupedData: [ '*/', 'It made the children laugh and play,' ],
+    block: false
+  },
+  { groupedData: [ '//   To see a lamb at school.' ], block: true }
+]
+--(multiple comments) -- parser flat (FLAT mode, noReturn callback) ---------
+data:   //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb
+data:  Mary had a little lamb,
+data:   /*
+data:  --  Its fleece was white as snow,
+data:  //--And every where that Mary went
+data:   //*/  
+data:  //   The lamb was sure to go ;
+data:  He followed her to school one day-
+data:   /* 
+data:   //  --   That was against the rule,
+data:  */
+data:  It made the children laugh and play,
+data:  //   To see a lamb at school.
+test result data:  []
+--(multiple comments) -- parser grouped (GROUPED mode, noReturn callback) ------
+grouped data:  [ ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
+grouped data:  [
+  'Mary had a little lamb,',
+  ' /*',
+  '--  Its fleece was white as snow,'
+]
+grouped data:  [
+  '//--And every where that Mary went',
+  ' //*/  ',
+  '//   The lamb was sure to go ;'
+]
+grouped data:  [ 'He followed her to school one day-', ' /* ' ]
+grouped data:  [ ' //  --   That was against the rule,' ]
+grouped data:  [ '*/', 'It made the children laugh and play,' ]
+grouped data:  [ '//   To see a lamb at school.' ]
+test result data:  []
+== lines (empty comment) ===============================================================================
+ [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  '//',
+  '   The lamb was sure to go ;'
+]
+--(empty comment) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 2,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'Mary had a little lamb,'
+  },
+  { lineNumber: 3, lineType: 'startTag', state: 'inBlock', data: '//' },
+  {
+    lineNumber: 4,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: '   The lamb was sure to go ;'
+  }
+]
+--(empty comment) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  [
+  {
+    state: 'outOfBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 3,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '//' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 4,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '   The lamb was sure to go ;' ]
+  }
+]
+--(empty comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  [ 'data: "null"', 'data: "null"', 'data: ""', 'data: "null"' ]
+--(empty comment) -- parser grouped (GROUPED mode, callback) ------
+test result data:  [
+  {
+    groupedData: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ],
+    block: false
+  },
+  { groupedData: [ '//' ], block: true },
+  { groupedData: [ '   The lamb was sure to go ;' ], block: false }
+]
+--(empty comment) -- parser flat (FLAT mode, noReturn callback) ---------
+data:  https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb
+data:  Mary had a little lamb,
+data:  //
+data:     The lamb was sure to go ;
+test result data:  []
+--(empty comment) -- parser grouped (GROUPED mode, noReturn callback) ------
+grouped data:  [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,'
+]
+grouped data:  [ '//' ]
+grouped data:  [ '   The lamb was sure to go ;' ]
+test result data:  []
+== lines (multiple empty comments) ===============================================================================
+ [
+  '  // ',
+  '//',
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,',
+  '  //',
+  'He followed her to school one day-'
+]
+--(multiple empty comments) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '  // '
+  },
+  { lineNumber: 2, lineType: 'startTag', state: 'inBlock', data: '//' },
+  {
+    lineNumber: 3,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
+  },
+  {
+    lineNumber: 4,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'Mary had a little lamb,'
+  },
+  {
+    lineNumber: 5,
+    lineType: 'startTag',
+    state: 'inBlock',
+    data: '  //'
+  },
+  {
+    lineNumber: 6,
+    lineType: 'line',
+    state: 'outOfBlock',
+    data: 'He followed her to school one day-'
+  }
+]
+--(multiple empty comments) -- parser grouped (GROUPED mode, no callback) ------
+test result data:  [
+  {
+    state: 'inBlock',
+    startLineNumber: 1,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '  // ', '//' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 3,
+    startTagLine: null,
+    endTagLine: null,
+    data: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ]
+  },
+  {
+    state: 'inBlock',
+    startLineNumber: 5,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ '  //' ]
+  },
+  {
+    state: 'outOfBlock',
+    startLineNumber: 6,
+    startTagLine: null,
+    endTagLine: null,
+    data: [ 'He followed her to school one day-' ]
+  }
+]
+--(multiple empty comments) -- parser flat (FLAT mode, callback (tag data) ) ---------
+test result data:  [
+  'data: " "',
+  'data: ""',
+  'data: "null"',
+  'data: "null"',
+  'data: ""',
+  'data: "null"'
+]
+--(multiple empty comments) -- parser grouped (GROUPED mode, callback) ------
+test result data:  [
+  { groupedData: [ '  // ', '//' ], block: true },
+  {
+    groupedData: [
+      'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+      'Mary had a little lamb,'
+    ],
+    block: false
+  },
+  { groupedData: [ '  //' ], block: true },
+  {
+    groupedData: [ 'He followed her to school one day-' ],
+    block: false
+  }
+]
+--(multiple empty comments) -- parser flat (FLAT mode, noReturn callback) ---------
+data:    // 
+data:  //
+data:  https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb
+data:  Mary had a little lamb,
+data:    //
+data:  He followed her to school one day-
+test result data:  []
+--(multiple empty comments) -- parser grouped (GROUPED mode, noReturn callback) ------
+grouped data:  [ '  // ', '//' ]
+grouped data:  [
+  'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
+  'Mary had a little lamb,'
+]
+grouped data:  [ '  //' ]
+grouped data:  [ 'He followed her to school one day-' ]
+test result data:  []
