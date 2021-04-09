@@ -1,4 +1,4 @@
-const { PairParser, Tags } = require("./line-block-parser");
+const { PairParser, LineParser, Tags } = require("./line-block-parser");
 
 //we want to recognize lines in javascript block comments
 //
@@ -16,14 +16,14 @@ const lines = [
   "  Its fleece was white as snow,",
   "And every where that Mary went",
   " */",
-  "   The lamb was sure to go ;",
-  "He followed her to school one day-",
+  "//   The lamb was sure to go ;",
+  " //He followed her to school one day-",
   " /* ",
-  "   That was against the rule,",
+  "//   That was against the rule,",
   "*/ ",
   "It made the children laugh and play,",
   "/*",
-  "   To see a lamb at school.",
+  " //   To see a lamb at school.",
 ];
 
 //let's go
@@ -35,7 +35,7 @@ console.log(
 console.log("errors: ", errors);
 
 console.log(
-  `----------------------------------------------------------------------------`
+  `----REDUCER------------------------------------------------------------------------`
 );
 
 //using its reducer
@@ -65,3 +65,14 @@ console.log(
   "(parse): lines that belongs to a block: ",
   linesBelongsToBlock(dataFromParse)
 );
+
+console.log(
+  `----LINE PARSER------------------------------------------------------------------------`
+);
+
+const lp = LineParser.create(Tags.JS_LINE_COMMENT);
+
+const { data: dataFromLineParser } = lp.parse(lines);
+
+console.log("lines: ", lines);
+console.log("lineParser data: ", dataFromLineParser);
