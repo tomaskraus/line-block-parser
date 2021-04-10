@@ -35,69 +35,59 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 3,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /*'
-  },
+  { lineNumber: 3, lineType: 'startTag', inBlock: true, data: ' /*' },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--  Its fleece was white as snow,'
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--And every where that Mary went'
   },
-  { lineNumber: 6, lineType: 'endTag', state: 'inBlock', data: '*/  ' },
+  { lineNumber: 6, lineType: 'endTag', inBlock: true, data: '*/  ' },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   },
-  {
-    lineNumber: 9,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /* '
-  },
+  { lineNumber: 9, lineType: 'startTag', inBlock: true, data: ' /* ' },
   {
     lineNumber: 10,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--   That was against the rule,'
   },
-  { lineNumber: 11, lineType: 'endTag', state: 'inBlock', data: '*/' },
+  { lineNumber: 11, lineType: 'endTag', inBlock: true, data: '*/' },
   {
     lineNumber: 12,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'It made the children laugh and play,'
   },
   {
     lineNumber: 13,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   To see a lamb at school.'
   }
 ]
@@ -106,8 +96,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -116,8 +106,8 @@ test result data:  [
   {
     startTagLine: ' /*',
     endTagLine: '*/  ',
-    state: 'inBlock',
     startLineNumber: 4,
+    inBlock: true,
     data: [
       '--  Its fleece was white as snow,',
       '--And every where that Mary went'
@@ -126,8 +116,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -136,15 +126,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 10,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 12,
+    inBlock: false,
     data: [
       'It made the children laugh and play,',
       '   To see a lamb at school.'
@@ -156,59 +146,59 @@ test result data:  [
 - - - - - - data:  {
   lineNumber: 1,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
 }
 - - - - - - data:  {
   lineNumber: 2,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'Mary had a little lamb,'
 }
-- - - - - - data:  { lineNumber: 3, lineType: 'startTag', state: 'inBlock', data: ' /*' }
+- - - - - - data:  { lineNumber: 3, lineType: 'startTag', inBlock: true, data: ' /*' }
 - - - - - - data:  {
   lineNumber: 4,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--  Its fleece was white as snow,'
 }
 - - - - - - data:  {
   lineNumber: 5,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--And every where that Mary went'
 }
-- - - - - - data:  { lineNumber: 6, lineType: 'endTag', state: 'inBlock', data: '*/  ' }
+- - - - - - data:  { lineNumber: 6, lineType: 'endTag', inBlock: true, data: '*/  ' }
 - - - - - - data:  {
   lineNumber: 7,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: '   The lamb was sure to go ;'
 }
 - - - - - - data:  {
   lineNumber: 8,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'He followed her to school one day-'
 }
-- - - - - - data:  { lineNumber: 9, lineType: 'startTag', state: 'inBlock', data: ' /* ' }
+- - - - - - data:  { lineNumber: 9, lineType: 'startTag', inBlock: true, data: ' /* ' }
 - - - - - - data:  {
   lineNumber: 10,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--   That was against the rule,'
 }
-- - - - - - data:  { lineNumber: 11, lineType: 'endTag', state: 'inBlock', data: '*/' }
+- - - - - - data:  { lineNumber: 11, lineType: 'endTag', inBlock: true, data: '*/' }
 - - - - - - data:  {
   lineNumber: 12,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'It made the children laugh and play,'
 }
 - - - - - - data:  {
   lineNumber: 13,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: '   To see a lamb at school.'
 }
 test result data:  []
@@ -216,8 +206,8 @@ test result data:  []
 - - - - - - data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 1,
+  inBlock: false,
   data: [
     'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
     'Mary had a little lamb,'
@@ -226,8 +216,8 @@ test result data:  []
 - - - - - - data:  {
   startTagLine: ' /*',
   endTagLine: '*/  ',
-  state: 'inBlock',
   startLineNumber: 4,
+  inBlock: true,
   data: [
     '--  Its fleece was white as snow,',
     '--And every where that Mary went'
@@ -236,8 +226,8 @@ test result data:  []
 - - - - - - data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 7,
+  inBlock: false,
   data: [
     '   The lamb was sure to go ;',
     'He followed her to school one day-'
@@ -246,15 +236,15 @@ test result data:  []
 - - - - - - data:  {
   startTagLine: ' /* ',
   endTagLine: '*/',
-  state: 'inBlock',
   startLineNumber: 10,
+  inBlock: true,
   data: [ '--   That was against the rule,' ]
 }
 - - - - - - data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 12,
+  inBlock: false,
   data: [
     'It made the children laugh and play,',
     '   To see a lamb at school.'
@@ -266,74 +256,74 @@ test result data:  []
 . . . . data:  {
   lineNumber: 1,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
 }
-belongsToBlock false
+in block false
 . . . . data:  {
   lineNumber: 2,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'Mary had a little lamb,'
 }
-belongsToBlock false
-. . . . data:  { lineNumber: 3, lineType: 'startTag', state: 'inBlock', data: ' /*' }
-belongsToBlock true
+in block false
+. . . . data:  { lineNumber: 3, lineType: 'startTag', inBlock: true, data: ' /*' }
+in block true
 . . . . data:  {
   lineNumber: 4,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--  Its fleece was white as snow,'
 }
-belongsToBlock true
+in block true
 . . . . data:  {
   lineNumber: 5,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--And every where that Mary went'
 }
-belongsToBlock true
-. . . . data:  { lineNumber: 6, lineType: 'endTag', state: 'inBlock', data: '*/  ' }
-belongsToBlock true
+in block true
+. . . . data:  { lineNumber: 6, lineType: 'endTag', inBlock: true, data: '*/  ' }
+in block true
 . . . . data:  {
   lineNumber: 7,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: '   The lamb was sure to go ;'
 }
-belongsToBlock false
+in block false
 . . . . data:  {
   lineNumber: 8,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'He followed her to school one day-'
 }
-belongsToBlock false
-. . . . data:  { lineNumber: 9, lineType: 'startTag', state: 'inBlock', data: ' /* ' }
-belongsToBlock true
+in block false
+. . . . data:  { lineNumber: 9, lineType: 'startTag', inBlock: true, data: ' /* ' }
+in block true
 . . . . data:  {
   lineNumber: 10,
   lineType: 'line',
-  state: 'inBlock',
+  inBlock: true,
   data: '--   That was against the rule,'
 }
-belongsToBlock true
-. . . . data:  { lineNumber: 11, lineType: 'endTag', state: 'inBlock', data: '*/' }
-belongsToBlock true
+in block true
+. . . . data:  { lineNumber: 11, lineType: 'endTag', inBlock: true, data: '*/' }
+in block true
 . . . . data:  {
   lineNumber: 12,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: 'It made the children laugh and play,'
 }
-belongsToBlock false
+in block false
 . . . . data:  {
   lineNumber: 13,
   lineType: 'line',
-  state: 'outOfBlock',
+  inBlock: false,
   data: '   To see a lamb at school.'
 }
-belongsToBlock false
+in block false
 test result: data  [
   'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
   'Mary had a little lamb,',
@@ -353,55 +343,55 @@ test result: data  [
 . . . . data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 1,
+  inBlock: false,
   data: [
     'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
     'Mary had a little lamb,'
   ]
 }
-belongsToBlock false
+in block false
 . . . . data:  {
   startTagLine: ' /*',
   endTagLine: '*/  ',
-  state: 'inBlock',
   startLineNumber: 4,
+  inBlock: true,
   data: [
     '--  Its fleece was white as snow,',
     '--And every where that Mary went'
   ]
 }
-belongsToBlock true
+in block true
 . . . . data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 7,
+  inBlock: false,
   data: [
     '   The lamb was sure to go ;',
     'He followed her to school one day-'
   ]
 }
-belongsToBlock false
+in block false
 . . . . data:  {
   startTagLine: ' /* ',
   endTagLine: '*/',
-  state: 'inBlock',
   startLineNumber: 10,
+  inBlock: true,
   data: [ '--   That was against the rule,' ]
 }
-belongsToBlock true
+in block true
 . . . . data:  {
   startTagLine: null,
   endTagLine: null,
-  state: 'outOfBlock',
   startLineNumber: 12,
+  inBlock: false,
   data: [
     'It made the children laugh and play,',
     '   To see a lamb at school.'
   ]
 }
-belongsToBlock false
+in block false
 test result data:  [
   [
     'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -450,25 +440,25 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -478,8 +468,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -494,8 +484,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -510,8 +500,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -532,40 +522,35 @@ test result errors:  []
 ]
 --(whole comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'He followed her to school one day-'
   },
   {
     lineNumber: 6,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   }
 ]
@@ -575,8 +560,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -591,8 +576,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -607,8 +592,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -631,52 +616,42 @@ test result errors:  []
 ]
 --(consecutiveComments) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 7,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -686,8 +661,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -696,15 +671,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -714,8 +689,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -724,15 +699,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -742,8 +717,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -752,15 +727,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -778,31 +753,26 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 3,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 3, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   }
 ]
@@ -812,8 +782,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -822,15 +792,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 4,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '   The lamb was sure to go ;' ]
   }
 ]
@@ -840,8 +810,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -850,15 +820,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 4,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '   The lamb was sure to go ;' ]
   }
 ]
@@ -868,8 +838,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -878,15 +848,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 4,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '   The lamb was sure to go ;' ]
   }
 ]
@@ -904,52 +874,42 @@ test result errors:  []
 ]
 --(multiple empty comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 6,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -959,15 +919,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 3,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -976,15 +936,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -997,15 +957,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 3,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1014,15 +974,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -1035,15 +995,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 3,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1052,15 +1012,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: []
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -1080,46 +1040,36 @@ test result errors:  []
 ]
 --(unclosed comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'He followed her to school one day-'
   }
 ]
@@ -1135,8 +1085,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1145,8 +1095,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -1165,8 +1115,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1175,8 +1125,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -1190,8 +1140,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1200,8 +1150,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [
       '   The lamb was sure to go ;',
       'He followed her to school one day-'
@@ -1220,37 +1170,27 @@ test result errors:  []
 ]
 --(empty unclosed comment) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
-  { lineNumber: 5, lineType: 'line', state: 'outOfBlock', data: '' },
-  {
-    lineNumber: 6,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  }
+  { lineNumber: 5, lineType: 'line', inBlock: false, data: '' },
+  { lineNumber: 6, lineType: 'startTag', inBlock: true, data: '  /* ' }
 ]
 test result errors:  [
   {
@@ -1264,8 +1204,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1274,15 +1214,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: []
   }
 ]
@@ -1298,8 +1238,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1308,15 +1248,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: []
   }
 ]
@@ -1327,8 +1267,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
@@ -1337,15 +1277,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 5,
+    inBlock: false,
     data: [ '' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: []
   }
 ]
@@ -1362,41 +1302,36 @@ test result errors:  []
 ]
 --(repeated startTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
-  { lineNumber: 3, lineType: 'startTag', state: 'inBlock', data: '/*' },
+  { lineNumber: 3, lineType: 'startTag', inBlock: true, data: '/*' },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'He followed her to school one day-'
   },
   {
     lineNumber: 7,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   }
 ]
@@ -1412,8 +1347,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*',
@@ -1435,8 +1370,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*',
@@ -1453,8 +1388,8 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*',
@@ -1480,38 +1415,33 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
-  { lineNumber: 4, lineType: 'startTag', state: 'inBlock', data: '/*' },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /*'
-  },
+  { lineNumber: 4, lineType: 'startTag', inBlock: true, data: '/*' },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: ' /*' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'He followed her to school one day-'
   },
   {
     lineNumber: 7,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   }
 ]
@@ -1527,8 +1457,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -1538,8 +1468,8 @@ test result data:  [
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ ' /*', 'He followed her to school one day-' ]
   }
 ]
@@ -1555,8 +1485,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -1566,8 +1496,8 @@ test result data:  [
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ ' /*', 'He followed her to school one day-' ]
   }
 ]
@@ -1578,8 +1508,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -1589,8 +1519,8 @@ test result data:  [
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ ' /*', 'He followed her to school one day-' ]
   }
 ]
@@ -1611,39 +1541,34 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
-  { lineNumber: 2, lineType: 'startTag', state: 'inBlock', data: '/*' },
+  { lineNumber: 2, lineType: 'startTag', inBlock: true, data: '/*' },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'Mary had a little lamb,'
   },
-  { lineNumber: 4, lineType: 'startTag', state: 'inBlock', data: '/*' },
+  { lineNumber: 4, lineType: 'startTag', inBlock: true, data: '/*' },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
-  {
-    lineNumber: 6,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /*'
-  },
+  { lineNumber: 6, lineType: 'startTag', inBlock: true, data: ' /*' },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'He followed her to school one day-'
   },
   {
     lineNumber: 8,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   }
 ]
@@ -1664,15 +1589,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 3,
+    inBlock: true,
     data: [
       'Mary had a little lamb,',
       '/*',
@@ -1699,15 +1624,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 3,
+    inBlock: true,
     data: [
       'Mary had a little lamb,',
       '/*',
@@ -1725,15 +1650,15 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: '/*',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 3,
+    inBlock: true,
     data: [
       'Mary had a little lamb,',
       '/*',
@@ -1758,58 +1683,43 @@ test result errors:  []
 ]
 --(repeatedEndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
-  {
-    lineNumber: 3,
-    lineType: 'endTag',
-    state: 'inBlock',
-    data: ' */   '
-  },
+  { lineNumber: 3, lineType: 'endTag', inBlock: true, data: ' */   ' },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 5,
     lineType: 'endTag',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   */    '
   },
-  {
-    lineNumber: 6,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 6, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 9,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -1825,29 +1735,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ 'Mary had a little lamb,', '   */    ' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -1863,29 +1773,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ 'Mary had a little lamb,', '   */    ' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -1896,29 +1806,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ 'Mary had a little lamb,', '   */    ' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -1937,58 +1847,43 @@ test result errors:  []
 ]
 --(consecutive EndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
-  {
-    lineNumber: 3,
-    lineType: 'endTag',
-    state: 'inBlock',
-    data: ' */   '
-  },
+  { lineNumber: 3, lineType: 'endTag', inBlock: true, data: ' */   ' },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   */    '
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 6,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 6, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 9,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -2004,29 +1899,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2042,29 +1937,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2075,29 +1970,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2117,66 +2012,46 @@ test result errors:  []
 ]
 --(multiple EndTag) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 1, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
-  {
-    lineNumber: 3,
-    lineType: 'endTag',
-    state: 'inBlock',
-    data: ' */   '
-  },
+  { lineNumber: 3, lineType: 'endTag', inBlock: true, data: ' */   ' },
   {
     lineNumber: 4,
     lineType: 'endTag',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   */    '
   },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 6,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 6, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 9,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   },
-  {
-    lineNumber: 10,
-    lineType: 'endTag',
-    state: 'outOfBlock',
-    data: '*/'
-  }
+  { lineNumber: 10, lineType: 'endTag', inBlock: false, data: '*/' }
 ]
 test result errors:  [
   {
@@ -2195,29 +2070,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-', '*/' ]
   }
 ]
@@ -2238,29 +2113,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-', '*/' ]
   }
 ]
@@ -2272,29 +2147,29 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: ' */   ',
-    state: 'inBlock',
     startLineNumber: 2,
+    inBlock: true,
     data: [ 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   */    ', 'Mary had a little lamb,' ]
   },
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 7,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [ 'He followed her to school one day-', '*/' ]
   }
 ]
@@ -2311,46 +2186,36 @@ test result errors:  []
 ]
 --(EndTag at the beginning) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'endTag',
-    state: 'outOfBlock',
-    data: ' */ '
-  },
+  { lineNumber: 1, lineType: 'endTag', inBlock: false, data: ' */ ' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 4,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: '  /* '
-  },
+  { lineNumber: 4, lineType: 'startTag', inBlock: true, data: '  /* ' },
   {
     lineNumber: 5,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 6,
     lineType: 'endTag',
-    state: 'inBlock',
+    inBlock: true,
     data: '   */    '
   },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
@@ -2366,8 +2231,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       ' */ ',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2377,15 +2242,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2401,8 +2266,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       ' */ ',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2412,15 +2277,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2431,8 +2296,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       ' */ ',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2442,15 +2307,15 @@ test result data:  [
   {
     startTagLine: '  /* ',
     endTagLine: '   */    ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [ '   The lamb was sure to go ;' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 7,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]
@@ -2477,96 +2342,66 @@ test result errors:  []
 ]
 --(multiple error types) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  {
-    lineNumber: 1,
-    lineType: 'endTag',
-    state: 'outOfBlock',
-    data: '*/'
-  },
+  { lineNumber: 1, lineType: 'endTag', inBlock: false, data: '*/' },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  {
-    lineNumber: 4,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /*'
-  },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /*'
-  },
+  { lineNumber: 4, lineType: 'startTag', inBlock: true, data: ' /*' },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: ' /*' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--  Its fleece was white as snow,'
   },
   {
     lineNumber: 7,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--And every where that Mary went'
   },
-  { lineNumber: 8, lineType: 'endTag', state: 'inBlock', data: '*/  ' },
-  {
-    lineNumber: 9,
-    lineType: 'endTag',
-    state: 'outOfBlock',
-    data: '*/  '
-  },
+  { lineNumber: 8, lineType: 'endTag', inBlock: true, data: '*/  ' },
+  { lineNumber: 9, lineType: 'endTag', inBlock: false, data: '*/  ' },
   {
     lineNumber: 10,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 11,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   },
-  {
-    lineNumber: 12,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /* '
-  },
+  { lineNumber: 12, lineType: 'startTag', inBlock: true, data: ' /* ' },
   {
     lineNumber: 13,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--   That was against the rule,'
   },
-  { lineNumber: 14, lineType: 'endTag', state: 'inBlock', data: '*/' },
-  {
-    lineNumber: 15,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /* '
-  },
+  { lineNumber: 14, lineType: 'endTag', inBlock: true, data: '*/' },
+  { lineNumber: 15, lineType: 'startTag', inBlock: true, data: ' /* ' },
   {
     lineNumber: 16,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: 'It made the children laugh and play,'
   },
   {
     lineNumber: 17,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '   To see a lamb at school.'
   }
 ]
@@ -2597,8 +2432,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       '*/',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2608,8 +2443,8 @@ test result data:  [
   {
     startTagLine: ' /*',
     endTagLine: '*/  ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [
       ' /*',
       '--  Its fleece was white as snow,',
@@ -2619,8 +2454,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [
       '*/  ',
       '   The lamb was sure to go ;',
@@ -2630,15 +2465,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 13,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: ' /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 16,
+    inBlock: true,
     data: [
       'It made the children laugh and play,',
       '   To see a lamb at school.'
@@ -2672,8 +2507,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       '*/',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2683,8 +2518,8 @@ test result data:  [
   {
     startTagLine: ' /*',
     endTagLine: '*/  ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [
       ' /*',
       '--  Its fleece was white as snow,',
@@ -2694,8 +2529,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [
       '*/  ',
       '   The lamb was sure to go ;',
@@ -2705,15 +2540,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 13,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: ' /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 16,
+    inBlock: true,
     data: [
       'It made the children laugh and play,',
       '   To see a lamb at school.'
@@ -2730,8 +2565,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       '*/',
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
@@ -2741,8 +2576,8 @@ test result data:  [
   {
     startTagLine: ' /*',
     endTagLine: '*/  ',
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [
       ' /*',
       '--  Its fleece was white as snow,',
@@ -2752,8 +2587,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 9,
+    inBlock: false,
     data: [
       '*/  ',
       '   The lamb was sure to go ;',
@@ -2763,15 +2598,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 13,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: ' /* ',
     endTagLine: null,
-    state: 'inBlock',
     startLineNumber: 16,
+    inBlock: true,
     data: [
       'It made the children laugh and play,',
       '   To see a lamb at school.'
@@ -2795,44 +2630,39 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '/*Mary had a little lamb,*/'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '--  Its fleece was white as snow,'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '--And every where that Mary went'
   },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /* '
-  },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: ' /* ' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '--   That was against the rule,'
   },
-  { lineNumber: 7, lineType: 'endTag', state: 'inBlock', data: '*/' },
+  { lineNumber: 7, lineType: 'endTag', inBlock: true, data: '*/' },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'It made the children laugh and play,'
   }
 ]
@@ -2842,8 +2672,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*Mary had a little lamb,*/',
@@ -2854,15 +2684,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -2872,8 +2702,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*Mary had a little lamb,*/',
@@ -2884,15 +2714,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -2902,8 +2732,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       '/*Mary had a little lamb,*/',
@@ -2914,15 +2744,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '--   That was against the rule,' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -2943,44 +2773,39 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '--  Its fleece was white as snow,'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '--And every where that Mary went'
   },
-  {
-    lineNumber: 5,
-    lineType: 'startTag',
-    state: 'inBlock',
-    data: ' /* '
-  },
+  { lineNumber: 5, lineType: 'startTag', inBlock: true, data: ' /* ' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'inBlock',
+    inBlock: true,
     data: '  /*   That was against the rule,*/   '
   },
-  { lineNumber: 7, lineType: 'endTag', state: 'inBlock', data: '*/' },
+  { lineNumber: 7, lineType: 'endTag', inBlock: true, data: '*/' },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'It made the children laugh and play,'
   }
 ]
@@ -2990,8 +2815,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -3002,15 +2827,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '  /*   That was against the rule,*/   ' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -3020,8 +2845,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -3032,15 +2857,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '  /*   That was against the rule,*/   ' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -3050,8 +2875,8 @@ test result data:  [
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -3062,15 +2887,15 @@ test result data:  [
   {
     startTagLine: ' /* ',
     endTagLine: '*/',
-    state: 'inBlock',
     startLineNumber: 6,
+    inBlock: true,
     data: [ '  /*   That was against the rule,*/   ' ]
   },
   {
     startTagLine: null,
     endTagLine: null,
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'It made the children laugh and play,' ]
   }
 ]
@@ -3153,33 +2978,33 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
 --(no comment) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  [
   {
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,',
@@ -3228,33 +3053,33 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: ' //  Mary had a little lamb, '
   },
   {
     lineNumber: 3,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '//  The lamb was sure to go ;'
   },
   {
     lineNumber: 4,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '  //He followed her to school one day- '
   }
 ]
 --(whole comment) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  [
   {
-    state: 'inBlock',
     startLineNumber: 1,
+    inBlock: true,
     data: [
       '//https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       ' //  Mary had a little lamb, ',
@@ -3317,77 +3142,72 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  { lineNumber: 3, lineType: 'line', state: 'outOfBlock', data: ' /*' },
+  { lineNumber: 3, lineType: 'line', inBlock: false, data: ' /*' },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '--  Its fleece was white as snow,'
   },
   {
     lineNumber: 5,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '//--And every where that Mary went'
   },
-  { lineNumber: 6, lineType: 'tag', state: 'inBlock', data: ' //*/  ' },
+  { lineNumber: 6, lineType: 'tag', inBlock: true, data: ' //*/  ' },
   {
     lineNumber: 7,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '//   The lamb was sure to go ;'
   },
   {
     lineNumber: 8,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   },
-  {
-    lineNumber: 9,
-    lineType: 'line',
-    state: 'outOfBlock',
-    data: ' /* '
-  },
+  { lineNumber: 9, lineType: 'line', inBlock: false, data: ' /* ' },
   {
     lineNumber: 10,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: ' //  --   That was against the rule,'
   },
-  { lineNumber: 11, lineType: 'line', state: 'outOfBlock', data: '*/' },
+  { lineNumber: 11, lineType: 'line', inBlock: false, data: '*/' },
   {
     lineNumber: 12,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'It made the children laugh and play,'
   },
   {
     lineNumber: 13,
     lineType: 'tag',
-    state: 'inBlock',
+    inBlock: true,
     data: '//   To see a lamb at school.'
   }
 ]
 --(multiple comments) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  [
   {
-    state: 'inBlock',
     startLineNumber: 1,
+    inBlock: true,
     data: [ ' //https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb' ]
   },
   {
-    state: 'outOfBlock',
     startLineNumber: 2,
+    inBlock: false,
     data: [
       'Mary had a little lamb,',
       ' /*',
@@ -3395,8 +3215,8 @@ test result data:  [
     ]
   },
   {
-    state: 'inBlock',
     startLineNumber: 5,
+    inBlock: true,
     data: [
       '//--And every where that Mary went',
       ' //*/  ',
@@ -3404,23 +3224,23 @@ test result data:  [
     ]
   },
   {
-    state: 'outOfBlock',
     startLineNumber: 8,
+    inBlock: false,
     data: [ 'He followed her to school one day-', ' /* ' ]
   },
   {
-    state: 'inBlock',
     startLineNumber: 10,
+    inBlock: true,
     data: [ ' //  --   That was against the rule,' ]
   },
   {
-    state: 'outOfBlock',
     startLineNumber: 11,
+    inBlock: false,
     data: [ '*/', 'It made the children laugh and play,' ]
   },
   {
-    state: 'inBlock',
     startLineNumber: 13,
+    inBlock: true,
     data: [ '//   To see a lamb at school.' ]
   }
 ]
@@ -3520,37 +3340,37 @@ test result data:  [
   {
     lineNumber: 1,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 2,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  { lineNumber: 3, lineType: 'tag', state: 'inBlock', data: '//' },
+  { lineNumber: 3, lineType: 'tag', inBlock: true, data: '//' },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: '   The lamb was sure to go ;'
   }
 ]
 --(empty comment) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  [
   {
-    state: 'outOfBlock',
     startLineNumber: 1,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
     ]
   },
-  { state: 'inBlock', startLineNumber: 3, data: [ '//' ] },
+  { startLineNumber: 3, inBlock: true, data: [ '//' ] },
   {
-    state: 'outOfBlock',
     startLineNumber: 4,
+    inBlock: false,
     data: [ '   The lamb was sure to go ;' ]
   }
 ]
@@ -3593,43 +3413,43 @@ test result data:  []
 ]
 --(multiple empty comments) -- parser flat (FLAT mode, no callback) ---------
 test result data:  [
-  { lineNumber: 1, lineType: 'tag', state: 'inBlock', data: '  // ' },
-  { lineNumber: 2, lineType: 'tag', state: 'inBlock', data: '//' },
+  { lineNumber: 1, lineType: 'tag', inBlock: true, data: '  // ' },
+  { lineNumber: 2, lineType: 'tag', inBlock: true, data: '//' },
   {
     lineNumber: 3,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb'
   },
   {
     lineNumber: 4,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'Mary had a little lamb,'
   },
-  { lineNumber: 5, lineType: 'tag', state: 'inBlock', data: '  //' },
+  { lineNumber: 5, lineType: 'tag', inBlock: true, data: '  //' },
   {
     lineNumber: 6,
     lineType: 'line',
-    state: 'outOfBlock',
+    inBlock: false,
     data: 'He followed her to school one day-'
   }
 ]
 --(multiple empty comments) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  [
-  { state: 'inBlock', startLineNumber: 1, data: [ '  // ', '//' ] },
+  { startLineNumber: 1, inBlock: true, data: [ '  // ', '//' ] },
   {
-    state: 'outOfBlock',
     startLineNumber: 3,
+    inBlock: false,
     data: [
       'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
       'Mary had a little lamb,'
     ]
   },
-  { state: 'inBlock', startLineNumber: 5, data: [ '  //' ] },
+  { startLineNumber: 5, inBlock: true, data: [ '  //' ] },
   {
-    state: 'outOfBlock',
     startLineNumber: 6,
+    inBlock: false,
     data: [ 'He followed her to school one day-' ]
   }
 ]

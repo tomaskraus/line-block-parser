@@ -118,43 +118,45 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 
 //========================================================================================
 
-const plainParserDecorator = (data, _) => data.data;
-
 const LINE_INFO = {
   LINE_NUMBER: "lineNumber",
   LINE_TYPE: "lineType",
   STATE: "state",
 };
 
-const infoParserDecorator = (data, lineContext) => ({
-  lineNumber: lineContext[LC.LINE_NUMBER],
-  lineType: LEXER.names[lineContext[LC.LINE].type],
-  state: P_STATE.names[lineContext[LC.PARSER].state],
+//every decorator (flat, grouped) should have this
+const _decorator = (data, lineContext) => ({
+  inBlock: lineContext[LC.PARSER].state === P_STATE.IN_BLOCK,
   data,
 });
 
-const belongsToBlock = (data) =>
-  data[LINE_INFO.STATE] === P_STATE.names[P_STATE.IN_BLOCK];
+const infoParserDecorator = (data, lineContext) => ({
+  lineNumber: lineContext[LC.LINE_NUMBER],
+  lineType: LEXER.names[lineContext[LC.LINE].type],
+  ..._decorator(data, lineContext),
+});
 
 //----------------------------------------------------------------------------------------
 
-const groupedParserDecorator = (data, lineContext) => ({
-  state: P_STATE.names[lineContext[LC.PARSER].state],
+//every grouped decorator should have this
+const groupedDecorator = (data, lineContext) => ({
   startLineNumber:
     lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
       ? lineContext[LC.PARSER].beginBlockLineNum
       : lineContext[LC.PARSER].beginNotBlockLineNum,
-  data,
+  ..._decorator(data, lineContext),
 });
 
 const groupedPairParserDecorator = (data, lineContext) => ({
   startTagLine: lineContext[LC.PARSER].startTagLine,
   endTagLine: lineContext[LC.PARSER].endTagLine,
-  ...groupedParserDecorator(data, lineContext),
+  ...groupedDecorator(data, lineContext),
 });
 
 const groupedLineParserDecorator = (data, lineContext) =>
-  groupedParserDecorator(data, lineContext);
+  groupedDecorator(data, lineContext);
+
+const inBlock = (data) => data.inBlock === true;
 
 //---------------------------------------------------------------------------------------------
 
@@ -231,7 +233,7 @@ const createAccumulator = (
           LC.ACCUM,
           (aObj) => ({
             state: A_STATE.READY,
-            data: [...aObj.data, plainParserDecorator(data, lineContext)],
+            data: [...aObj.data, data.data],
           }),
           lineContext
         )
@@ -466,7 +468,7 @@ class Parser {
     return { errors, data };
   }
 
-  static belongsToBlock = belongsToBlock;
+  static inBlock = inBlock;
 }
 
 // -----------------------------
@@ -509,7 +511,7 @@ class PairParser {
 
   getReducer = Parser.getReducer(this);
 
-  static belongsToBlock = Parser.belongsToBlock;
+  static inBlock = Parser.inBlock;
 
   static initialLineContext = Parser.initialLineContext;
 }
@@ -545,7 +547,7 @@ class LineParser {
 
   getReducer = Parser.getReducer(this);
 
-  static belongsToBlock = Parser.belongsToBlock;
+  static inBlock = Parser.inBlock;
 
   static initialLineContext = Parser.initialLineContext;
 }

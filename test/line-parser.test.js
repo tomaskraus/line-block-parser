@@ -20,7 +20,7 @@ const parserGroupedCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: true,
   onData: (data) => ({
     groupedData: data.data,
-    block: LineParser.belongsToBlock(data),
+    block: LineParser.inBlock(data),
   }),
 });
 //

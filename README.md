@@ -40,7 +40,7 @@ const lines = [
 const { data, errors } = jsCommentParser.parse(lines);
 console.log(
   "lines in blocks: ",
-  data.filter(PairParser.belongsToBlock).map((a) => a.data)
+  data.filter(PairParser.inBlock).map((a) => a.data)
 );
 console.log("errors: ", errors);
 ```
