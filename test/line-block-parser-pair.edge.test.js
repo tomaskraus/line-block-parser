@@ -309,3 +309,20 @@ testLines(
   startEndAtOneLine_inBlock,
   "start and end tag at one line (in a block)"
 );
+
+// -----------------------------------------------------------------------
+
+const oneLine_empty = [""];
+testLines(oneLine_empty, "oneLine_empty");
+
+const oneLine_notBlock = ["Mary had a little lamb,"];
+testLines(oneLine_notBlock, "oneLine_notBlock");
+//
+const oneLine_block_begin = ["/*Mary had a little lamb,"];
+testLines(oneLine_block_begin, "oneLine_block_begin");
+
+const oneLine_block_end = ["Mary had a little lamb,*/"];
+testLines(oneLine_block_end, "oneLine_block_end");
+
+const oneLine_block_begin_end = ["/*Mary had a little lamb,*/"];
+testLines(oneLine_block_begin_end, "oneLine_block_begin_end");

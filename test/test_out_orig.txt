@@ -2900,6 +2900,250 @@ test result data:  [
   }
 ]
 test result errors:  []
+== lines (oneLine_empty) ===============================================================================
+ [ '' ]
+--(oneLine_empty) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [ { lineNumber: 1, lineType: 'line', inBlock: false, data: '' } ]
+test result errors:  []
+--(oneLine_empty) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '' ]
+  }
+]
+test result errors:  []
+--(oneLine_empty) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '' ]
+  }
+]
+test result errors:  []
+--(oneLine_empty) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '' ]
+  }
+]
+test result errors:  []
+== lines (oneLine_notBlock) ===============================================================================
+ [ 'Mary had a little lamb,' ]
+--(oneLine_notBlock) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'line',
+    inBlock: false,
+    data: 'Mary had a little lamb,'
+  }
+]
+test result errors:  []
+--(oneLine_notBlock) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,' ]
+  }
+]
+test result errors:  []
+--(oneLine_notBlock) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,' ]
+  }
+]
+test result errors:  []
+--(oneLine_notBlock) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,' ]
+  }
+]
+test result errors:  []
+== lines (oneLine_block_begin) ===============================================================================
+ [ '/*Mary had a little lamb,' ]
+--(oneLine_block_begin) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'startTag',
+    inBlock: true,
+    data: '/*Mary had a little lamb,'
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 1
+  }
+]
+--(oneLine_block_begin) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    startTagLine: '/*Mary had a little lamb,',
+    endTagLine: null,
+    startLineNumber: 2,
+    inBlock: true,
+    data: []
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'Missing end-tag at the end of the final block',
+    lineNumber: 1
+  }
+]
+--(oneLine_block_begin) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    startTagLine: '/*Mary had a little lamb,',
+    endTagLine: null,
+    startLineNumber: 2,
+    inBlock: true,
+    data: []
+  }
+]
+test result errors:  [ 1 ]
+--(oneLine_block_begin) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 1
+test result data:  [
+  {
+    startTagLine: '/*Mary had a little lamb,',
+    endTagLine: null,
+    startLineNumber: 2,
+    inBlock: true,
+    data: []
+  }
+]
+test result errors:  []
+== lines (oneLine_block_end) ===============================================================================
+ [ 'Mary had a little lamb,*/' ]
+--(oneLine_block_end) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'endTag',
+    inBlock: false,
+    data: 'Mary had a little lamb,*/'
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
+  }
+]
+--(oneLine_block_end) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  [
+  {
+    name: 'ParserError',
+    message: 'End-tag at the very beginning is not allowed',
+    lineNumber: 1
+  }
+]
+--(oneLine_block_end) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  [ 1 ]
+--(oneLine_block_end) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+ERROR on line: 1
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ 'Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  []
+== lines (oneLine_block_begin_end) ===============================================================================
+ [ '/*Mary had a little lamb,*/' ]
+--(oneLine_block_begin_end) -- parser flat (FLAT mode, no callback) ---------
+test result data:  [
+  {
+    lineNumber: 1,
+    lineType: 'line',
+    inBlock: false,
+    data: '/*Mary had a little lamb,*/'
+  }
+]
+test result errors:  []
+--(oneLine_block_begin_end) -- parser grouped (GROUPED mode, no callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '/*Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  []
+--(oneLine_block_begin_end) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '/*Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  []
+--(oneLine_block_begin_end) -- parser grouped null error (GROUPED mode, nothing-returning error callback) ---------
+test result data:  [
+  {
+    startTagLine: null,
+    endTagLine: null,
+    startLineNumber: 1,
+    inBlock: false,
+    data: [ '/*Mary had a little lamb,*/' ]
+  }
+]
+test result errors:  []
 
 =-=  OTHER TESTS  =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
