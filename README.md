@@ -1,7 +1,12 @@
 # Line Block Parser
 
-Recognizes multi-line blocks - such as block comments etc.
-Simple to use, yet quite powerful.
+Recognizes multi-line blocks, such as:
+
+- block comments
+- blocks of line comments
+- ini sections
+
+Customizable. Simple to use, yet quite powerful.
 
 ## Usage
 
