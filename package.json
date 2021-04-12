@@ -4,7 +4,8 @@
   "description": "Recognizes multi-line blocks - such as block comments, blocks of line comments, ini sections etc. Customizable.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "keywords": [
     "parser",
