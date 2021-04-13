@@ -57,18 +57,15 @@ const createLexer = (startTagRegExp, endTagRegExp = null) => {
 
   // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
   lexerObj.consume = (lc) => {
+    const is_start = lexerObj.matchStartTag(lc.line);
+    const is_end = lexerObj.matchEndTag(lc.line);
+
     let tagType = LEXER.LINE;
-    if (lexerObj.matchStartTag(lc.line)) {
-      tagType = endTagRegExp !== null ? LEXER.START_TAG : LEXER.TAG;
-    }
-    if (lexerObj.matchEndTag(lc.line)) {
-      if (tagType === LEXER.START_TAG) {
-        //treats one-line block as a normal line
-        tagType = LEXER.LINE;
-      } else {
-        tagType = LEXER.END_TAG;
-      }
-    }
+    if (is_start) tagType = LEXER.START_TAG;
+    if (is_start && endTagRegExp === null) tagType = LEXER.TAG;
+    if (is_end) tagType = LEXER.END_TAG;
+    if (is_start && is_end) tagType = LEXER.LINE; //treat full one-line block comment as normal line
+
     return fu.overProp(LC.LINE, (s) => ({ type: tagType, data: s }), lc);
   };
 
