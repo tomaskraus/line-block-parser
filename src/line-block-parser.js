@@ -21,9 +21,9 @@ const LC = {
   ERRORS: "errors",
 };
 
-const initialLineContext = () => {
+const initialLineContext = (startLineNumberValue = 0) => {
   const ilc = {};
-  ilc[LC.LINE_NUMBER] = 0;
+  ilc[LC.LINE_NUMBER] = startLineNumberValue;
   ilc[LC.LINE] = null;
   // ilc[LC.PARSER] = null;
   // ilc[LC.ACCUM] = null;
@@ -438,19 +438,19 @@ class Parser {
     onData: fu.id,
   });
 
-  static initialLineContext = () =>
+  static initialLineContext = (startLineNumberValue = 0) =>
     fu.compose3(
       fu.setProp(LC.DATA, []),
       fu.setProp(LC.ACCUM, initialAccumState()),
       fu.setProp(LC.PARSER, initialParserState())
-    )(initialLineContext());
+    )(initialLineContext(startLineNumberValue));
 
   static getReducer = (parserObj) => () => parserObj.reducer;
 
-  static parse(parserObj, lines) {
+  static parse(parserObj, startLineNumberValue, lines) {
     const resCtx = lines.reduce(
       parserObj.reducer.bind(parserObj), //bind to preserve context
-      Parser.initialLineContext()
+      Parser.initialLineContext(startLineNumberValue)
     );
     return parserObj.flush(resCtx);
   }
@@ -497,7 +497,8 @@ class PairParser {
     );
   }
 
-  parse = (lines) => Parser.parse(this, lines);
+  parse = (lines, startLineNumberValue = 0) =>
+    Parser.parse(this, startLineNumberValue, lines);
 
   flush = (lineContext) => Parser.flush(this, lineContext);
 
@@ -533,7 +534,8 @@ class LineParser {
     return new LineParser(tagRegExp, grouped, onData);
   }
 
-  parse = (lines) => Parser.parse(this, lines);
+  parse = (lines, startLineNumberValue = 0) =>
+    Parser.parse(this, startLineNumberValue, lines);
 
   flush = (lineContext) => Parser.flush(this, lineContext);
 
