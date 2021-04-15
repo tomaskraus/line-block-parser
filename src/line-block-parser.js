@@ -471,8 +471,8 @@ class PairParser {
     onError: defaultErrorHandler,
   });
 
-  constructor(startTagRegExp, endTagRegExp, grouped, onData, onError) {
-    this.lexer = createLexer(startTagRegExp, endTagRegExp);
+  constructor(startTagStr, endTagStr, grouped, onData, onError) {
+    this.lexer = createLexer(startTagStr, endTagStr);
     this.accum = createAccumulator(
       grouped,
       groupedPairParserDecorator,
@@ -514,8 +514,8 @@ class PairParser {
 class LineParser {
   static defaults = () => Parser.defaults();
 
-  constructor(tagRegExp, grouped, onData) {
-    this.lexer = createLexer(tagRegExp);
+  constructor(tagStr, grouped, onData) {
+    this.lexer = createLexer(tagStr);
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
