@@ -3161,35 +3161,35 @@ lines:  [
 ]
 {
   block: false,
-  startTagData: null,
+  startTagInnerText: null,
   lines: [
     'https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb',
     'Mary had a little lamb,'
   ],
-  endTagData: null
+  endTagInnerText: null
 }
 {
   block: true,
-  startTagData: ' Its fleece was white as snow,  ',
+  startTagInnerText: ' Its fleece was white as snow,  ',
   lines: [],
-  endTagData: ' And every where that Mary went '
+  endTagInnerText: ' And every where that Mary went '
 }
 {
   block: false,
-  startTagData: null,
+  startTagInnerText: null,
   lines: [
     '   The lamb was sure to go ;',
     'He followed her to school one day-',
     ' /*  That was against the rule,*/ ',
     'It made the children laugh and play,'
   ],
-  endTagData: null
+  endTagInnerText: null
 }
 {
   block: true,
-  startTagData: '',
+  startTagInnerText: '',
   lines: [ '   To see a lamb at school.' ],
-  endTagData: null
+  endTagInnerText: null
 }
 parsed data:  []
 parsed errors:  [ 'ERROR on line: 10: Missing end-tag at the end of the final block' ]
@@ -3202,7 +3202,7 @@ parsed errors:  [ 'ERROR on line: 10: Missing end-tag at the end of the final bl
 test result data:  []
 --(emptyLines) -- parser grouped (GROUPED mode, no callback) ------
 test result data:  []
---(emptyLines) -- parser flat (FLAT mode, callback (tag data) ) ---------
+--(emptyLines) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  []
 --(emptyLines) -- parser grouped (GROUPED mode, callback) ------
 test result data:  []
@@ -3257,8 +3257,13 @@ test result data:  [
     ]
   }
 ]
---(no comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
-test result data:  [ 'data: "null"', 'data: "null"', 'data: "null"', 'data: "null"' ]
+--(no comment) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
+test result data:  [
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "null"'
+]
 --(no comment) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
   {
@@ -3332,12 +3337,12 @@ test result data:  [
     ]
   }
 ]
---(whole comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
+--(whole comment) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
-  'data: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
-  'data: "  Mary had a little lamb, "',
-  'data: "  The lamb was sure to go ;"',
-  'data: "He followed her to school one day- "'
+  'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'innerText: "  Mary had a little lamb, "',
+  'innerText: "  The lamb was sure to go ;"',
+  'innerText: "He followed her to school one day- "'
 ]
 --(whole comment) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
@@ -3488,21 +3493,21 @@ test result data:  [
     data: [ '//   To see a lamb at school.' ]
   }
 ]
---(multiple comments) -- parser flat (FLAT mode, callback (tag data) ) ---------
+--(multiple comments) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
-  'data: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
-  'data: "null"',
-  'data: "null"',
-  'data: "null"',
-  'data: "--And every where that Mary went"',
-  'data: "*/  "',
-  'data: "   The lamb was sure to go ;"',
-  'data: "null"',
-  'data: "null"',
-  'data: "  --   That was against the rule,"',
-  'data: "null"',
-  'data: "null"',
-  'data: "   To see a lamb at school."'
+  'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "--And every where that Mary went"',
+  'innerText: "*/  "',
+  'innerText: "   The lamb was sure to go ;"',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "  --   That was against the rule,"',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: "   To see a lamb at school."'
 ]
 --(multiple comments) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
@@ -3618,8 +3623,13 @@ test result data:  [
     data: [ '   The lamb was sure to go ;' ]
   }
 ]
---(empty comment) -- parser flat (FLAT mode, callback (tag data) ) ---------
-test result data:  [ 'data: "null"', 'data: "null"', 'data: ""', 'data: "null"' ]
+--(empty comment) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
+test result data:  [
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: ""',
+  'innerText: "null"'
+]
 --(empty comment) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
   {
@@ -3697,14 +3707,14 @@ test result data:  [
     data: [ 'He followed her to school one day-' ]
   }
 ]
---(multiple empty comments) -- parser flat (FLAT mode, callback (tag data) ) ---------
+--(multiple empty comments) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
-  'data: " "',
-  'data: ""',
-  'data: "null"',
-  'data: "null"',
-  'data: ""',
-  'data: "null"'
+  'innerText: " "',
+  'innerText: ""',
+  'innerText: "null"',
+  'innerText: "null"',
+  'innerText: ""',
+  'innerText: "null"'
 ]
 --(multiple empty comments) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [

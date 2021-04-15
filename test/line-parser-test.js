@@ -11,9 +11,10 @@ const parserGrouped = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: true,
 });
 //
-const parserFlatCBTagData = LineParser.create(Tags.JS_LINE_COMMENT, {
+const parserFlatCBTagInnerText = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: false,
-  onData: (data, lexerUtils) => `data: "${lexerUtils.tagInnerText(data.data)}"`,
+  onData: (data, lexerUtils) =>
+    `innerText: "${lexerUtils.tagInnerText(data.data)}"`,
 });
 
 const parserGroupedCB = LineParser.create(Tags.JS_LINE_COMMENT, {
@@ -55,9 +56,9 @@ const testLines = (lines, label = "") => {
   fu.log("test result data: ", parsedGrouped.data);
   //
   fu.log(
-    `--(${label}) -- parser flat (FLAT mode, callback (tag data) ) ---------`
+    `--(${label}) -- parser flat (FLAT mode, callback (tag inner text) ) ---------`
   );
-  const parsedFlatCB = parserFlatCBTagData.parse(lines);
+  const parsedFlatCB = parserFlatCBTagInnerText.parse(lines);
   fu.log("test result data: ", parsedFlatCB.data);
   //
   fu.log(`--(${label}) -- parser grouped (GROUPED mode, callback) ------`);
