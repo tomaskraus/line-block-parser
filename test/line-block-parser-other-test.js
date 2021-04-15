@@ -1,11 +1,11 @@
 const { PairParser, Tags } = require("../src/line-block-parser");
 
-const dataHandler = (data, lexer) => {
+const dataHandler = (data, lexerUtils) => {
   const d = {
     block: data.inBlock,
-    startTagData: lexer.startTagData(data.startTagLine),
+    startTagData: lexerUtils.startTagInnerText(data.startTagLine),
     lines: data.data,
-    endTagData: lexer.endTagData(data.endTagLine),
+    endTagData: lexerUtils.endTagInnerText(data.endTagLine),
   };
   console.log(d);
 };

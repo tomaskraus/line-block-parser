@@ -8,6 +8,7 @@
 //TODO add input param type check
 
 const fu = require("./func-utils");
+const crb = require("@krausoft/comment-regexp-builder");
 
 //---------------------------------------------------------------------------------------------
 
@@ -34,9 +35,9 @@ const initialLineContext = () => {
 //---------------------------------------------------------------------------------------------
 
 const Tags = {
-  JS_BLOCK_COMMENT_START: /^\s*\/\*(.*)$/,
-  JS_BLOCK_COMMENT_END: /^(.*)\*\/\s*$/,
-  JS_LINE_COMMENT: /^\s*\/\/(.*)$/,
+  JS_BLOCK_COMMENT_START: "/*",
+  JS_BLOCK_COMMENT_END: "*/",
+  JS_LINE_COMMENT: "//",
 };
 
 const LEXER = {
@@ -48,39 +49,33 @@ const LEXER = {
   names: ["init", "startTag", "endTag", "tag", "line"],
 };
 
-const createLexer = (startTagRegExp, endTagRegExp = null) => {
+const createLexer = (startTagStr, endTagStr = null) => {
   const lexerObj = {};
 
-  lexerObj.matchStartTag = (line) => startTagRegExp.test(line);
-  lexerObj.matchEndTag = (line) =>
-    endTagRegExp !== null && endTagRegExp.test(line);
+  lexerObj.startTagObj = crb.createStartTag(startTagStr);
+  lexerObj.endTagObj = endTagStr !== null ? crb.createEndTag(endTagStr) : null;
 
   // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
   lexerObj.consume = (lc) => {
-    const is_start = lexerObj.matchStartTag(lc.line);
-    const is_end = lexerObj.matchEndTag(lc.line);
+    const is_start = lexerObj.startTagObj.test(lc.line);
+    const is_end = endTagStr !== null && lexerObj.endTagObj.test(lc.line);
 
     let tagType = LEXER.LINE;
     if (is_start) tagType = LEXER.START_TAG;
-    if (is_start && endTagRegExp === null) tagType = LEXER.TAG;
+    if (is_start && endTagStr === null) tagType = LEXER.TAG;
     if (is_end) tagType = LEXER.END_TAG;
     if (is_start && is_end) tagType = LEXER.LINE; //treat full one-line block comment as normal line
 
     return fu.overProp(LC.LINE, (s) => ({ type: tagType, data: s }), lc);
   };
 
-  const firstMatch = (regexp, line) => {
-    if (line === null) return null;
-    const matches = regexp.exec(line);
-    if (matches === null) return null;
-    return fu.empty(matches) ? "" : matches[1];
-  };
-
   lexerObj.utils = {};
 
-  lexerObj.utils.startTagData = (line) => firstMatch(startTagRegExp, line);
-  lexerObj.utils.endTagData = (line) => firstMatch(endTagRegExp, line);
-  lexerObj.utils.tagData = lexerObj.utils.startTagData;
+  lexerObj.utils.startTagInnerText = lexerObj.startTagObj.innerText;
+  if (endTagStr !== null) {
+    lexerObj.utils.endTagInnerText = lexerObj.endTagObj.innerText;
+  }
+  lexerObj.utils.tagInnerText = lexerObj.utils.startTagInnerText;
 
   return lexerObj;
 };
@@ -177,8 +172,8 @@ const overAcc = fu.curry2((fn, lineContext) =>
   fu.overProp(LC.ACCUM, fn, lineContext)
 );
 
-const flushAccum = (dataCallback, lexer, data, lineContext) => {
-  const dataFromCallback = dataCallback(data, lexer);
+const flushAccum = (dataCallback, lexerUtils, data, lineContext) => {
+  const dataFromCallback = dataCallback(data, lexerUtils);
   return fu.compose2(
     clearAcc,
     fu.overProp(LC.DATA, (arr) =>
