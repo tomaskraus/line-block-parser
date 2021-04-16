@@ -52,9 +52,6 @@ const LEXER = {
 const createLexer = (startTagObj, endTagObj = null) => {
   const lexerObj = {};
 
-  //lexerObj.startTagObj = crb.createStartTag(startTagStr);
-  //lexerObj.endTagObj = endTagStr !== null ? crb.createEndTag(endTagStr) : null;
-
   // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
   lexerObj.consume = (lc) => {
     const is_start = startTagObj.test(lc.line);
