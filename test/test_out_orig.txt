@@ -1076,6 +1076,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 7
   }
@@ -1106,6 +1107,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 7
   }
@@ -1195,6 +1197,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 6
   }
@@ -1229,6 +1232,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 6
   }
@@ -1338,6 +1342,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 3
   }
@@ -1361,6 +1366,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 3
   }
@@ -1448,6 +1454,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 5
   }
@@ -1476,6 +1483,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 5
   }
@@ -1575,11 +1583,13 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 4
   },
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 6
   }
@@ -1610,11 +1620,13 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 4
   },
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 6
   }
@@ -1726,6 +1738,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 5
   }
@@ -1764,6 +1777,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 5
   }
@@ -1890,6 +1904,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 4
   }
@@ -1928,6 +1943,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 4
   }
@@ -2056,11 +2072,13 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 4
   },
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 10
   }
@@ -2099,11 +2117,13 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 4
   },
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 10
   }
@@ -2222,6 +2242,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   }
@@ -2257,6 +2278,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   }
@@ -2408,21 +2430,25 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   },
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 5
   },
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 9
   },
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 17
   }
@@ -2483,21 +2509,25 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   },
   {
     name: 'ParserError',
+    code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
     lineNumber: 5
   },
   {
     name: 'ParserError',
+    code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
     lineNumber: 9
   },
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 17
   }
@@ -2997,6 +3027,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 1
   }
@@ -3014,6 +3045,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
     lineNumber: 1
   }
@@ -3055,6 +3087,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   }
@@ -3072,6 +3105,7 @@ test result data:  [
 test result errors:  [
   {
     name: 'ParserError',
+    code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
     lineNumber: 1
   }

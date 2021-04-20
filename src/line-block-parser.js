@@ -287,6 +287,7 @@ const addError = fu.curry3((errorCallback, errType, lineContext) => {
 
 const defaultErrorHandler = (err) => ({
   name: err.name,
+  code: err.code,
   message: err.message,
   lineNumber: err.lineNumber,
 });
