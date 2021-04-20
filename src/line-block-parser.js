@@ -546,10 +546,50 @@ class LineParser {
   static initialLineContext = Parser.initialLineContext;
 }
 
+//
+
+class SectionParser {
+  static defaults = () => Parser.defaults();
+
+  constructor(leftTagStr, rightTagStr, grouped, onData) {
+    this.lexer = createLexer(crb.createSectionTag(leftTagStr, rightTagStr));
+    this.accum = createAccumulator(
+      grouped,
+      groupedLineParserDecorator,
+      this.lexer.utils,
+      onData
+    );
+    this.parserEngine = createLineParserEngine(this.accum);
+    this.reducer = createReducer(this.lexer, this.parserEngine);
+  }
+
+  static create(tagRegExp, options) {
+    const { grouped, onData } = {
+      ...LineParser.defaults(),
+      ...options,
+    };
+    return new LineParser(tagRegExp, grouped, onData);
+  }
+
+  parse = (lines, startLineNumberValue = 0) =>
+    Parser.parse(this, startLineNumberValue, lines);
+
+  flush = (lineContext) => Parser.flush(this, lineContext);
+
+  getReducer = Parser.getReducer(this);
+
+  static inBlock = Parser.inBlock;
+
+  static initialLineContext = Parser.initialLineContext;
+}
+
+
+
 //========================================================================================
 
 module.exports = {
   PairParser,
   LineParser,
+  SectionParser,
   Tags,
 };
