@@ -17,7 +17,7 @@ const par = PairParser.create(
     grouped: true,
     onData: dataHandler,
     onError: (err) => {
-      return `ERROR on line: ${err.lineNumber}: ${err.message}`;
+      return `ERROR on line: ${err.lineNumber}: ${err.code}, ${err.message}`;
     },
   }
 );

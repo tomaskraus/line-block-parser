@@ -260,7 +260,7 @@ const ERR_TYPE = {
   DUP_END_TAG: 1,
   MISS_END_TAG: 2,
   END_TAG_FIRST: 3,
-  names: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG", "END_TAG_FIRST"],
+  codes: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG", "END_TAG_FIRST"],
   descriptions: [
     "Repeated start-tag. No previous matching end-tag found",
     "Repeated end-tag. No previous matching start-tag found",
@@ -271,6 +271,7 @@ const ERR_TYPE = {
 
 const addError = fu.curry3((errorCallback, errType, lineContext) => {
   const newErr = new Error();
+  newErr.code = ERR_TYPE.codes[errType];
   newErr.message = ERR_TYPE.descriptions[errType];
   newErr.lineNumber = lineContext[LC.LINE_NUMBER];
   newErr.name = "ParserError";
@@ -582,8 +583,6 @@ class SectionParser {
 
   static initialLineContext = Parser.initialLineContext;
 }
-
-
 
 //========================================================================================
 

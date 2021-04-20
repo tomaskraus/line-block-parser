@@ -3192,7 +3192,9 @@ lines:  [
   endTagInnerText: null
 }
 parsed data:  []
-parsed errors:  [ 'ERROR on line: 10: Missing end-tag at the end of the final block' ]
+parsed errors:  [
+  'ERROR on line: 10: MISS_END_TAG, Missing end-tag at the end of the final block'
+]
 
   = =  LINE PARSER  = = ------ ------- ----------- ---------- ---------- ------------- -------------
   
