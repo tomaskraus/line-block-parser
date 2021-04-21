@@ -39,6 +39,23 @@ const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   },
 });
 
+//
+
+const parserFlatNoReturnExceptionCB = LineParser.create(Tags.JS_LINE_COMMENT, {
+  grouped: false,
+  onData: (data) => {
+    const num = parseInt(data.data, 10);
+    console.log("data: ", data.data);
+    if (isNaN(num)) {
+      throw new TypeError("not exactly a number");
+    }
+    return [data.lineNumber, num];
+  },
+  // onError: (err) => {
+  //   throw err;
+  // },
+});
+
 //-------------------------------------------
 
 const testLines = (lines, label = "") => {
@@ -146,4 +163,23 @@ const multipleEmptyComments = [
 ];
 testLines(multipleEmptyComments, "multiple empty comments");
 
-//
+//-----------------------------------------------------------------------------------------------------------
+
+const lines2 = `
+1
+2
+3
+abc
+5
+
+6
+`;
+
+fu.log(
+  `--() -- exception parser flat (FLAT mode, noReturn callback) ---------`
+);
+const parsedFlatNoReturnExceptionCB = parserFlatNoReturnExceptionCB.parse(
+  lines2.split("\n")
+);
+fu.log("test result data: ", parsedFlatNoReturnExceptionCB.data);
+fu.log("test errors: ", parsedFlatNoReturnExceptionCB.errors);

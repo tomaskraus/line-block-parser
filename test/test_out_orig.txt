@@ -3785,3 +3785,40 @@ grouped data:  [
 grouped data:  [ '  //' ]
 grouped data:  [ 'He followed her to school one day-' ]
 test result data:  []
+--() -- exception parser flat (FLAT mode, noReturn callback) ---------
+data:  
+data:  1
+data:  2
+data:  3
+data:  abc
+data:  5
+data:  
+data:  6
+data:  
+test result data:  [ [ 2, 1 ], [ 3, 2 ], [ 4, 3 ], [ 6, 5 ], [ 8, 6 ] ]
+test errors:  [
+  {
+    name: 'TypeError',
+    code: undefined,
+    message: 'not exactly a number',
+    lineNumber: 1
+  },
+  {
+    name: 'TypeError',
+    code: undefined,
+    message: 'not exactly a number',
+    lineNumber: 5
+  },
+  {
+    name: 'TypeError',
+    code: undefined,
+    message: 'not exactly a number',
+    lineNumber: 7
+  },
+  {
+    name: 'TypeError',
+    code: undefined,
+    message: 'not exactly a number',
+    lineNumber: 9
+  }
+]

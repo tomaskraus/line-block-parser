@@ -149,6 +149,58 @@ const inBlock = (data) => data.inBlock === true;
 
 //---------------------------------------------------------------------------------------------
 
+//
+
+const ERR_TYPE = {
+  DUP_START_TAG: 0,
+  DUP_END_TAG: 1,
+  MISS_END_TAG: 2,
+  END_TAG_FIRST: 3,
+  codes: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG", "END_TAG_FIRST"],
+  descriptions: [
+    "Repeated start-tag. No previous matching end-tag found",
+    "Repeated end-tag. No previous matching start-tag found",
+    "Missing end-tag at the end of the final block",
+    "End-tag at the very beginning is not allowed",
+  ],
+};
+
+const addGenericError = (errorCallback, errObj, lineContext) =>
+  fu.compose3(
+    (dataFromErrorCallback) =>
+      fu.nullOrUndefined(dataFromErrorCallback)
+        ? lineContext
+        : fu.overProp(
+            LC.ERRORS,
+            (errs) => [...errs, dataFromErrorCallback],
+            lineContext
+          ),
+    errorCallback,
+    (err) => {
+      err.lineNumber = lineContext[LC.LINE_NUMBER];
+      err.line = lineContext[LC.LINE].data;
+      return err;
+    }
+  )(errObj);
+
+const addParserError = fu.curry3((errorCallback, errType, lineContext) => {
+  const newErr = new Error();
+  newErr.name = "ParserError";
+  newErr.code = ERR_TYPE.codes[errType];
+  newErr.message = ERR_TYPE.descriptions[errType];
+  return addGenericError(errorCallback, newErr, lineContext);
+});
+
+const defaultErrorHandler = (err) => ({
+  name: err.name,
+  code: err.code,
+  message: err.message,
+  lineNumber: err.lineNumber,
+  //line: err.line,
+});
+
+//---------------------------------------------------------------------------------------------
+
 const A_STATE = {
   READY: 0,
   INIT: 1,
@@ -169,14 +221,30 @@ const overAcc = fu.curry2((fn, lineContext) =>
   fu.overProp(LC.ACCUM, fn, lineContext)
 );
 
-const flushAccum = (dataCallback, lexerUtils, data, lineContext) => {
-  const dataFromCallback = dataCallback(data, lexerUtils);
+const flushAccum = (
+  dataCallback,
+  lexerUtils,
+  data,
+  errHandler,
+  lineContext
+) => {
   return fu.compose2(
     clearAcc,
-    fu.overProp(LC.DATA, (arr) =>
-      fu.nullOrUndefined(dataFromCallback) ? arr : [...arr, dataFromCallback]
-    )
+    runCallback(dataCallback, lexerUtils, errHandler, data)
   )(lineContext);
+};
+
+const runCallback = (callback, lexerUtils, errorCallback, dataToCallback) => (
+  lineContext
+) => {
+  try {
+    const data = callback(dataToCallback, lexerUtils);
+    return fu.nullOrUndefined(data)
+      ? lineContext
+      : fu.overProp(LC.DATA, (arr) => [...arr, data], lineContext);
+  } catch (err) {
+    return addGenericError(errorCallback, err, lineContext);
+  }
 };
 
 //----------------------------------------------------------------------------------------
@@ -191,7 +259,8 @@ const createAccumulator = (
   isGrouped,
   groupDecorator,
   lexerObjUtils,
-  dataCallback
+  dataCallback,
+  errorCallback
 ) => {
   const accObj = {};
 
@@ -202,6 +271,7 @@ const createAccumulator = (
             dataCallback,
             lexerObjUtils,
             groupDecorator(lineContext[LC.ACCUM].data, lineContext),
+            errorCallback,
             lineContext
           )
         : lineContext;
@@ -212,6 +282,7 @@ const createAccumulator = (
           dataCallback,
           lexerObjUtils,
           infoParserDecorator(dataToFlush.data, lineContext),
+          errorCallback,
           lineContext
         );
   });
@@ -255,43 +326,6 @@ const createReducer = (lexer, parserEngine) => (lineContext, line) =>
 
 //
 
-const ERR_TYPE = {
-  DUP_START_TAG: 0,
-  DUP_END_TAG: 1,
-  MISS_END_TAG: 2,
-  END_TAG_FIRST: 3,
-  codes: ["DUP_START_TAG", "DUP_END_TAG", "MISS_END_TAG", "END_TAG_FIRST"],
-  descriptions: [
-    "Repeated start-tag. No previous matching end-tag found",
-    "Repeated end-tag. No previous matching start-tag found",
-    "Missing end-tag at the end of the final block",
-    "End-tag at the very beginning is not allowed",
-  ],
-};
-
-const addError = fu.curry3((errorCallback, errType, lineContext) => {
-  const newErr = new Error();
-  newErr.code = ERR_TYPE.codes[errType];
-  newErr.message = ERR_TYPE.descriptions[errType];
-  newErr.lineNumber = lineContext[LC.LINE_NUMBER];
-  newErr.name = "ParserError";
-  const dataFromCallback = errorCallback(newErr);
-  return fu.nullOrUndefined(dataFromCallback)
-    ? lineContext
-    : fu.overProp(
-        LC.ERRORS,
-        (errs) => [...errs, dataFromCallback],
-        lineContext
-      );
-});
-
-const defaultErrorHandler = (err) => ({
-  name: err.name,
-  code: err.code,
-  message: err.message,
-  lineNumber: err.lineNumber,
-});
-
 const createPairParserEngine = (accum, errorCallback) => ({
   consume: (lc) => {
     const in_block = lc[LC.PARSER].beginBlockLineNum !== NO_BLOCK_BEGIN;
@@ -323,8 +357,8 @@ const createPairParserEngine = (accum, errorCallback) => ({
         (lc1) =>
           lc1[LC.LINE].type === LEXER.END_TAG
             ? lc[LC.LINE_NUMBER] === 1
-              ? addError(errorCallback, ERR_TYPE.END_TAG_FIRST, lc1)
-              : addError(errorCallback, ERR_TYPE.DUP_END_TAG, lc1)
+              ? addParserError(errorCallback, ERR_TYPE.END_TAG_FIRST, lc1)
+              : addParserError(errorCallback, ERR_TYPE.DUP_END_TAG, lc1)
             : lc1
       )(lc);
     }
@@ -356,7 +390,7 @@ const createPairParserEngine = (accum, errorCallback) => ({
         (lc2) => accum.append(lc2.line, lc2),
         (lc1) =>
           lc1[LC.LINE].type === LEXER.START_TAG
-            ? addError(errorCallback, ERR_TYPE.DUP_START_TAG, lc1)
+            ? addParserError(errorCallback, ERR_TYPE.DUP_START_TAG, lc1)
             : lc1
       )(lc);
     }
@@ -367,7 +401,7 @@ const createPairParserEngine = (accum, errorCallback) => ({
     lineContext[LC.LINE].type != LEXER.END_TAG
       ? fu.compose2(
           accum.flush(null),
-          addError(errorCallback, ERR_TYPE.MISS_END_TAG)
+          addParserError(errorCallback, ERR_TYPE.MISS_END_TAG)
         )(lineContext)
       : accum.flush(null, lineContext),
 });
@@ -435,6 +469,7 @@ class Parser {
   static defaults = () => ({
     grouped: true,
     onData: fu.id,
+    onError: defaultErrorHandler,
   });
 
   static initialLineContext = (startLineNumberValue = 0) =>
@@ -465,10 +500,7 @@ class Parser {
 // -----------------------------
 
 class PairParser {
-  static defaults = () => ({
-    ...Parser.defaults(),
-    onError: defaultErrorHandler,
-  });
+  static defaults = () => Parser.defaults();
 
   constructor(startTagStr, endTagStr, grouped, onData, onError) {
     this.lexer = createLexer(
@@ -479,7 +511,8 @@ class PairParser {
       grouped,
       groupedPairParserDecorator,
       this.lexer.utils,
-      onData
+      onData,
+      onError
     );
     this.parserEngine = createPairParserEngine(this.accum, onError);
     this.reducer = createReducer(this.lexer, this.parserEngine);
@@ -516,24 +549,25 @@ class PairParser {
 class LineParser {
   static defaults = () => Parser.defaults();
 
-  constructor(tagStr, grouped, onData) {
+  constructor(tagStr, grouped, onData, onError) {
     this.lexer = createLexer(crb.createStartTag(tagStr));
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
       this.lexer.utils,
-      onData
+      onData,
+      onError
     );
     this.parserEngine = createLineParserEngine(this.accum);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
   static create(tagRegExp, options) {
-    const { grouped, onData } = {
+    const { grouped, onData, onError } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagRegExp, grouped, onData);
+    return new LineParser(tagRegExp, grouped, onData, onError);
   }
 
   parse = (lines, startLineNumberValue = 0) =>
@@ -553,24 +587,25 @@ class LineParser {
 class SectionParser {
   static defaults = () => Parser.defaults();
 
-  constructor(leftTagStr, rightTagStr, grouped, onData) {
+  constructor(leftTagStr, rightTagStr, grouped, onData, onError) {
     this.lexer = createLexer(crb.createSectionTag(leftTagStr, rightTagStr));
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
       this.lexer.utils,
-      onData
+      onData,
+      onError
     );
     this.parserEngine = createLineParserEngine(this.accum);
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
   static create(tagRegExp, options) {
-    const { grouped, onData } = {
+    const { grouped, onData, onError } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagRegExp, grouped, onData);
+    return new LineParser(tagRegExp, grouped, onData, onError);
   }
 
   parse = (lines, startLineNumberValue = 0) =>
