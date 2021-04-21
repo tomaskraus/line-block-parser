@@ -196,7 +196,7 @@ const defaultErrorHandler = (err) => ({
   code: err.code,
   message: err.message,
   lineNumber: err.lineNumber,
-  //line: err.line,
+  line: err.line,
 });
 
 //---------------------------------------------------------------------------------------------

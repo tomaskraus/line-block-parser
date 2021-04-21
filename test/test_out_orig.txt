@@ -1078,7 +1078,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 7
+    lineNumber: 7,
+    line: 'He followed her to school one day-'
   }
 ]
 --(unclosed comment) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1109,7 +1110,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 7
+    lineNumber: 7,
+    line: 'He followed her to school one day-'
   }
 ]
 --(unclosed comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1199,7 +1201,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 6
+    lineNumber: 6,
+    line: '  /* '
   }
 ]
 --(empty unclosed comment) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1234,7 +1237,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 6
+    lineNumber: 6,
+    line: '  /* '
   }
 ]
 --(empty unclosed comment) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1344,7 +1348,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 3
+    lineNumber: 3,
+    line: '/*'
   }
 ]
 --(repeated startTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1368,7 +1373,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 3
+    lineNumber: 3,
+    line: '/*'
   }
 ]
 --(repeated startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1456,7 +1462,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: ' /*'
   }
 ]
 --(consecutive startTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1485,7 +1492,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: ' /*'
   }
 ]
 --(consecutive startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1585,13 +1593,15 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '/*'
   },
   {
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 6
+    lineNumber: 6,
+    line: ' /*'
   }
 ]
 --(multiple repeated startTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1622,13 +1632,15 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '/*'
   },
   {
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 6
+    lineNumber: 6,
+    line: ' /*'
   }
 ]
 --(multiple repeated startTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1740,7 +1752,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: '   */    '
   }
 ]
 --(repeatedEndTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1779,7 +1792,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: '   */    '
   }
 ]
 --(repeatedEndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -1906,7 +1920,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '   */    '
   }
 ]
 --(consecutive EndTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -1945,7 +1960,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '   */    '
   }
 ]
 --(consecutive EndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -2074,13 +2090,15 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '   */    '
   },
   {
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 10
+    lineNumber: 10,
+    line: '*/'
   }
 ]
 --(multiple EndTag) -- parser grouped (GROUPED mode, no callback) ---------
@@ -2119,13 +2137,15 @@ test result errors:  [
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 4
+    lineNumber: 4,
+    line: '   */    '
   },
   {
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 10
+    lineNumber: 10,
+    line: '*/'
   }
 ]
 --(multiple EndTag) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -2244,7 +2264,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: ' */ '
   }
 ]
 --(EndTag at the beginning) -- parser grouped (GROUPED mode, no callback) ---------
@@ -2280,7 +2301,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: ' */ '
   }
 ]
 --(EndTag at the beginning) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -2432,25 +2454,29 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: '*/'
   },
   {
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: ' /*'
   },
   {
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 9
+    lineNumber: 9,
+    line: '*/  '
   },
   {
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 17
+    lineNumber: 17,
+    line: '   To see a lamb at school.'
   }
 ]
 --(multiple error types) -- parser grouped (GROUPED mode, no callback) ---------
@@ -2511,25 +2537,29 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: '*/'
   },
   {
     name: 'ParserError',
     code: 'DUP_START_TAG',
     message: 'Repeated start-tag. No previous matching end-tag found',
-    lineNumber: 5
+    lineNumber: 5,
+    line: ' /*'
   },
   {
     name: 'ParserError',
     code: 'DUP_END_TAG',
     message: 'Repeated end-tag. No previous matching start-tag found',
-    lineNumber: 9
+    lineNumber: 9,
+    line: '*/  '
   },
   {
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 17
+    lineNumber: 17,
+    line: '   To see a lamb at school.'
   }
 ]
 --(multiple error types) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -3029,7 +3059,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 1
+    lineNumber: 1,
+    line: '/*Mary had a little lamb,'
   }
 ]
 --(oneLine_block_begin) -- parser grouped (GROUPED mode, no callback) ---------
@@ -3047,7 +3078,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'MISS_END_TAG',
     message: 'Missing end-tag at the end of the final block',
-    lineNumber: 1
+    lineNumber: 1,
+    line: '/*Mary had a little lamb,'
   }
 ]
 --(oneLine_block_begin) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -3089,7 +3121,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: 'Mary had a little lamb,*/'
   }
 ]
 --(oneLine_block_end) -- parser grouped (GROUPED mode, no callback) ---------
@@ -3107,7 +3140,8 @@ test result errors:  [
     name: 'ParserError',
     code: 'END_TAG_FIRST',
     message: 'End-tag at the very beginning is not allowed',
-    lineNumber: 1
+    lineNumber: 1,
+    line: 'Mary had a little lamb,*/'
   }
 ]
 --(oneLine_block_end) -- parser grouped custom error (GROUPED mode, custom error callback) ---------
@@ -3801,24 +3835,28 @@ test errors:  [
     name: 'TypeError',
     code: undefined,
     message: 'not exactly a number',
-    lineNumber: 1
+    lineNumber: 1,
+    line: ''
   },
   {
     name: 'TypeError',
     code: undefined,
     message: 'not exactly a number',
-    lineNumber: 5
+    lineNumber: 5,
+    line: 'abc'
   },
   {
     name: 'TypeError',
     code: undefined,
     message: 'not exactly a number',
-    lineNumber: 7
+    lineNumber: 7,
+    line: ''
   },
   {
     name: 'TypeError',
     code: undefined,
     message: 'not exactly a number',
-    lineNumber: 9
+    lineNumber: 9,
+    line: ''
   }
 ]
