@@ -49,30 +49,39 @@ const LEXER = {
   names: ["init", "startTag", "endTag", "tag", "line"],
 };
 
-const createLexer = (startTagObj, endTagObj = null) => {
+const createLexer = (tagObj1, tagObj2 = null, stripTags = false) => {
   const lexerObj = {};
-
-  // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
-  lexerObj.consume = (lc) => {
-    const is_start = startTagObj.test(lc.line);
-    const is_end = endTagObj !== null && endTagObj.test(lc.line);
-
-    let tagType = LEXER.LINE;
-    if (is_start) tagType = LEXER.START_TAG;
-    if (is_start && endTagObj === null) tagType = LEXER.TAG;
-    if (is_end) tagType = LEXER.END_TAG;
-    if (is_start && is_end) tagType = LEXER.LINE; //treat full one-line block comment as normal line
-
-    return fu.overProp(LC.LINE, (s) => ({ type: tagType, data: s }), lc);
-  };
 
   lexerObj.utils = {};
 
-  lexerObj.utils.startTagInnerText = startTagObj.innerText;
-  if (endTagObj !== null) {
-    lexerObj.utils.endTagInnerText = endTagObj.innerText;
+  lexerObj.utils.startTagInnerText = tagObj1.innerText;
+  if (tagObj2 !== null) {
+    lexerObj.utils.endTagInnerText = tagObj2.innerText;
   }
   lexerObj.utils.tagInnerText = lexerObj.utils.startTagInnerText;
+
+  // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
+  lexerObj.consume = (lc) => {
+    const is_start = tagObj1.test(lc.line);
+    const is_end = tagObj2 !== null && tagObj2.test(lc.line);
+
+    let tagType = LEXER.LINE;
+    if (is_start) tagType = LEXER.START_TAG;
+    if (is_start && tagObj2 === null) tagType = LEXER.TAG;
+    if (is_end) tagType = LEXER.END_TAG;
+    if (is_start && is_end) tagType = LEXER.LINE; //treat full one-line block comment as normal line
+
+    let lineData = fu.prop(LC.LINE, lc);
+    if (stripTags && tagType !== LEXER.LINE) {
+      //strip tags
+      lineData =
+        tagType == LEXER.END_TAG
+          ? lexerObj.utils.endTagInnerText(lineData)
+          : lexerObj.utils.startTagInnerText(lineData);
+    }
+
+    return fu.setProp(LC.LINE, { type: tagType, data: lineData }, lc);
+  };
 
   return lexerObj;
 };
@@ -468,6 +477,7 @@ const createLineParserEngine = (accum) => ({
 class Parser {
   static defaults = () => ({
     grouped: true,
+    stripTags: false,
     onData: fu.id,
     onError: defaultErrorHandler,
   });
@@ -502,10 +512,11 @@ class Parser {
 class PairParser {
   static defaults = () => Parser.defaults();
 
-  constructor(startTagStr, endTagStr, grouped, onData, onError) {
+  constructor(startTagStr, endTagStr, grouped, onData, onError, stripTags) {
     this.lexer = createLexer(
       crb.createStartTag(startTagStr),
-      crb.createEndTag(endTagStr)
+      crb.createEndTag(endTagStr),
+      stripTags
     );
     this.accum = createAccumulator(
       grouped,
@@ -519,7 +530,7 @@ class PairParser {
   }
 
   static create(startTagRegExp, endTagRegExp, options) {
-    const { grouped, onData, onError } = {
+    const { grouped, onData, onError, stripTags } = {
       ...PairParser.defaults(),
       ...options,
     };
@@ -528,7 +539,8 @@ class PairParser {
       endTagRegExp,
       grouped,
       onData,
-      onError
+      onError,
+      stripTags
     );
   }
 
@@ -549,8 +561,8 @@ class PairParser {
 class LineParser {
   static defaults = () => Parser.defaults();
 
-  constructor(tagStr, grouped, onData, onError) {
-    this.lexer = createLexer(crb.createStartTag(tagStr));
+  constructor(tagStr, grouped, onData, onError, stripTags) {
+    this.lexer = createLexer(crb.createStartTag(tagStr), null, stripTags);
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
@@ -563,11 +575,11 @@ class LineParser {
   }
 
   static create(tagRegExp, options) {
-    const { grouped, onData, onError } = {
+    const { grouped, onData, onError, stripTags } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagRegExp, grouped, onData, onError);
+    return new LineParser(tagRegExp, grouped, onData, onError, stripTags);
   }
 
   parse = (lines, startLineNumberValue = 0) =>
@@ -587,8 +599,12 @@ class LineParser {
 class SectionParser {
   static defaults = () => Parser.defaults();
 
-  constructor(leftTagStr, rightTagStr, grouped, onData, onError) {
-    this.lexer = createLexer(crb.createSectionTag(leftTagStr, rightTagStr));
+  constructor(leftTagStr, rightTagStr, grouped, onData, onError, stripTags) {
+    this.lexer = createLexer(
+      crb.createSectionTag(leftTagStr, rightTagStr),
+      null,
+      stripTags
+    );
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
@@ -601,11 +617,11 @@ class SectionParser {
   }
 
   static create(tagRegExp, options) {
-    const { grouped, onData, onError } = {
+    const { grouped, onData, onError, stripTags } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagRegExp, grouped, onData, onError);
+    return new LineParser(tagRegExp, grouped, onData, onError, stripTags);
   }
 
   parse = (lines, startLineNumberValue = 0) =>

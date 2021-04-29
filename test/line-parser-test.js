@@ -30,6 +30,7 @@ const parserFlatNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   onData: (data) => {
     console.log("data: ", data.data);
   },
+  stripTags: true,
 });
 
 const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
@@ -37,6 +38,7 @@ const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   onData: (data) => {
     console.log("grouped data: ", data.data);
   },
+  stripTags: true,
 });
 
 //-------------------------------------------

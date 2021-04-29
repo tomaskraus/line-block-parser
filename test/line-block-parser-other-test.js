@@ -22,6 +22,19 @@ const par = PairParser.create(
   }
 );
 
+const par2 = PairParser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
+  {
+    grouped: true,
+    stripTags: true,
+    //onData: dataHandler,
+    onError: (err) => {
+      return `ERROR on line: ${err.lineNumber}: ${err.code}, ${err.message}`;
+    },
+  }
+);
+
 const lines = [
   "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb",
   "Mary had a little lamb,",
@@ -44,3 +57,9 @@ console.log("lines: ", lines);
 const { data, errors } = par.parse(lines);
 console.log("parsed data: ", data);
 console.log("parsed errors: ", errors);
+
+console.log("'''''''''''''''''''''''''''''''''''''''");
+
+const { data: d, errors: e } = par2.parse(lines);
+console.log("parsed data: ", d);
+console.log("parsed errors: ", e);
