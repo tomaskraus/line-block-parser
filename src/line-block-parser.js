@@ -243,13 +243,23 @@ const flushAccum = (
   )(lineContext);
 };
 
+const isFormattedData = (data) =>
+  !fu.nullOrUndefined(data.data) && !fu.nullOrUndefined(data.errors);
+
 const runCallback = (callback, lexerUtils, errorCallback, dataToCallback) => (
   lineContext
 ) => {
   try {
     const data = callback(dataToCallback, lexerUtils);
-    return fu.nullOrUndefined(data)
-      ? lineContext
+    if (fu.nullOrUndefined(data)) {
+      return lineContext;
+    }
+    return isFormattedData(data)
+      ? //merge
+        fu.compose2(
+          fu.overProp(LC.DATA, (arr) => [...arr, ...data.data]),
+          fu.overProp(LC.ERRORS, (arr) => [...arr, ...data.errors])
+        )(lineContext)
       : fu.overProp(LC.DATA, (arr) => [...arr, data], lineContext);
   } catch (err) {
     return addGenericError(errorCallback, err, lineContext);
