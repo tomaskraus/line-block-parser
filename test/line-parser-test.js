@@ -208,5 +208,5 @@ try {
   fu.log("test result data: ", parsedFlatPropagatedDataExceptionCB.data);
   fu.log("test errors: ", parsedFlatPropagatedDataExceptionCB.errors);
 } catch (e) {
-  fu.log("catch: ", e);
+  fu.log("catch: ", e.message);
 }
