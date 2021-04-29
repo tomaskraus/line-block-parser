@@ -3819,7 +3819,7 @@ grouped data:  [
 grouped data:  [ '  //' ]
 grouped data:  [ 'He followed her to school one day-' ]
 test result data:  []
---() -- exception parser flat (FLAT mode, noReturn callback) ---------
+--() -- exception parser flat (FLAT mode, dataException callback) ---------
 data:  
 data:  1
 data:  2
@@ -3860,3 +3860,19 @@ test errors:  [
     line: ''
   }
 ]
+--() -- exception parser flat (FLAT mode, propagated dataException callback) ---------
+data:  
+catch:  TypeError: not exactly a number
+    at dataNumCheck (/home/tomas/Dokumenty/JS/line-block-parser/test/line-parser-test.js:155:11)
+    at /home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:241:18
+    at /home/tomas/Dokumenty/JS/line-block-parser/src/func-utils.js:26:37
+    at flushAccum (/home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:234:4)
+    at /home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:281:9
+    at Object.flush (/home/tomas/Dokumenty/JS/line-block-parser/src/func-utils.js:34:12)
+    at Object.accObj.append (/home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:300:16)
+    at /home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:434:24
+    at /home/tomas/Dokumenty/JS/line-block-parser/src/func-utils.js:26:35
+    at consume (/home/tomas/Dokumenty/JS/line-block-parser/src/line-block-parser.js:436:8) {
+  lineNumber: 1,
+  line: ''
+}

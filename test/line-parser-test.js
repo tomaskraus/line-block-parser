@@ -39,23 +39,6 @@ const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   },
 });
 
-//
-
-const parserFlatNoReturnExceptionCB = LineParser.create(Tags.JS_LINE_COMMENT, {
-  grouped: false,
-  onData: (data) => {
-    const num = parseInt(data.data, 10);
-    console.log("data: ", data.data);
-    if (isNaN(num)) {
-      throw new TypeError("not exactly a number");
-    }
-    return [data.lineNumber, num];
-  },
-  // onError: (err) => {
-  //   throw err;
-  // },
-});
-
 //-------------------------------------------
 
 const testLines = (lines, label = "") => {
@@ -165,6 +148,17 @@ testLines(multipleEmptyComments, "multiple empty comments");
 
 //-----------------------------------------------------------------------------------------------------------
 
+const dataNumCheck = (data) => {
+  const num = parseInt(data.data, 10);
+  console.log("data: ", data.data);
+  if (isNaN(num)) {
+    throw new TypeError("not exactly a number");
+  }
+  return [data.lineNumber, num];
+};
+
+//
+
 const lines2 = `
 1
 2
@@ -176,10 +170,43 @@ abc
 `;
 
 fu.log(
-  `--() -- exception parser flat (FLAT mode, noReturn callback) ---------`
+  `--() -- exception parser flat (FLAT mode, dataException callback) ---------`
 );
-const parsedFlatNoReturnExceptionCB = parserFlatNoReturnExceptionCB.parse(
+
+const parserFlatDataExceptionCB = LineParser.create(Tags.JS_LINE_COMMENT, {
+  grouped: false,
+  onData: dataNumCheck,
+});
+const parsedFlatNoReturnExceptionCB = parserFlatDataExceptionCB.parse(
   lines2.split("\n")
 );
 fu.log("test result data: ", parsedFlatNoReturnExceptionCB.data);
 fu.log("test errors: ", parsedFlatNoReturnExceptionCB.errors);
+
+//
+
+fu.log(
+  `--() -- exception parser flat (FLAT mode, propagated dataException callback) ---------`
+);
+
+const parserFlatPropagatedDataExceptionCB = LineParser.create(
+  Tags.JS_LINE_COMMENT,
+  {
+    grouped: false,
+    onData: dataNumCheck,
+    onError: (err) => {
+      throw err;
+    },
+  }
+);
+
+try {
+  const parsedFlatPropagatedDataExceptionCB = parserFlatPropagatedDataExceptionCB.parse(
+    lines2.split("\n")
+  );
+
+  fu.log("test result data: ", parsedFlatPropagatedDataExceptionCB.data);
+  fu.log("test errors: ", parsedFlatPropagatedDataExceptionCB.errors);
+} catch (e) {
+  fu.log("catch: ", e);
+}
