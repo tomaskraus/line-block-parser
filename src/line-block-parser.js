@@ -202,9 +202,9 @@ const defaultErrorHandler = (err) => ({
 //---------------------------------------------------------------------------------------------
 
 const A_STATE = {
-  READY: 0,
-  INIT: 1,
-  names: ["ready", "init"],
+  INIT: 0,
+  READY: 1,
+  names: ["init", "ready"],
 };
 
 const initialAccumState = () => ({
