@@ -571,8 +571,8 @@ class PairParser {
 class LineParser {
   static defaults = () => Parser.defaults();
 
-  constructor(tagStr, grouped, onData, onError, stripTags) {
-    this.lexer = createLexer(crb.createStartTag(tagStr), null, stripTags);
+  constructor(tagObj, grouped, onData, onError, stripTags) {
+    this.lexer = createLexer(tagObj, null, stripTags);
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
@@ -589,7 +589,21 @@ class LineParser {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagStr, grouped, onData, onError, stripTags);
+    return new LineParser(
+      crb.createStartTag(tagStr),
+      grouped,
+      onData,
+      onError,
+      stripTags
+    );
+  }
+
+  static createMatchAll(options) {
+    const { grouped, onData, onError, stripTags } = {
+      ...LineParser.defaults(),
+      ...options,
+    };
+    return new LineParser(crb.matchAllTag, grouped, onData, onError, stripTags);
   }
 
   parse = (lines, startLineNumberValue = 0) =>
