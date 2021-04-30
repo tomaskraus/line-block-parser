@@ -539,13 +539,13 @@ class PairParser {
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
-  static create(startTagRegExp, endTagRegExp, options) {
+  static create(startTagStr, endTagRegExp, options) {
     const { grouped, onData, onError, stripTags } = {
       ...PairParser.defaults(),
       ...options,
     };
     return new PairParser(
-      startTagRegExp,
+      startTagStr,
       endTagRegExp,
       grouped,
       onData,
@@ -584,12 +584,12 @@ class LineParser {
     this.reducer = createReducer(this.lexer, this.parserEngine);
   }
 
-  static create(tagRegExp, options) {
+  static create(tagStr, options) {
     const { grouped, onData, onError, stripTags } = {
       ...LineParser.defaults(),
       ...options,
     };
-    return new LineParser(tagRegExp, grouped, onData, onError, stripTags);
+    return new LineParser(tagStr, grouped, onData, onError, stripTags);
   }
 
   parse = (lines, startLineNumberValue = 0) =>
