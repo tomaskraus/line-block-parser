@@ -1,11 +1,11 @@
 const { PairParser, Tags } = require("../src/line-block-parser");
 
-const dataHandler = (data, lexer) => {
+const dataHandler = (data, lexerUtils) => {
   const d = {
     block: data.inBlock,
-    startTagData: lexer.startTagData(data.startTagLine),
+    startTagInnerText: lexerUtils.startTagInnerText(data.startTagLine),
     lines: data.data,
-    endTagData: lexer.endTagData(data.endTagLine),
+    endTagInnerText: lexerUtils.endTagInnerText(data.endTagLine),
   };
   console.log(d);
 };
@@ -17,7 +17,20 @@ const par = PairParser.create(
     grouped: true,
     onData: dataHandler,
     onError: (err) => {
-      return `ERROR on line: ${err.lineNumber}: ${err.message}`;
+      return `ERROR on line: ${err.lineNumber}: ${err.code}, ${err.message}`;
+    },
+  }
+);
+
+const par2 = PairParser.create(
+  Tags.JS_BLOCK_COMMENT_START,
+  Tags.JS_BLOCK_COMMENT_END,
+  {
+    grouped: true,
+    stripTags: true,
+    //onData: dataHandler,
+    onError: (err) => {
+      return `ERROR on line: ${err.lineNumber}: ${err.code}, ${err.message}`;
     },
   }
 );
@@ -44,3 +57,9 @@ console.log("lines: ", lines);
 const { data, errors } = par.parse(lines);
 console.log("parsed data: ", data);
 console.log("parsed errors: ", errors);
+
+console.log("'''''''''''''''''''''''''''''''''''''''");
+
+const { data: d, errors: e } = par2.parse(lines);
+console.log("parsed data: ", d);
+console.log("parsed errors: ", e);

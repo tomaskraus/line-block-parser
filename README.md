@@ -1,7 +1,12 @@
 # Line Block Parser
 
-Recognizes multi-line blocks - such as block comments etc.
-Simple to use, yet quite powerful.
+Recognizes multi-line blocks, such as:
+
+- block comments
+- blocks of line comments
+- ini sections
+
+Customizable. Simple to use, yet quite powerful.
 
 ## Usage
 
@@ -13,10 +18,7 @@ const { PairParser, Tags } = require("./line-block-parser");
 //we want to recognize lines in javascript block comments
 //
 //Parser.create(start tag, end tag[, options])
-const jsCommentParser = PairParser.create(
-  Tags.JS_BLOCK_COMMENT_START,
-  Tags.JS_BLOCK_COMMENT_END
-);
+const jsCommentParser = PairParser.create("/*", "*/");
 
 //these are lines to parse
 const lines = [

@@ -11,9 +11,10 @@ const parserGrouped = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: true,
 });
 //
-const parserFlatCBTagData = LineParser.create(Tags.JS_LINE_COMMENT, {
+const parserFlatCBTagInnerText = LineParser.create(Tags.JS_LINE_COMMENT, {
   grouped: false,
-  onData: (data, lexer) => `data: "${lexer.tagData(data.data)}"`,
+  onData: (data, lexerUtils) =>
+    `innerText: "${lexerUtils.tagInnerText(data.data)}"`,
 });
 
 const parserGroupedCB = LineParser.create(Tags.JS_LINE_COMMENT, {
@@ -29,6 +30,7 @@ const parserFlatNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   onData: (data) => {
     console.log("data: ", data.data);
   },
+  stripTags: true,
 });
 
 const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
@@ -36,6 +38,7 @@ const parserGroupedNoReturnCB = LineParser.create(Tags.JS_LINE_COMMENT, {
   onData: (data) => {
     console.log("grouped data: ", data.data);
   },
+  stripTags: true,
 });
 
 //-------------------------------------------
@@ -55,9 +58,9 @@ const testLines = (lines, label = "") => {
   fu.log("test result data: ", parsedGrouped.data);
   //
   fu.log(
-    `--(${label}) -- parser flat (FLAT mode, callback (tag data) ) ---------`
+    `--(${label}) -- parser flat (FLAT mode, callback (tag inner text) ) ---------`
   );
-  const parsedFlatCB = parserFlatCBTagData.parse(lines);
+  const parsedFlatCB = parserFlatCBTagInnerText.parse(lines);
   fu.log("test result data: ", parsedFlatCB.data);
   //
   fu.log(`--(${label}) -- parser grouped (GROUPED mode, callback) ------`);
@@ -145,4 +148,67 @@ const multipleEmptyComments = [
 ];
 testLines(multipleEmptyComments, "multiple empty comments");
 
+//-----------------------------------------------------------------------------------------------------------
+
+const dataNumCheck = (data) => {
+  const num = parseInt(data.data, 10);
+  console.log("data: ", data.data);
+  if (isNaN(num)) {
+    throw new TypeError("not exactly a number");
+  }
+  return [data.lineNumber, num];
+};
+
 //
+
+const lines2 = `
+1
+2
+3
+abc
+5
+
+6
+`;
+
+fu.log(
+  `--() -- exception parser flat (FLAT mode, dataException callback) ---------`
+);
+
+const parserFlatDataExceptionCB = LineParser.create(Tags.JS_LINE_COMMENT, {
+  grouped: false,
+  onData: dataNumCheck,
+});
+const parsedFlatNoReturnExceptionCB = parserFlatDataExceptionCB.parse(
+  lines2.split("\n")
+);
+fu.log("test result data: ", parsedFlatNoReturnExceptionCB.data);
+fu.log("test errors: ", parsedFlatNoReturnExceptionCB.errors);
+
+//
+
+fu.log(
+  `--() -- exception parser flat (FLAT mode, propagated dataException callback) ---------`
+);
+
+const parserFlatPropagatedDataExceptionCB = LineParser.create(
+  Tags.JS_LINE_COMMENT,
+  {
+    grouped: false,
+    onData: dataNumCheck,
+    onError: (err) => {
+      throw err;
+    },
+  }
+);
+
+try {
+  const parsedFlatPropagatedDataExceptionCB = parserFlatPropagatedDataExceptionCB.parse(
+    lines2.split("\n")
+  );
+
+  fu.log("test result data: ", parsedFlatPropagatedDataExceptionCB.data);
+  fu.log("test errors: ", parsedFlatPropagatedDataExceptionCB.errors);
+} catch (e) {
+  fu.log("catch: ", e.message);
+}

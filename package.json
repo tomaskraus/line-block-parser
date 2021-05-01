@@ -1,19 +1,28 @@
 {
   "name": "line-block-parser",
   "version": "0.1.0",
-  "description": "Recognizes multi-line blocks - such as block comments etc.",
+  "description": "Recognizes multi-line blocks - such as block comments, blocks of line comments, ini sections etc. Customizable.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "keywords": [
     "parser",
     "line",
     "text",
     "textline",
-    "comment",
-    "commentblock"
+    "comments",
+    "commentblock",
+    "ini",
+    "section"
   ],
   "author": "Tomas Kraus",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "dependencies": {
+    "@krausoft/comment-regexp-builder": "0.0.3"
+  }
 }
