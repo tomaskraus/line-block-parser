@@ -52,14 +52,6 @@ const LEXER = {
 const createLexer = (tagObj1, tagObj2 = null, stripTags = false) => {
   const lexerObj = {};
 
-  lexerObj.utils = {};
-
-  lexerObj.utils.startTagInnerText = tagObj1.innerText;
-  if (tagObj2 !== null) {
-    lexerObj.utils.endTagInnerText = tagObj2.innerText;
-  }
-  lexerObj.utils.tagInnerText = lexerObj.utils.startTagInnerText;
-
   // consume :: lineContext -> {...lineContext, line: {type: LEXER.TYPE, data: lineContext.line}}
   lexerObj.consume = (lc) => {
     const is_start = tagObj1.test(lc.line);
@@ -76,8 +68,8 @@ const createLexer = (tagObj1, tagObj2 = null, stripTags = false) => {
       //strip tags
       lineData =
         tagType == LEXER.END_TAG
-          ? lexerObj.utils.endTagInnerText(lineData)
-          : lexerObj.utils.startTagInnerText(lineData);
+          ? tagObj2.innerText(lineData)
+          : tagObj1.innerText(lineData);
     }
 
     return fu.setProp(LC.LINE, { type: tagType, data: lineData }, lc);
@@ -230,27 +222,21 @@ const overAcc = fu.curry2((fn, lineContext) =>
   fu.overProp(LC.ACCUM, fn, lineContext)
 );
 
-const flushAccum = (
-  dataCallback,
-  lexerUtils,
-  data,
-  errHandler,
-  lineContext
-) => {
+const flushAccum = (dataCallback, data, errHandler, lineContext) => {
   return fu.compose2(
     clearAcc,
-    runCallback(dataCallback, lexerUtils, errHandler, data)
+    runCallback(dataCallback, errHandler, data)
   )(lineContext);
 };
 
 const isFormattedData = (data) =>
   !fu.nullOrUndefined(data.data) && !fu.nullOrUndefined(data.errors);
 
-const runCallback = (callback, lexerUtils, errorCallback, dataToCallback) => (
+const runCallback = (callback, errorCallback, dataToCallback) => (
   lineContext
 ) => {
   try {
-    const data = callback(dataToCallback, lexerUtils);
+    const data = callback(dataToCallback);
     if (fu.nullOrUndefined(data)) {
       return lineContext;
     }
@@ -277,7 +263,6 @@ const isValidToFlush = (lineContext) => {
 const createAccumulator = (
   isGrouped,
   groupDecorator,
-  lexerObjUtils,
   dataCallback,
   errorCallback
 ) => {
@@ -288,7 +273,6 @@ const createAccumulator = (
       return isValidToFlush(lineContext)
         ? flushAccum(
             dataCallback,
-            lexerObjUtils,
             groupDecorator(lineContext[LC.ACCUM].data, lineContext),
             errorCallback,
             lineContext
@@ -299,7 +283,6 @@ const createAccumulator = (
       ? lineContext
       : flushAccum(
           dataCallback,
-          lexerObjUtils,
           infoParserDecorator(dataToFlush.data, lineContext),
           errorCallback,
           lineContext
@@ -531,7 +514,6 @@ class PairParser {
     this.accum = createAccumulator(
       grouped,
       groupedPairParserDecorator,
-      this.lexer.utils,
       onData,
       onError
     );
@@ -576,7 +558,6 @@ class LineParser {
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
-      this.lexer.utils,
       onData,
       onError
     );
@@ -632,7 +613,6 @@ class SectionParser {
     this.accum = createAccumulator(
       grouped,
       groupedLineParserDecorator,
-      this.lexer.utils,
       onData,
       onError
     );
