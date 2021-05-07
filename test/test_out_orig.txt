@@ -3371,10 +3371,10 @@ test result data:  [
 ]
 --(no comment) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
-  'innerText: "null"',
-  'innerText: "null"',
-  'innerText: "null"',
-  'innerText: "null"'
+  'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'innerText: "Mary had a little lamb,"',
+  'innerText: "   The lamb was sure to go ;"',
+  'innerText: "He followed her to school one day-"'
 ]
 --(no comment) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
@@ -3608,17 +3608,17 @@ test result data:  [
 --(multiple comments) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
   'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
-  'innerText: "null"',
-  'innerText: "null"',
-  'innerText: "null"',
+  'innerText: "Mary had a little lamb,"',
+  'innerText: " /*"',
+  'innerText: "--  Its fleece was white as snow,"',
   'innerText: "--And every where that Mary went"',
   'innerText: "*/  "',
   'innerText: "   The lamb was sure to go ;"',
-  'innerText: "null"',
-  'innerText: "null"',
+  'innerText: "He followed her to school one day-"',
+  'innerText: " /* "',
   'innerText: "  --   That was against the rule,"',
-  'innerText: "null"',
-  'innerText: "null"',
+  'innerText: "*/"',
+  'innerText: "It made the children laugh and play,"',
   'innerText: "   To see a lamb at school."'
 ]
 --(multiple comments) -- parser grouped (GROUPED mode, callback) ------
@@ -3737,10 +3737,10 @@ test result data:  [
 ]
 --(empty comment) -- parser flat (FLAT mode, callback (tag inner text) ) ---------
 test result data:  [
-  'innerText: "null"',
-  'innerText: "null"',
+  'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'innerText: "Mary had a little lamb,"',
   'innerText: ""',
-  'innerText: "null"'
+  'innerText: "   The lamb was sure to go ;"'
 ]
 --(empty comment) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
@@ -3823,10 +3823,10 @@ test result data:  [
 test result data:  [
   'innerText: " "',
   'innerText: ""',
-  'innerText: "null"',
-  'innerText: "null"',
+  'innerText: "https://en.wikipedia.org/wiki/Mary_Had_a_Little_Lamb"',
+  'innerText: "Mary had a little lamb,"',
   'innerText: ""',
-  'innerText: "null"'
+  'innerText: "He followed her to school one day-"'
 ]
 --(multiple empty comments) -- parser grouped (GROUPED mode, callback) ------
 test result data:  [
