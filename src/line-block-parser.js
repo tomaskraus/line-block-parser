@@ -108,6 +108,9 @@ const setParserProp = fu.curry3((propName, value, lineContext) =>
 
 //========================================================================================
 
+const isLineInBlock = (lineContext) =>
+  lineContext[LC.PARSER].state === P_STATE.IN_BLOCK;
+
 const LINE_INFO = {
   LINE_NUMBER: "lineNumber",
   LINE_TYPE: "lineType",
@@ -116,7 +119,7 @@ const LINE_INFO = {
 
 //every decorator (flat, grouped) should have this
 const _decorator = (data, lineContext) => ({
-  inBlock: lineContext[LC.PARSER].state === P_STATE.IN_BLOCK,
+  inBlock: isLineInBlock(lineContext),
   data,
 });
 
@@ -130,10 +133,9 @@ const infoParserDecorator = (data, lineContext) => ({
 
 //every grouped decorator should have this
 const groupedDecorator = (data, lineContext) => ({
-  startLineNumber:
-    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK
-      ? lineContext[LC.PARSER].beginBlockLineNum
-      : lineContext[LC.PARSER].beginNotBlockLineNum,
+  startLineNumber: isLineInBlock(lineContext)
+    ? lineContext[LC.PARSER].beginBlockLineNum
+    : lineContext[LC.PARSER].beginNotBlockLineNum,
   ..._decorator(data, lineContext),
 });
 
@@ -399,8 +401,7 @@ const createPairParserEngine = (accum, errorCallback) => ({
   },
 
   flush: (lineContext) =>
-    lineContext[LC.PARSER].state === P_STATE.IN_BLOCK &&
-    lineContext[LC.LINE].type != LEXER.END_TAG
+    isLineInBlock(lineContext) && lineContext[LC.LINE].type != LEXER.END_TAG
       ? fu.compose2(
           accum.flush(null),
           addParserError(errorCallback, ERR_TYPE.MISS_END_TAG)
